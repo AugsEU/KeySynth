@@ -1,16 +1,50 @@
-#include <Arduino.h>
+#include <I2S/Teensy4i2s.h>
+#include <I2S/AudioConfig.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <arm_math.h>
 
-constexpr uint8_t LED_PIN = 13;
-
-void setup()
+int32_t acc = 0;
+void processAudio(int32_t** inputs, int32_t** outputs)
 {
-	pinMode(LED_PIN, OUTPUT);
+	for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES; i++)
+	{
+		// use can use regular sinf() as well, but it's highly recommended 
+		// to use these optimised arm-specific functions whenever possible
+		acc++;
+		int32_t sig = acc < 100 ? 0 : 2000000;
+		outputs[0][i] = sig;
+		outputs[1][i] = sig;
+
+		if (acc >= 200)
+			acc = 0;
+	}
 }
 
-bool gLedOn = false;
-void loop()
+void setup(void)
 {
-	delay(20);
-	digitalWrite(LED_PIN, gLedOn);
-	gLedOn = !gLedOn;
+	Serial.begin(9600);
+
+	// Assign the callback function
+	i2sAudioCallback = processAudio;
+
+	// Start the I2S interrupts
+	InitI2s();
+
+	// need to wait a bit before configuring codec, otherwise something weird happens and there's no output...
+	delay(1000); 
+}
+
+void loop(void)
+{
+	delay(1000);
+	float avg = Timers::GetPeak(Timers::TIMER_TOTAL);
+	float period = Timers::GetAvgPeriod();
+	float percent = avg / period * 100;
+	Serial.print("CPU Usage: ");
+	Serial.print(percent, 4);
+	Serial.print("%");
+	Serial.print(" -- Processing period: ");
+	Serial.print(period/1000, 3);
+	Serial.println("ms");
 }
