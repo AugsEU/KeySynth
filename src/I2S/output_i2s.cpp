@@ -74,16 +74,16 @@ void AudioOutputI2S::begin()
 	// To reset Source address, trigger interrupts, etc.
 	CORE_PIN7_CONFIG  = 3;  //1:TX_DATA0
 	dma.TCD->SADDR = i2s_tx_buffer;
-	dma.TCD->SOFF = 4; // how many bytes to jump from current address on the next move
-	dma.TCD->ATTR = DMA_TCD_ATTR_SSIZE(2) | DMA_TCD_ATTR_DSIZE(2); // 1=16bits, 2=32 bits. size of source, size of dest
-	dma.TCD->NBYTES_MLNO = 4; // number of bytes to move, (minor loop?)
+	dma.TCD->SOFF = 2; // how many bytes to jump from current address on the next move
+	dma.TCD->ATTR = DMA_TCD_ATTR_SSIZE(1) | DMA_TCD_ATTR_DSIZE(1); // 1=16bits, 2=32 bits. size of source, size of dest
+	dma.TCD->NBYTES_MLNO = 2; // number of bytes to move, (minor loop?)
 	dma.TCD->SLAST = -sizeof(i2s_tx_buffer); // how many bytes to jump when hitting the end of the major loop. In this case, jump back to start of buffer
 	dma.TCD->DOFF = 0; // how many bytes to move the destination at each minor loop. In this case we're always writing to the same memory register.
-	dma.TCD->CITER_ELINKNO = sizeof(i2s_tx_buffer) / 4; // how many iterations are in the major loop
+	dma.TCD->CITER_ELINKNO = sizeof(i2s_tx_buffer) / 2; // how many iterations are in the major loop
 	dma.TCD->DLASTSGA = 0; // how many bytes to jump the destination address at the end of the major loop
-	dma.TCD->BITER_ELINKNO = sizeof(i2s_tx_buffer) / 4; // beginning iteration count
+	dma.TCD->BITER_ELINKNO = sizeof(i2s_tx_buffer) / 2; // beginning iteration count
 	dma.TCD->CSR = DMA_TCD_CSR_INTHALF | DMA_TCD_CSR_INTMAJOR; // Tells the DMA mechanism to trigger interrupt at half and full population of the buffer
-	dma.TCD->DADDR = (void *)((uint32_t)&I2S1_TDR0 + 0); // Destination address. for 16 bit values we use +2 byte offset from the I2S register. for 32 bits we use a zero offset.
+	dma.TCD->DADDR = (void *)((uint32_t)&I2S1_TDR0 + 2); // Destination address. for 16 bit values we use +2 byte offset from the I2S register. for 32 bits we use a zero offset.
 	dma.triggerAtHardwareEvent(DMAMUX_SOURCE_SAI1_TX); // run DMA at hardware event when new I2S data transmitted.
 	dma.enable();
 

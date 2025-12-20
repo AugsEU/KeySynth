@@ -12,11 +12,14 @@ void processAudio(int32_t** inputs, int32_t** outputs)
 		// use can use regular sinf() as well, but it's highly recommended 
 		// to use these optimised arm-specific functions whenever possible
 		acc++;
-		int32_t sig = acc < 100 ? 0 : 2000000;
+		float32_t wave = (float)acc / 100.0f;
+		wave = sinf(M_TWOPI * wave);
+		int32_t sig = (int32_t)(100.0f * wave);
+		//sig = sig | (sig << 16);
 		outputs[0][i] = sig;
 		outputs[1][i] = sig;
 
-		if (acc >= 200)
+		if (acc >= 100)
 			acc = 0;
 	}
 }
