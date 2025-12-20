@@ -9,8 +9,6 @@ void processAudio(int32_t** inputs, int32_t** outputs)
 {
 	for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES; i++)
 	{
-		// use can use regular sinf() as well, but it's highly recommended 
-		// to use these optimised arm-specific functions whenever possible
 		acc++;
 		float32_t waveL = (float)acc / 100.0f;
 		waveL = sinf(M_TWOPI * waveL);
@@ -20,13 +18,11 @@ void processAudio(int32_t** inputs, int32_t** outputs)
 		waveR = cosf(2.0f * M_TWOPI * waveR);
 		int32_t sigR = (int32_t)(100.0f * waveR);
 
-		//sig = sig | (sig << 16);
-		//uint16_t sig16 = (uint16_t)sigL; 
-		uint32_t sig32 = (uint16_t)sigR;//
+		uint32_t sig32 = (uint16_t)sigR;
 		sig32 <<= 16;
 		sig32 |= (uint16_t)sigL;
-		//sig32 = sig32 | (sig32<<16);
-		//outputs[0][i] = sig32;
+		
+		outputs[0][i] = sig32;
 		outputs[1][i] = sig32;
 
 		if (acc >= 100)
