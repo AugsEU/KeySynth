@@ -41,9 +41,6 @@
 DMAChannel AudioOutputI2S::dma(false);
 bool AudioOutputI2S::Enabled;
 
-static uint16_t dataA[AUDIO_BLOCK_SAMPLES * 2] = {0};
-static uint16_t dataB[AUDIO_BLOCK_SAMPLES * 2] = {0};
-
 DMAMEM __attribute__((aligned(32))) static uint32_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*2];
 #include "utility/imxrt_hw.h"
 #include "imxrt.h"
@@ -85,8 +82,6 @@ void AudioOutputI2S::begin()
 void AudioOutputI2S::isr(void)
 {
 	uint16_t* dest;
-	uint16_t* transmitBuffer;
-	uint16_t* fillBuffer;
 	uint32_t saddr;
 
 	saddr = (uint32_t)(dma.TCD->SADDR);
@@ -96,23 +91,18 @@ void AudioOutputI2S::isr(void)
 		// DMA is transmitting the first half of the buffer
 		// so we must fill the second half
 		dest = (uint16_t *)&i2s_tx_buffer[AUDIO_BLOCK_SAMPLES];
-		transmitBuffer = dataA;
-		fillBuffer = dataB;
 	}
 	else
 	{
 		// DMA is transmitting the second half of the buffer
 		// so we must fill the first half
 		dest = (uint16_t *)i2s_tx_buffer;
-		transmitBuffer = dataB;
-		fillBuffer = dataA;
 	}
 
 	Timers::ResetFrame();
 
-	// populate the next block - unless CPU is at or above 98%
+	// Write wave to destination buffer
 	GenerateWave(dest, AUDIO_BLOCK_SAMPLES * 2);
-	//memcpy(dest, transmitBuffer, sizeof(uint16_t) * AUDIO_BLOCK_SAMPLES * 2 );
 	arm_dcache_flush_delete(dest, sizeof(i2s_tx_buffer) / 2 );
 
 	Timers::LapInner(Timers::TIMER_TOTAL);
