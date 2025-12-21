@@ -25,15 +25,13 @@
  */
 
 #pragma once
+
 #include "DMAChannel.h"
 #include "AudioConfig.h"
 #include "I2sTimers.h"
-
-#include "InputI2s.h"
 #include "OutputI2s.h"
 
 extern AudioOutputI2S audioOutputI2S;
-extern AudioInputI2S audioInputI2S;
 
 inline void AudioDisable() { AudioOutputI2S::Enabled = false; }
 inline void AudioEnable() { AudioOutputI2S::Enabled = true; }
@@ -41,5 +39,4 @@ inline void AudioEnable() { AudioOutputI2S::Enabled = true; }
 inline void InitI2s()
 {
     audioOutputI2S.begin();
-    audioInputI2S.begin();
 }
