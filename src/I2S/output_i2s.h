@@ -28,8 +28,7 @@
 
 #include <Arduino.h>
 #include <DMAChannel.h>
-
-extern void (*i2sAudioCallback)(int32_t** inputs, int32_t** outputs);
+#include <waveGen.h>
 
 class AudioOutputI2S
 {
@@ -37,7 +36,6 @@ public:
 	static bool Enabled;
 	AudioOutputI2S(void) { }
 	void begin(void);
-	friend class AudioInputI2S;
 
 protected:
 	static void config_i2s(bool only_bclk = false);

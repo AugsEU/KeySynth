@@ -32,7 +32,6 @@
 #include <cstdlib>
 #include "AudioConfig.h"
 #include "output_i2s.h"
-#include "input_i2s.h"
 #include <cmath>
 
 // high-level explanation of how this I2S & DMA code works:
@@ -46,17 +45,6 @@ static int32_t dataLA[AUDIO_BLOCK_SAMPLES] = {0};
 static int32_t dataLB[AUDIO_BLOCK_SAMPLES] = {0};
 static int32_t dataRA[AUDIO_BLOCK_SAMPLES] = {0};
 static int32_t dataRB[AUDIO_BLOCK_SAMPLES] = {0};
-
-void audioCallbackPassthrough(int32_t** inputs, int32_t** outputs)
-{
-	for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES; i++)
-	{
-		outputs[0][i] = inputs[0][i];
-		outputs[1][i] = inputs[1][i];
-	}
-}
-
-void (*i2sAudioCallback)(int32_t** inputs, int32_t** outputs) = audioCallbackPassthrough;
 
 DMAMEM __attribute__((aligned(32))) static uint64_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*2];
 #include "utility/imxrt_hw.h"
@@ -136,8 +124,6 @@ void AudioOutputI2S::isr(void)
 	arm_dcache_flush_delete(dest, sizeof(i2s_tx_buffer) / 2 );
 
 	Timers::ResetFrame();
-	// Fetch the input samples
-	int32_t** dataInPtr = AudioInputI2S::getData();
 	
 	if (!Enabled)
 	{
@@ -151,7 +137,7 @@ void AudioOutputI2S::isr(void)
 	else if (Timers::GetCpuLoad() < 0.98)
 	{
 		// populate the next block - unless CPU is at or above 98%
-		i2sAudioCallback(dataInPtr, fillBuffers);
+		GenerateWave(fillBuffers, AUDIO_BLOCK_SAMPLES);
 	}
 
 	Timers::LapInner(Timers::TIMER_TOTAL);
