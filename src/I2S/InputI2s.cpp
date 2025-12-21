@@ -25,7 +25,7 @@
  */
 
 #include "AudioConfig.h"
-#include "input_i2s.h"
+#include "InputI2s.h"
 
 // set up two flip-flopped buffers, one is used for queueing up data for processing, the other receives data from I2S codec
 static int32_t dataL[AUDIO_BLOCK_SAMPLES*2] = {0};

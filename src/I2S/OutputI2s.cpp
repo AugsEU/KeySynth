@@ -31,7 +31,7 @@
 #include <Arduino.h>
 #include <cstdlib>
 #include "AudioConfig.h"
-#include "output_i2s.h"
+#include "OutputI2s.h"
 #include <cmath>
 
 // high-level explanation of how this I2S & DMA code works:
@@ -44,7 +44,7 @@ bool AudioOutputI2S::Enabled;
 DMAMEM __attribute__((aligned(32))) static uint32_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*NUM_DMA_SECTIONS];
 #include "utility/imxrt_hw.h"
 #include "imxrt.h"
-#include "i2s_timers.h"
+#include "I2sTimers.h"
 
 void AudioOutputI2S::begin()
 {

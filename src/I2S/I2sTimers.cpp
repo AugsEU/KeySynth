@@ -1,4 +1,4 @@
-#include "i2s_timers.h"
+#include "I2sTimers.h"
 
 float Timers::TimeAvg[Timers::TIMER_COUNT];
 float Timers::TimePeak[Timers::TIMER_COUNT];

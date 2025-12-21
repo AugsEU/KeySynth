@@ -28,7 +28,7 @@
 
 #include <Arduino.h>
 #include <DMAChannel.h>
-#include <waveGen.h>
+#include <WaveGen.h>
 
 class AudioOutputI2S
 {
