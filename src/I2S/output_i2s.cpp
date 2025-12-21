@@ -41,10 +41,8 @@
 DMAChannel AudioOutputI2S::dma(false);
 bool AudioOutputI2S::Enabled;
 
-static int32_t dataLA[AUDIO_BLOCK_SAMPLES] = {0};
-static int32_t dataLB[AUDIO_BLOCK_SAMPLES] = {0};
-static int32_t dataRA[AUDIO_BLOCK_SAMPLES] = {0};
-static int32_t dataRB[AUDIO_BLOCK_SAMPLES] = {0};
+static int32_t dataA[AUDIO_BLOCK_SAMPLES * 2] = {0};
+static int32_t dataB[AUDIO_BLOCK_SAMPLES * 2] = {0};
 
 DMAMEM __attribute__((aligned(32))) static uint64_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*2];
 #include "utility/imxrt_hw.h"
@@ -87,9 +85,8 @@ void AudioOutputI2S::begin()
 void AudioOutputI2S::isr(void)
 {
 	int32_t* dest;
-	int32_t* transmitBufferL;
-	int32_t* transmitBufferR;
-	int32_t* fillBuffers[2];
+	int32_t* transmitBuffer;
+	int32_t* fillBuffer;
 	uint32_t saddr;
 
 	saddr = (uint32_t)(dma.TCD->SADDR);
@@ -99,26 +96,21 @@ void AudioOutputI2S::isr(void)
 		// DMA is transmitting the first half of the buffer
 		// so we must fill the second half
 		dest = (int32_t *)&i2s_tx_buffer[AUDIO_BLOCK_SAMPLES];
-		transmitBufferL = dataLA;
-		transmitBufferR = dataRA;
-		fillBuffers[0] = &dataLB[0];
-		fillBuffers[1] = &dataRB[0];
+		transmitBuffer = dataA;
+		fillBuffer = dataB;
 	}
 	else
 	{
 		// DMA is transmitting the second half of the buffer
 		// so we must fill the first half
 		dest = (int32_t *)i2s_tx_buffer;
-		transmitBufferL = dataLB;
-		transmitBufferR = dataRB;
-		fillBuffers[0] = &dataLA[0];
-		fillBuffers[1] = &dataRA[0];
+		transmitBuffer = dataB;
+		fillBuffer = dataA;
 	}
 
-	for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES; i++)
+	for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES * 2; i++)
 	{
-		dest[2*i] = transmitBufferL[i];
-		dest[2*i+1] = transmitBufferR[i];
+		dest[i] = transmitBuffer[i];
 	}
 	
 	arm_dcache_flush_delete(dest, sizeof(i2s_tx_buffer) / 2 );
@@ -128,16 +120,15 @@ void AudioOutputI2S::isr(void)
 	if (!Enabled)
 	{
 		// Populate output with zeros if processing is disabled
-		for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES; i++)
+		for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES * 2; i++)
 		{
-			fillBuffers[0][i] = 0;
-			fillBuffers[1][i] = 0;
+			fillBuffer[i] = 0;
 		}
 	}
 	else if (Timers::GetCpuLoad() < 0.98)
 	{
 		// populate the next block - unless CPU is at or above 98%
-		GenerateWave(fillBuffers, AUDIO_BLOCK_SAMPLES);
+		GenerateWave(fillBuffer, AUDIO_BLOCK_SAMPLES * 2);
 	}
 
 	Timers::LapInner(Timers::TIMER_TOTAL);
