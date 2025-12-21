@@ -18,11 +18,11 @@ void GenerateWave(uint16_t* out, size_t len)
 		acc++;
 		float32_t waveL = (float)acc / 200.0f;
 		waveL = sinf(M_TWOPI * waveL);
-		int32_t sigL = (int32_t)(4000.0f * waveL);
+		int16_t sigL = (int16_t)(4000.0f * waveL);
 
 		float32_t waveR = (float)acc / 200.0f;
 		waveR = cosf(2.0f * M_TWOPI * waveR);
-		int32_t sigR = (int32_t)(4000.0f * waveR);
+		int16_t sigR = (int16_t)(4000.0f * waveR);
 		
 		out[i] = (uint16_t)sigL;
         out[i+1] = (uint16_t)sigR;

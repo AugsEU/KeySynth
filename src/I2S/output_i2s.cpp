@@ -108,28 +108,12 @@ void AudioOutputI2S::isr(void)
 		fillBuffer = dataA;
 	}
 
-	for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES * 2; i++)
-	{
-		dest[i] = transmitBuffer[i];
-	}
-	
-	arm_dcache_flush_delete(dest, sizeof(i2s_tx_buffer) / 2 );
-
 	Timers::ResetFrame();
-	
-	if (!Enabled)
-	{
-		// Populate output with zeros if processing is disabled
-		for (size_t i = 0; i < AUDIO_BLOCK_SAMPLES * 2; i++)
-		{
-			fillBuffer[i] = 0;
-		}
-	}
-	else if (Timers::GetCpuLoad() < 0.98)
-	{
-		// populate the next block - unless CPU is at or above 98%
-		GenerateWave(fillBuffer, AUDIO_BLOCK_SAMPLES * 2);
-	}
+
+	// populate the next block - unless CPU is at or above 98%
+	GenerateWave(dest, AUDIO_BLOCK_SAMPLES * 2);
+	//memcpy(dest, transmitBuffer, sizeof(uint16_t) * AUDIO_BLOCK_SAMPLES * 2 );
+	arm_dcache_flush_delete(dest, sizeof(i2s_tx_buffer) / 2 );
 
 	Timers::LapInner(Timers::TIMER_TOTAL);
 }
