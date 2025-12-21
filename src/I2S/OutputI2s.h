@@ -26,19 +26,18 @@
 
 #pragma once
 
+// ============================================================================
+// Include
+// ============================================================================
 #include <Arduino.h>
 #include <DMAChannel.h>
 #include <WaveGen.h>
 
-class AudioOutputI2S
-{
-public:
-	static bool Enabled;
-	AudioOutputI2S(void) { }
-	void begin(void);
 
-protected:
-	static void config_i2s(bool only_bclk = false);
-	static DMAChannel dma;
-	static void isr(void);
-};
+
+
+
+// ============================================================================
+// Public funcs
+// ============================================================================
+extern void BeginI2s();

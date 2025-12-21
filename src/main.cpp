@@ -1,5 +1,4 @@
 #include <I2S/Teensy4i2s.h>
-#include <I2S/AudioConfig.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <arm_math.h>
@@ -9,7 +8,7 @@ void setup(void)
 	Serial.begin(9600);
 
 	// Start the I2S interrupts
-	InitI2s();
+	BeginI2s();
 
 	// need to wait a bit before configuring codec, otherwise something weird happens and there's no output...
 	delay(1000); 

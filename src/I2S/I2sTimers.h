@@ -5,7 +5,6 @@ class AudioOutputI2S;
 
 class Timers
 {
-    friend class AudioOutputI2S;
 public:
     static const int TIMER_COUNT = 20;
     static const uint8_t TIMER_TOTAL = 19;
@@ -20,7 +19,7 @@ public:
     static void Clear(uint8_t timerIndex=0);
     static float GetAvgPeriod();
     static float GetCpuLoad();
-private:
+
     static int TimeFrameStart;
     static float TimeFramePeriod;
     static void ResetFrame();
