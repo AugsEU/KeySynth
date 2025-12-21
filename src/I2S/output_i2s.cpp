@@ -41,10 +41,10 @@
 DMAChannel AudioOutputI2S::dma(false);
 bool AudioOutputI2S::Enabled;
 
-static int32_t dataA[AUDIO_BLOCK_SAMPLES * 2] = {0};
-static int32_t dataB[AUDIO_BLOCK_SAMPLES * 2] = {0};
+static uint16_t dataA[AUDIO_BLOCK_SAMPLES * 2] = {0};
+static uint16_t dataB[AUDIO_BLOCK_SAMPLES * 2] = {0};
 
-DMAMEM __attribute__((aligned(32))) static uint64_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*2];
+DMAMEM __attribute__((aligned(32))) static uint32_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*2];
 #include "utility/imxrt_hw.h"
 #include "imxrt.h"
 #include "i2s_timers.h"
@@ -84,9 +84,9 @@ void AudioOutputI2S::begin()
 // process() call again, computing a new block of data
 void AudioOutputI2S::isr(void)
 {
-	int32_t* dest;
-	int32_t* transmitBuffer;
-	int32_t* fillBuffer;
+	uint16_t* dest;
+	uint16_t* transmitBuffer;
+	uint16_t* fillBuffer;
 	uint32_t saddr;
 
 	saddr = (uint32_t)(dma.TCD->SADDR);
@@ -95,7 +95,7 @@ void AudioOutputI2S::isr(void)
 	{
 		// DMA is transmitting the first half of the buffer
 		// so we must fill the second half
-		dest = (int32_t *)&i2s_tx_buffer[AUDIO_BLOCK_SAMPLES];
+		dest = (uint16_t *)&i2s_tx_buffer[AUDIO_BLOCK_SAMPLES];
 		transmitBuffer = dataA;
 		fillBuffer = dataB;
 	}
@@ -103,7 +103,7 @@ void AudioOutputI2S::isr(void)
 	{
 		// DMA is transmitting the second half of the buffer
 		// so we must fill the first half
-		dest = (int32_t *)i2s_tx_buffer;
+		dest = (uint16_t *)i2s_tx_buffer;
 		transmitBuffer = dataB;
 		fillBuffer = dataA;
 	}

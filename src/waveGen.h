@@ -10,4 +10,4 @@
 // ============================================================================
 
 /// @brief Fill sound buffer with sounds.
-extern void GenerateWave(int32_t* out, size_t len);
+extern void GenerateWave(uint16_t* out, size_t len);
