@@ -41,7 +41,7 @@
 DMAChannel AudioOutputI2S::dma(false);
 bool AudioOutputI2S::Enabled;
 
-DMAMEM __attribute__((aligned(32))) static uint32_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*2];
+DMAMEM __attribute__((aligned(32))) static uint32_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*NUM_DMA_SECTIONS];
 #include "utility/imxrt_hw.h"
 #include "imxrt.h"
 #include "i2s_timers.h"
@@ -86,7 +86,7 @@ void AudioOutputI2S::isr(void)
 
 	saddr = (uint32_t)(dma.TCD->SADDR);
 	dma.clearInterrupt();
-	if (saddr < (uint32_t)i2s_tx_buffer + sizeof(i2s_tx_buffer) / 2) 
+	if (saddr < (uint32_t)i2s_tx_buffer + sizeof(i2s_tx_buffer) / NUM_DMA_SECTIONS) 
 	{
 		// DMA is transmitting the first half of the buffer
 		// so we must fill the second half
@@ -102,7 +102,7 @@ void AudioOutputI2S::isr(void)
 	Timers::ResetFrame();
 
 	// Write wave to destination buffer
-	GenerateWave(dest, AUDIO_BLOCK_SAMPLES * 2);
+	GenerateWave(dest, AUDIO_BLOCK_SAMPLES * NUM_CHANNELS);
 	arm_dcache_flush_delete(dest, sizeof(i2s_tx_buffer) / 2 );
 
 	Timers::LapInner(Timers::TIMER_TOTAL);
