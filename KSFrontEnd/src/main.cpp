@@ -1,12 +1,24 @@
-// Simple USB Keyboard Forwarder
-//
-// This example is in the public domain
+// ============================================================================
+// Include
+// ============================================================================
 #include <Arduino.h>
 #include "USBHost_t36.h"
 
-// You can have this one only output to the USB type Keyboard and
-// not show the keyboard data on Serial...
+
+
+
+// ============================================================================
+// Constants
+// ============================================================================
 #define SHOW_KEYBOARD_DATA
+
+
+
+
+
+// ============================================================================
+// Forward decl
+// ============================================================================
 void OnPress(int key);
 void OnRawPress(uint8_t keycode);
 void OnRawRelease(uint8_t keycode);
@@ -15,24 +27,51 @@ void OnHIDExtrasRelease(uint32_t top, uint16_t key);
 void ShowUpdatedDeviceListInfo();
 void ShowHIDExtrasPress(uint32_t top, uint16_t key);
 
+
+
+
+
+// ============================================================================
+// Globals
+// ============================================================================
 USBHost gUsbHost;
-USBHub hub1(gUsbHost);
-KeyboardController keyboard1(gUsbHost);
-//BluetoothController bluet(myusb, true, "0000");   // Version does pairing to device
-BluetoothController bluet(gUsbHost);   // version assumes it already was paired
+USBHub gUsbHub(gUsbHost);
+KeyboardController gUsbKeyboard(gUsbHost);
+BluetoothController gBluetooth(gUsbHost);   // version assumes it already was paired
 
-USBHIDParser hid1(gUsbHost);
-USBHIDParser hid2(gUsbHost);
-USBHIDParser hid3(gUsbHost);
+USBHIDParser gHid1(gUsbHost);
+USBHIDParser gHid2(gUsbHost);
+USBHIDParser gHid3(gUsbHost);
 
-uint8_t keyboard_modifiers = 0;  // try to keep a reasonable value
-#ifdef KEYBOARD_INTERFACE
-uint8_t keyboard_last_leds = 0;
-#elif !defined(SHOW_KEYBOARD_DATA)
-#Warning: "USB type does not have Serial, so turning on SHOW_KEYBOARD_DATA"
-#define SHOW_KEYBOARD_DATA
-#endif
+uint8_t gHeldModifiers = 0;  // try to keep a reasonable value
 
+#ifdef SHOW_KEYBOARD_DATA
+
+USBDriver* gDrivers[] = {&gUsbHub, &gHid1, &gHid2, &gHid3, &gBluetooth};
+#define CNT_DEVICES (sizeof(gDrivers)/sizeof(gDrivers[0]))
+const char* gDriverNames[CNT_DEVICES] = {"Hub1", "HID1" , "HID2", "HID3", "BlueTooth"};
+bool gDriverActive[CNT_DEVICES] = {false, false, false};
+
+// Lets also look at HID Input devices
+USBHIDInput* gHidDrivers[] = { &gUsbKeyboard };
+#define CNT_HIDDEVICES (sizeof(gHidDrivers) / sizeof(gHidDrivers[0]))
+const char* gHidDriverNames[CNT_DEVICES] = { "KB" };
+bool gHidDriverActive[CNT_DEVICES] = { false };
+
+BTHIDInput* gBtHidDrivers[] = {&gUsbKeyboard};
+#define CNT_BTHIDDEVICES (sizeof(gBtHidDrivers)/sizeof(gBtHidDrivers[0]))
+const char * gBtHidDriverNames[CNT_HIDDEVICES] = {"KB(BT)"};
+bool gBtHidDriverActive[CNT_HIDDEVICES] = {false};
+
+#endif // SHOW_KEYBOARD_DATA
+
+
+
+// ============================================================================
+// Private Funcs
+// ============================================================================
+
+/// @brief Called on launch
 void setup()
 {
 #ifdef SHOW_KEYBOARD_DATA
@@ -44,15 +83,17 @@ void setup()
 
 	// Only needed to display...
 #ifdef SHOW_KEYBOARD_DATA
-	keyboard1.attachPress(OnPress);
+	gUsbKeyboard.attachPress(OnPress);
 #endif
-	keyboard1.attachRawPress(OnRawPress);
-	keyboard1.attachRawRelease(OnRawRelease);
-	keyboard1.attachExtrasPress(OnHIDExtrasPress);
-	keyboard1.attachExtrasRelease(OnHIDExtrasRelease);
+	gUsbKeyboard.attachRawPress(OnRawPress);
+	gUsbKeyboard.attachRawRelease(OnRawRelease);
+	gUsbKeyboard.attachExtrasPress(OnHIDExtrasPress);
+	gUsbKeyboard.attachExtrasRelease(OnHIDExtrasRelease);
 }
 
 
+
+/// @brief Called in a loop
 void loop()
 {
 	gUsbHost.Task();
@@ -60,21 +101,18 @@ void loop()
 }
 
 
+
+/// @brief Processes second HID data after a press
 void OnHIDExtrasPress(uint32_t top, uint16_t key)
 {
-#ifdef KEYBOARD_INTERFACE
-	if (top == 0xc0000) {
-		Keyboard.press(0XE400 | key);
-#ifndef KEYMEDIA_INTERFACE
-#error "KEYMEDIA_INTERFACE is Not defined"
-#endif
-	}
-#endif
 #ifdef SHOW_KEYBOARD_DATA
 	ShowHIDExtrasPress(top, key);
 #endif
 }
 
+
+
+/// @brief Process secondary HID data after a release
 void OnHIDExtrasRelease(uint32_t top, uint16_t key)
 {
 #ifdef KEYBOARD_INTERFACE
@@ -90,141 +128,132 @@ void OnHIDExtrasRelease(uint32_t top, uint16_t key)
 #endif
 }
 
-void OnRawPress(uint8_t keycode) {
-#ifdef KEYBOARD_INTERFACE
-	if (keyboard_leds != keyboard_last_leds) {
-		//Serial.printf("New LEDS: %x\n", keyboard_leds);
-		keyboard_last_leds = keyboard_leds;
-		keyboard1.LEDS(keyboard_leds);
-	}
-	if (keycode >= 103 && keycode < 111) {
-		// one of the modifier keys was pressed, so lets turn it
-		// on global..
-		uint8_t keybit = 1 << (keycode - 103);
-		keyboard_modifiers |= keybit;
-		Keyboard.set_modifier(keyboard_modifiers);
-	} else {
-		if (keyboard1.getModifiers() != keyboard_modifiers) {
-#ifdef SHOW_KEYBOARD_DATA
-			Serial.printf("Mods mismatch: %x != %x\n", keyboard_modifiers, keyboard1.getModifiers());
-#endif
-			keyboard_modifiers = keyboard1.getModifiers();
-			Keyboard.set_modifier(keyboard_modifiers);
-		}
-		Keyboard.press(0XF000 | keycode);
-	}
-#endif
+
+
+/// @brief Called when a key is pressed
+void OnRawPress(uint8_t keycode) 
+{
 #ifdef SHOW_KEYBOARD_DATA
 	Serial.print("OnRawPress keycode: ");
 	Serial.print(keycode, HEX);
 	Serial.print(" Modifiers: ");
-	Serial.println(keyboard_modifiers, HEX);
+	Serial.println(gHeldModifiers, HEX);
 #endif
 }
-void OnRawRelease(uint8_t keycode) {
-#ifdef KEYBOARD_INTERFACE
-	if (keycode >= 103 && keycode < 111) {
-		// one of the modifier keys was pressed, so lets turn it
-		// on global..
-		uint8_t keybit = 1 << (keycode - 103);
-		keyboard_modifiers &= ~keybit;
-		Keyboard.set_modifier(keyboard_modifiers);
-	} else {
-		Keyboard.release(0XF000 | keycode);
-	}
-#endif
+
+
+
+/// @brief Called on each key release
+void OnRawRelease(uint8_t keycode)
+{
 #ifdef SHOW_KEYBOARD_DATA
 	Serial.print("OnRawRelease keycode: ");
 	Serial.print(keycode, HEX);
 	Serial.print(" Modifiers: ");
-	Serial.println(keyboard1.getModifiers(), HEX);
+	Serial.println(gUsbKeyboard.getModifiers(), HEX);
 #endif
 }
 
-//=============================================================
-// Device and Keyboard Output To Serial objects...
-//=============================================================
-#ifdef SHOW_KEYBOARD_DATA
-USBDriver *drivers[] = {&hub1, &hid1, &hid2, &hid3, &bluet};
-#define CNT_DEVICES (sizeof(drivers)/sizeof(drivers[0]))
-const char * driver_names[CNT_DEVICES] = {"Hub1", "HID1" , "HID2", "HID3", "BlueTooth"};
-bool driver_active[CNT_DEVICES] = {false, false, false};
-
-// Lets also look at HID Input devices
-USBHIDInput *hiddrivers[] = { &keyboard1 };
-#define CNT_HIDDEVICES (sizeof(hiddrivers) / sizeof(hiddrivers[0]))
-const char *hid_driver_names[CNT_DEVICES] = { "KB" };
-bool hid_driver_active[CNT_DEVICES] = { false };
-
-BTHIDInput *bthiddrivers[] = {&keyboard1};
-#define CNT_BTHIDDEVICES (sizeof(bthiddrivers)/sizeof(bthiddrivers[0]))
-const char * bthid_driver_names[CNT_HIDDEVICES] = {"KB(BT)"};
-bool bthid_driver_active[CNT_HIDDEVICES] = {false};
 
 
-#endif
-
+/// @brief Prince device info to the serial monitor
 void ShowUpdatedDeviceListInfo()
 {
 #ifdef SHOW_KEYBOARD_DATA
-	for (uint8_t i = 0; i < CNT_DEVICES; i++) {
-		if (*drivers[i] != driver_active[i]) {
-			if (driver_active[i]) {
-				Serial.printf("*** Device %s - disconnected ***\n", driver_names[i]);
-				driver_active[i] = false;
-			} else {
-				Serial.printf("*** Device %s %x:%x - connected ***\n", driver_names[i], drivers[i]->idVendor(), drivers[i]->idProduct());
-				driver_active[i] = true;
+	for (uint8_t i = 0; i < CNT_DEVICES; i++) 
+	{
+		if (*gDrivers[i] != gDriverActive[i]) 
+		{
+			if (gDriverActive[i]) 
+			{
+				Serial.printf("*** Device %s - disconnected ***\n", gDriverNames[i]);
+				gDriverActive[i] = false;
+			} 
+			else 
+			{
+				Serial.printf("*** Device %s %x:%x - connected ***\n", gDriverNames[i], gDrivers[i]->idVendor(), gDrivers[i]->idProduct());
+				gDriverActive[i] = true;
 
-				const uint8_t *psz = drivers[i]->manufacturer();
-				if (psz && *psz) Serial.printf("  manufacturer: %s\n", psz);
-				psz = drivers[i]->product();
-				if (psz && *psz) Serial.printf("  product: %s\n", psz);
-				psz = drivers[i]->serialNumber();
-				if (psz && *psz) Serial.printf("  Serial: %s\n", psz);
+				const uint8_t *psz = gDrivers[i]->manufacturer();
+				if (psz && *psz) 
+					Serial.printf("  manufacturer: %s\n", psz);
 
+				psz = gDrivers[i]->product();
+				if (psz && *psz) 
+					Serial.printf("  product: %s\n", psz);
+
+				psz = gDrivers[i]->serialNumber();
+				if (psz && *psz) 
+					Serial.printf("  Serial: %s\n", psz);
 			}
 		}
 	}
-	for (uint8_t i = 0; i < CNT_HIDDEVICES; i++) {
-		if (*hiddrivers[i] != hid_driver_active[i]) {
-			if (hid_driver_active[i]) {
-				Serial.printf("*** HID Device %s - disconnected ***\n", hid_driver_names[i]);
-				hid_driver_active[i] = false;
-			} else {
-				Serial.printf("*** HID Device %s %x:%x - connected ***\n", hid_driver_names[i], hiddrivers[i]->idVendor(), hiddrivers[i]->idProduct());
-				hid_driver_active[i] = true;
 
-				const uint8_t *psz = hiddrivers[i]->manufacturer();
-				if (psz && *psz) Serial.printf("  manufacturer: %s\n", psz);
-				psz = hiddrivers[i]->product();
-				if (psz && *psz) Serial.printf("  product: %s\n", psz);
-				psz = hiddrivers[i]->serialNumber();
-				if (psz && *psz) Serial.printf("  Serial: %s\n", psz);
+	for (uint8_t i = 0; i < CNT_HIDDEVICES; i++) 
+	{
+		if (*gHidDrivers[i] != gHidDriverActive[i]) 
+		{
+			if (gHidDriverActive[i]) 
+			{
+				Serial.printf("*** HID Device %s - disconnected ***\n", gHidDriverNames[i]);
+				gHidDriverActive[i] = false;
+			} 
+			else 
+			{
+				Serial.printf("*** HID Device %s %x:%x - connected ***\n", gHidDriverNames[i], gHidDrivers[i]->idVendor(), gHidDrivers[i]->idProduct());
+				gHidDriverActive[i] = true;
+
+				const uint8_t *psz = gHidDrivers[i]->manufacturer();
+				if (psz && *psz) 
+					Serial.printf("  manufacturer: %s\n", psz);
+
+				psz = gHidDrivers[i]->product();
+				if (psz && *psz)
+					Serial.printf("  product: %s\n", psz);
+
+				psz = gHidDrivers[i]->serialNumber();
+				if (psz && *psz) 
+					Serial.printf("  Serial: %s\n", psz);
+
 				// Note: with some keyboards there is an issue that they may not output in a format understand
 				// either as in boot format or in a HID format that is recognized.  In that case you
 				// can try forcing the keyboard into boot mode.
-				if (hiddrivers[i] == &keyboard1) {
+				if (gHidDrivers[i] == &gUsbKeyboard) 
+				{
 					// example Gigabyte uses N key rollover which should now work, but...
 				}
 			}
 		}
 	}
-	for (uint8_t i = 0; i < CNT_BTHIDDEVICES; i++) {
-		if (*bthiddrivers[i] != bthid_driver_active[i]) {
-			if (bthid_driver_active[i]) {
-				Serial.printf("*** BTHID Device %s - disconnected ***\n", bthid_driver_names[i]);
-				bthid_driver_active[i] = false;
-			} else {
-				Serial.printf("*** BTHID Device %s %x:%x - connected ***\n", bthid_driver_names[i], bthiddrivers[i]->idVendor(), bthiddrivers[i]->idProduct());
-				bthid_driver_active[i] = true;
-				const uint8_t *psz = bthiddrivers[i]->manufacturer();
-				if (psz && *psz) Serial.printf("  manufacturer: %s\n", psz);
-				psz = bthiddrivers[i]->product();
-				if (psz && *psz) Serial.printf("  product: %s\n", psz);
-				psz = bthiddrivers[i]->serialNumber();
-				if (psz && *psz) Serial.printf("  Serial: %s\n", psz);
-				if (bthiddrivers[i] == &keyboard1) {
+
+	for (uint8_t i = 0; i < CNT_BTHIDDEVICES; i++) 
+	{
+		if (*gBtHidDrivers[i] != gBtHidDriverActive[i])
+		{
+			if (gBtHidDriverActive[i])
+			{
+				Serial.printf("*** BTHID Device %s - disconnected ***\n", gBtHidDriverNames[i]);
+				gBtHidDriverActive[i] = false;
+			} 
+			else
+			{
+				Serial.printf("*** BTHID Device %s %x:%x - connected ***\n", gBtHidDriverNames[i], gBtHidDrivers[i]->idVendor(), gBtHidDrivers[i]->idProduct());
+				gBtHidDriverActive[i] = true;
+
+				const uint8_t *psz = gBtHidDrivers[i]->manufacturer();
+				if (psz && *psz) 
+					Serial.printf("  manufacturer: %s\n", psz);
+
+				psz = gBtHidDrivers[i]->product();
+				if (psz && *psz) 
+					Serial.printf("  product: %s\n", psz);
+
+				psz = gBtHidDrivers[i]->serialNumber();
+				if (psz && *psz) 
+					Serial.printf("  Serial: %s\n", psz);
+
+				if (gBtHidDrivers[i] == &gUsbKeyboard)
+				{
 					// try force back to HID mode
 					Serial.println("\n Try to force keyboard back into HID protocol");
 				}
@@ -235,43 +264,47 @@ void ShowUpdatedDeviceListInfo()
 #endif
 }
 
+
+
 #ifdef SHOW_KEYBOARD_DATA
+/// @brief Called when a key is pressed.
 void OnPress(int key)
 {
 	Serial.print("key '");
-	switch (key) {
-	case KEYD_UP       : Serial.print("UP"); break;
-	case KEYD_DOWN    : Serial.print("DN"); break;
-	case KEYD_LEFT     : Serial.print("LEFT"); break;
-	case KEYD_RIGHT   : Serial.print("RIGHT"); break;
-	case KEYD_INSERT   : Serial.print("Ins"); break;
-	case KEYD_DELETE   : Serial.print("Del"); break;
-	case KEYD_PAGE_UP  : Serial.print("PUP"); break;
-	case KEYD_PAGE_DOWN: Serial.print("PDN"); break;
-	case KEYD_HOME     : Serial.print("HOME"); break;
-	case KEYD_END      : Serial.print("END"); break;
-	case KEYD_F1       : Serial.print("F1"); break;
-	case KEYD_F2       : Serial.print("F2"); break;
-	case KEYD_F3       : Serial.print("F3"); break;
-	case KEYD_F4       : Serial.print("F4"); break;
-	case KEYD_F5       : Serial.print("F5"); break;
-	case KEYD_F6       : Serial.print("F6"); break;
-	case KEYD_F7       : Serial.print("F7"); break;
-	case KEYD_F8       : Serial.print("F8"); break;
-	case KEYD_F9       : Serial.print("F9"); break;
-	case KEYD_F10      : Serial.print("F10"); break;
-	case KEYD_F11      : Serial.print("F11"); break;
-	case KEYD_F12      : Serial.print("F12"); break;
-	default: Serial.print((char)key); break;
+	switch (key) 
+	{
+		case KEYD_UP       : Serial.print("UP"); break;
+		case KEYD_DOWN     : Serial.print("DN"); break;
+		case KEYD_LEFT     : Serial.print("LEFT"); break;
+		case KEYD_RIGHT    : Serial.print("RIGHT"); break;
+		case KEYD_INSERT   : Serial.print("Ins"); break;
+		case KEYD_DELETE   : Serial.print("Del"); break;
+		case KEYD_PAGE_UP  : Serial.print("PUP"); break;
+		case KEYD_PAGE_DOWN: Serial.print("PDN"); break;
+		case KEYD_HOME     : Serial.print("HOME"); break;
+		case KEYD_END      : Serial.print("END"); break;
+		case KEYD_F1       : Serial.print("F1"); break;
+		case KEYD_F2       : Serial.print("F2"); break;
+		case KEYD_F3       : Serial.print("F3"); break;
+		case KEYD_F4       : Serial.print("F4"); break;
+		case KEYD_F5       : Serial.print("F5"); break;
+		case KEYD_F6       : Serial.print("F6"); break;
+		case KEYD_F7       : Serial.print("F7"); break;
+		case KEYD_F8       : Serial.print("F8"); break;
+		case KEYD_F9       : Serial.print("F9"); break;
+		case KEYD_F10      : Serial.print("F10"); break;
+		case KEYD_F11      : Serial.print("F11"); break;
+		case KEYD_F12      : Serial.print("F12"); break;
+		default: Serial.print((char)key); break;
 	}
 	Serial.print("'  ");
 	Serial.print(key);
 	Serial.print(" MOD: ");
-	Serial.print(keyboard1.getModifiers(), HEX);
+	Serial.print(gUsbKeyboard.getModifiers(), HEX);
 	Serial.print(" OEM: ");
-	Serial.print(keyboard1.getOemKey(), HEX);
+	Serial.print(gUsbKeyboard.getOemKey(), HEX);
 	Serial.print(" LEDS: ");
-	Serial.println(keyboard1.LEDS(), HEX);
+	Serial.println(gUsbKeyboard.LEDS(), HEX);
 	//Serial.print("key ");
 	//Serial.print((char)keyboard1.getKey());
 	//Serial.print("  ");
@@ -280,6 +313,9 @@ void OnPress(int key)
 }
 #endif
 
+
+
+/// @brief Called with hid extra data
 void ShowHIDExtrasPress(uint32_t top, uint16_t key)
 {
 #ifdef SHOW_KEYBOARD_DATA
@@ -287,8 +323,11 @@ void ShowHIDExtrasPress(uint32_t top, uint16_t key)
 	Serial.print(top, HEX);
 	Serial.print(") key press:");
 	Serial.print(key, HEX);
-	if (top == 0xc0000) {
-		switch (key) {
+
+	if (top == 0xc0000) 
+	{
+		switch (key) 
+		{
 		case  0x20 : Serial.print(" - +10"); break;
 		case  0x21 : Serial.print(" - +100"); break;
 		case  0x22 : Serial.print(" - AM/PM"); break;
