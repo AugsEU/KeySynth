@@ -37,7 +37,6 @@ void ShowHIDExtrasPress(uint32_t top, uint16_t key);
 USBHost gUsbHost;
 USBHub gUsbHub(gUsbHost);
 KeyboardController gUsbKeyboard(gUsbHost);
-BluetoothController gBluetooth(gUsbHost);   // version assumes it already was paired
 
 USBHIDParser gHid1(gUsbHost);
 USBHIDParser gHid2(gUsbHost);
@@ -47,9 +46,9 @@ uint8_t gHeldModifiers = 0;  // try to keep a reasonable value
 
 #ifdef SHOW_KEYBOARD_DATA
 
-USBDriver* gDrivers[] = {&gUsbHub, &gHid1, &gHid2, &gHid3, &gBluetooth};
+USBDriver* gDrivers[] = {&gUsbHub, &gHid1, &gHid2, &gHid3};
 #define CNT_DEVICES (sizeof(gDrivers)/sizeof(gDrivers[0]))
-const char* gDriverNames[CNT_DEVICES] = {"Hub1", "HID1" , "HID2", "HID3", "BlueTooth"};
+const char* gDriverNames[CNT_DEVICES] = {"Hub1", "HID1" , "HID2", "HID3"};
 bool gDriverActive[CNT_DEVICES] = {false, false, false};
 
 // Lets also look at HID Input devices
@@ -57,11 +56,6 @@ USBHIDInput* gHidDrivers[] = { &gUsbKeyboard };
 #define CNT_HIDDEVICES (sizeof(gHidDrivers) / sizeof(gHidDrivers[0]))
 const char* gHidDriverNames[CNT_DEVICES] = { "KB" };
 bool gHidDriverActive[CNT_DEVICES] = { false };
-
-BTHIDInput* gBtHidDrivers[] = {&gUsbKeyboard};
-#define CNT_BTHIDDEVICES (sizeof(gBtHidDrivers)/sizeof(gBtHidDrivers[0]))
-const char * gBtHidDriverNames[CNT_HIDDEVICES] = {"KB(BT)"};
-bool gBtHidDriverActive[CNT_HIDDEVICES] = {false};
 
 #endif // SHOW_KEYBOARD_DATA
 
@@ -221,41 +215,6 @@ void ShowUpdatedDeviceListInfo()
 				if (gHidDrivers[i] == &gUsbKeyboard) 
 				{
 					// example Gigabyte uses N key rollover which should now work, but...
-				}
-			}
-		}
-	}
-
-	for (uint8_t i = 0; i < CNT_BTHIDDEVICES; i++) 
-	{
-		if (*gBtHidDrivers[i] != gBtHidDriverActive[i])
-		{
-			if (gBtHidDriverActive[i])
-			{
-				Serial.printf("*** BTHID Device %s - disconnected ***\n", gBtHidDriverNames[i]);
-				gBtHidDriverActive[i] = false;
-			} 
-			else
-			{
-				Serial.printf("*** BTHID Device %s %x:%x - connected ***\n", gBtHidDriverNames[i], gBtHidDrivers[i]->idVendor(), gBtHidDrivers[i]->idProduct());
-				gBtHidDriverActive[i] = true;
-
-				const uint8_t *psz = gBtHidDrivers[i]->manufacturer();
-				if (psz && *psz) 
-					Serial.printf("  manufacturer: %s\n", psz);
-
-				psz = gBtHidDrivers[i]->product();
-				if (psz && *psz) 
-					Serial.printf("  product: %s\n", psz);
-
-				psz = gBtHidDrivers[i]->serialNumber();
-				if (psz && *psz) 
-					Serial.printf("  Serial: %s\n", psz);
-
-				if (gBtHidDrivers[i] == &gUsbKeyboard)
-				{
-					// try force back to HID mode
-					Serial.println("\n Try to force keyboard back into HID protocol");
 				}
 			}
 		}
