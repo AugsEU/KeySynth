@@ -29,6 +29,7 @@ void OnRawRelease(uint8_t keycode);
 // ============================================================================
 USBHost gUsbHost;
 KeyboardController gUsbKeyboard(gUsbHost);
+USBHIDParser gHidParser(gUsbHost);
 uint8_t gHeldModifiers = 0;  // try to keep a reasonable value
 
 
@@ -49,6 +50,7 @@ void setup()
 
 	gUsbKeyboard.attachRawPress(OnRawPress);
 	gUsbKeyboard.attachRawRelease(OnRawRelease);
+	gUsbKeyboard.forceHIDProtocol();
 }
 
 
