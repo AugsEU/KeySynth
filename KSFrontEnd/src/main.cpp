@@ -22,7 +22,8 @@
 void OnPress(int key);
 void OnRawPress(uint8_t keycode);
 void OnRawRelease(uint8_t keycode);
-
+void ExtraPress(uint32_t top, uint16_t code);
+void ExtraRelease(uint32_t top, uint16_t code);
 
 // ============================================================================
 // Globals
@@ -50,6 +51,8 @@ void setup()
 
 	gUsbKeyboard.attachRawPress(OnRawPress);
 	gUsbKeyboard.attachRawRelease(OnRawRelease);
+	gUsbKeyboard.attachExtrasPress(ExtraPress);
+	gUsbKeyboard.attachExtrasRelease(ExtraRelease);
 	gUsbKeyboard.forceHIDProtocol();
 }
 
@@ -86,4 +89,14 @@ void OnRawRelease(uint8_t keycode)
 	Serial.print(" Modifiers: ");
 	Serial.println(gUsbKeyboard.getModifiers(), HEX);
 #endif
+}
+
+void ExtraPress(uint32_t top, uint16_t code)
+{
+	Serial.printf("Ep %u %u \n", top, code);
+}
+
+void ExtraRelease(uint32_t top, uint16_t code)
+{
+	Serial.printf("Er %u %u \n", top, code);
 }
