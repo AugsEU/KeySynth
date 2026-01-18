@@ -2,32 +2,43 @@
 // Includes
 // ============================================================================
 #include <waveGen.h>
+#include <I2S/AudioConfig.h>
 #include <arm_math.h>
+
+// ============================================================================
+// Globals
+// ============================================================================
+uint32_t gAcc = 0;
+volatile float_t gFreq = 440.0f;
+volatile float_t gVol = 1.0f;
+
 
 // ============================================================================
 // Public funcs
 // ============================================================================
 
-int32_t acc = 0;
-
 /// @brief Fill sound buffer with sounds.
 void GenerateWave(uint16_t* out, size_t len)
 {
+	float_t period = SAMPLERATE * (1.0f/gFreq);
+
 	for (size_t i = 0; i < len; i+=2)
 	{
-		acc++;
-		float32_t waveL = (float)acc / 200.0f;
-		waveL = sinf(M_TWOPI * waveL);
-		int16_t sigL = (int16_t)(4000.0f * waveL);
+		gAcc++;
 
-		float32_t waveR = (float)acc / 200.0f;
-		waveR = cosf(2.0f * M_TWOPI * waveR);
-		int16_t sigR = (int16_t)(4000.0f * waveR);
+		// Calculate wave
+		float32_t wave = (float)gAcc / period;
+		wave = sinf(wave * TWO_PI) * gVol;
+		int16_t sig = (int16_t)(4000.0f * wave);
 		
-		out[i] = (uint16_t)sigL;
-        out[i+1] = (uint16_t)sigR;
+		// Write left & right
+		out[i] = (uint16_t)sig;
+        out[i+1] = (uint16_t)sig;
 
-		if (acc >= 200)
-			acc = 0;
+		if (gAcc >= period)
+		{
+			gAcc -= period;
+		}
 	}
 }
+
