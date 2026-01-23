@@ -4,13 +4,14 @@
 #include <Arduino.h>
 #include "USBHost_t36.h"
 
+#include <Midi/NoteMaps.h>
 
 
 
 // ============================================================================
 // Constants
 // ============================================================================
-#define SHOW_KEYBOARD_DATA
+#define SHOW_KEYBOARD_DATA 0
 
 
 
@@ -22,8 +23,10 @@
 void OnPress(int key);
 void OnRawPress(uint8_t keycode);
 void OnRawRelease(uint8_t keycode);
-void ExtraPress(uint32_t top, uint16_t code);
-void ExtraRelease(uint32_t top, uint16_t code);
+
+
+
+
 
 // ============================================================================
 // Globals
@@ -31,7 +34,8 @@ void ExtraRelease(uint32_t top, uint16_t code);
 USBHost gUsbHost;
 KeyboardController gUsbKeyboard(gUsbHost);
 USBHIDParser gHidParser(gUsbHost);
-uint8_t gHeldModifiers = 0;  // try to keep a reasonable value
+
+
 
 
 
@@ -42,17 +46,11 @@ uint8_t gHeldModifiers = 0;  // try to keep a reasonable value
 /// @brief Called on launch
 void setup()
 {
-#ifdef SHOW_KEYBOARD_DATA
-	while (!Serial) ; // wait for Arduino Serial Monitor
-	Serial.println("\n\nUSB Host Keyboard forward and Testing");
-	Serial.println(sizeof(USBHub), DEC);
-#endif
 	gUsbHost.begin();
+	Serial3.begin(115200);
 
 	gUsbKeyboard.attachRawPress(OnRawPress);
 	gUsbKeyboard.attachRawRelease(OnRawRelease);
-	gUsbKeyboard.attachExtrasPress(ExtraPress);
-	gUsbKeyboard.attachExtrasRelease(ExtraRelease);
 	gUsbKeyboard.forceHIDProtocol();
 }
 
@@ -70,12 +68,16 @@ void loop()
 /// @brief Called when a key is pressed
 void OnRawPress(uint8_t keycode) 
 {
-#ifdef SHOW_KEYBOARD_DATA
+#if SHOW_KEYBOARD_DATA
 	Serial.print("OnRawPress keycode: ");
-	Serial.print(keycode, HEX);
-	Serial.print(" Modifiers: ");
-	Serial.println(gHeldModifiers, HEX);
+	Serial.println(keycode, HEX);
 #endif
+
+	uint8_t noteNum = KeyCodeToNoteNum(keycode, NoteLayout::Isometric);
+
+	Serial3.write(0xAB);
+	Serial3.write(noteNum);
+	Serial3.write(0xBA);
 }
 
 
@@ -83,20 +85,8 @@ void OnRawPress(uint8_t keycode)
 /// @brief Called on each key release
 void OnRawRelease(uint8_t keycode)
 {
-#ifdef SHOW_KEYBOARD_DATA
+#if SHOW_KEYBOARD_DATA
 	Serial.print("OnRawRelease keycode: ");
-	Serial.print(keycode, HEX);
-	Serial.print(" Modifiers: ");
-	Serial.println(gUsbKeyboard.getModifiers(), HEX);
+	Serial.println(keycode, HEX);
 #endif
-}
-
-void ExtraPress(uint32_t top, uint16_t code)
-{
-	Serial.printf("Ep %u %u \n", top, code);
-}
-
-void ExtraRelease(uint32_t top, uint16_t code)
-{
-	Serial.printf("Er %u %u \n", top, code);
 }

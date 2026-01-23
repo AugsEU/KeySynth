@@ -17,6 +17,16 @@ volatile float_t gVol = 1.0f;
 // Public funcs
 // ============================================================================
 
+float_t Saw(float_t x)
+{
+	if(x < 0.5f)
+	{
+		return 2.0f * x;
+	}
+
+	return 2.0f * x - 2.0f;
+}
+
 /// @brief Fill sound buffer with sounds.
 void GenerateWave(uint16_t* out, size_t len)
 {
@@ -28,7 +38,7 @@ void GenerateWave(uint16_t* out, size_t len)
 
 		// Calculate wave
 		float32_t wave = (float)gAcc / period;
-		wave = sinf(wave * TWO_PI) * gVol;
+		wave = Saw(wave) * gVol;
 		int16_t sig = (int16_t)(4000.0f * wave);
 		
 		// Write left & right
