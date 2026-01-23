@@ -1,11 +1,14 @@
 // ============================================================================
+// Main source file. Top level entry point and loop.
+// ----------------------------------------------------------------------------
+// ============================================================================
 // Include
 // ============================================================================
 #include <Arduino.h>
 #include "USBHost_t36.h"
 
 #include <Midi/NoteMaps.h>
-
+#include <Usart/TxBackend.h>
 
 
 // ============================================================================
@@ -46,9 +49,11 @@ USBHIDParser gHidParser(gUsbHost);
 /// @brief Called on launch
 void setup()
 {
-	gUsbHost.begin();
-	Serial3.begin(115200);
+	// SERIAL
+	TxBackendBegin();
 
+	// USB
+	gUsbHost.begin();
 	gUsbKeyboard.attachRawPress(OnRawPress);
 	gUsbKeyboard.attachRawRelease(OnRawRelease);
 	gUsbKeyboard.forceHIDProtocol();
@@ -74,10 +79,7 @@ void OnRawPress(uint8_t keycode)
 #endif
 
 	uint8_t noteNum = KeyCodeToNoteNum(keycode, NoteLayout::Isometric);
-
-	Serial3.write(0xAB);
-	Serial3.write(noteNum);
-	Serial3.write(0xBA);
+	TxBackendNotePress(noteNum);
 }
 
 
@@ -89,4 +91,7 @@ void OnRawRelease(uint8_t keycode)
 	Serial.print("OnRawRelease keycode: ");
 	Serial.println(keycode, HEX);
 #endif
+
+	uint8_t noteNum = KeyCodeToNoteNum(keycode, NoteLayout::Isometric);
+	TxBackendNoteRelease(noteNum);
 }
