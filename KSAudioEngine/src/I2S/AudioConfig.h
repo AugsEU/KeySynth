@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #define SAMPLERATE 48000
+#define NYQUIST (SAMPLERATE / 2)
 #define AUDIO_BLOCK_SAMPLES 128
 #define NUM_CHANNELS 2
 #define NUM_DMA_SECTIONS 2

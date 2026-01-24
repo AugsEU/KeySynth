@@ -1,36 +1,22 @@
 // ============================================================================
-// Includes
+// Utilities to receive from the front end
+// ----------------------------------------------------------------------------
 // ============================================================================
-#include <I2S/Teensy4i2s.h>
-#include <Wire.h>
-#include <SPI.h>
-#include <arm_math.h>
-#include <WaveGen.h>
-
-#include <Usart/RxFrontEnd.h>
-
+// Include
 // ============================================================================
-// Constants
+#include <Arduino.h>
+
+#ifndef RX_FRONT_END
+#define RX_FRONT_END
 // ============================================================================
-
-
+// Public constants
+// ============================================================================
+#define AUSERIAL Serial6
 
 // ============================================================================
-// Globals
+// Public functions
 // ============================================================================
+void RxFrontEndBegin();
+void RxFrontEndPoll();
 
-void setup(void)
-{
-	// Begin serial
-	Serial.begin(9600);
-	RxFrontEndBegin();
-
-	// Start the I2S interrupts
-	BeginI2s();
-}
-
-void loop(void)
-{
-	// Should this be interrupt based instead?
-	RxFrontEndPoll();
-}
+#endif //RX_FRONT_END
