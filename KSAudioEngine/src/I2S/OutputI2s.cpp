@@ -84,9 +84,9 @@ void BeginI2s()
 	gDma.TCD->NBYTES_MLNO = 2; // number of bytes to move, (minor loop?)
 	gDma.TCD->SLAST = -sizeof(i2s_tx_buffer); // how many bytes to jump when hitting the end of the major loop. In this case, jump back to start of buffer
 	gDma.TCD->DOFF = 0; // how many bytes to move the destination at each minor loop. In this case we're always writing to the same memory register.
-	gDma.TCD->CITER_ELINKNO = sizeof(i2s_tx_buffer) / 2; // how many iterations are in the major loop
+	gDma.TCD->CITER_ELINKNO = sizeof(i2s_tx_buffer) / sizeof(uint16_t); // how many iterations are in the major loop
 	gDma.TCD->DLASTSGA = 0; // how many bytes to jump the destination address at the end of the major loop
-	gDma.TCD->BITER_ELINKNO = sizeof(i2s_tx_buffer) / 2; // beginning iteration count
+	gDma.TCD->BITER_ELINKNO = sizeof(i2s_tx_buffer) / sizeof(uint16_t); // beginning iteration count
 	gDma.TCD->CSR = DMA_TCD_CSR_INTHALF | DMA_TCD_CSR_INTMAJOR; // Tells the DMA mechanism to trigger interrupt at half and full population of the buffer
 	gDma.TCD->DADDR = (void *)((uint32_t)&I2S1_TDR0 + 2); // Destination address. for 16 bit values we use +2 byte offset from the I2S register. for 32 bits we use a zero offset.
 	gDma.triggerAtHardwareEvent(DMAMUX_SOURCE_SAI1_TX); // run DMA at hardware event when new I2S data transmitted.
