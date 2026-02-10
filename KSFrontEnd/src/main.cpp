@@ -9,6 +9,7 @@
 
 #include <Midi/NoteMaps.h>
 #include <Usart/TxBackend.h>
+#include <Screen/ScreenDisplay.h>
 
 
 // ============================================================================
@@ -57,6 +58,9 @@ void setup()
 	gUsbKeyboard.attachRawPress(OnRawPress);
 	gUsbKeyboard.attachRawRelease(OnRawRelease);
 	gUsbKeyboard.forceHIDProtocol();
+
+	// Screen
+	SetupScreenDisplay();
 }
 
 
@@ -64,6 +68,7 @@ void setup()
 /// @brief Called in a loop
 void loop()
 {
+	ScreenDisplayUpdate();
 	gUsbHost.Task();
 }
 
