@@ -91,7 +91,7 @@ void HandleMessage(uint8_t* buf, size_t len)
 	switch (GetCurrMessageHeader())
     {
     case MessageHeader::NotifyOnline:
-        // OK...
+        // OK
         return;
 
     case MessageHeader::NotePress:
@@ -108,7 +108,7 @@ void HandleMessage(uint8_t* buf, size_t len)
         // ToDo: set parameter
         return;
 
-    default:
+    default: // Invalid header, ignore
         break;
     }
 }
