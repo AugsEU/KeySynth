@@ -27,11 +27,21 @@ public:
 	/// @param device TFT screen device.
 	DeferDriver(T4_ILI9341 device);
 
+
+
 	/// @brief Draw a single pixel
 	/// @param x x-coordinate
 	/// @param y y-coordinate
 	/// @param col packed 16-bit color
 	void DrawPixel(uint16_t x, uint16_t y, ILIColor col) final;
+
+
+
+	/// @brief Flood entire screen with color
+	/// @param col Color to flood
+	void ForceClear(ILIColor col) final; 
+
+
 
 	/// @brief Draw rectangle
 	/// @param x top-left x-coordinate
@@ -39,11 +49,15 @@ public:
 	/// @param w width
 	/// @param h height
 	/// @param col packed 16-bit color
-	void DrawRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ILIColor col) final;
+	void FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ILIColor col) final;
+
+
 
 	/// @brief Actually render the pixels out the the screen.
 	/// @param numBlocks Number of blocks to render before returning.
 	void RenderPixels(uint16_t numBlocks = 4);
+
+
 
 	/// @brief Actually render the pixels out the the screen.
 	void RenderAllPixels();
@@ -65,7 +79,7 @@ private:
 		bool mDirty : 1;
 
 		// Pixel data
-		ILIColor mColorBuff[DRAW_BLOCK_SIZE * DRAW_BLOCK_SIZE];
+		alignas(uint32_t) ILIColor mColorBuff[DRAW_BLOCK_SIZE * DRAW_BLOCK_SIZE];
 	};
 
 	// Methods

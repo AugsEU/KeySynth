@@ -36,8 +36,10 @@ DeferDriver::DeferDriver(T4_ILI9341 device) : DisplayDriver(device)
 
 void DeferDriver::DrawPixel(uint16_t x, uint16_t y, ILIColor col)
 {
-	//x = max(0, min(x, T4_ILI9341::WIDTH-1));
-	//y = max(0, min(y, T4_ILI9341::HEIGHT-1));
+	if(x >= T4_ILI9341::WIDTH || y >= T4_ILI9341::HEIGHT)
+	{
+		return;
+	}
 
 	// Block index
 	uint16_t bx = x / DRAW_BLOCK_SIZE;
@@ -68,10 +70,42 @@ void DeferDriver::DrawPixel(uint16_t x, uint16_t y, ILIColor col)
 	}
 }
 
-void DeferDriver::DrawRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ILIColor col)
+
+
+void DeferDriver::ForceClear(ILIColor col)
+{
+	constexpr size_t SIZE_OF_BUS_AS_U32 = sizeof(DrawBlock::mColorBuff) / (sizeof(uint32_t));
+	static_assert(sizeof(DrawBlock::mColorBuff) % sizeof(uint32_t) == 0);
+	
+	const uint32_t colCol = (col) | (col << 16);
+	
+	for(uint16_t bx = 0; bx < DB_GRID_WIDTH; ++bx)
+	{
+		for(uint16_t by = 0; by < DB_GRID_HEIGHT; ++by)
+		{
+			DrawBlock& newBlock = GetBlock(bx, by);
+			newBlock.mDirty = false;
+
+			uint32_t* colBuffasU32 = reinterpret_cast<uint32_t*>(newBlock.mColorBuff);
+			for(size_t i = 0; i < SIZE_OF_BUS_AS_U32; i+=4ull)
+			{
+				// Do in groups of 4 to encourage compiler to make this SIMD
+				colBuffasU32[i]   = colCol;
+				colBuffasU32[i+1] = colCol;
+				colBuffasU32[i+2] = colCol;
+				colBuffasU32[i+3] = colCol;
+			}
+		}
+	}
+	DisplayDriver::ForceClear(col);
+}
+
+
+
+void DeferDriver::FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ILIColor col)
 {
 	// Todo: More optimised version of this...
-	DisplayDriver::DrawRect(x, y, w, h, col);
+	DisplayDriver::FillRect(x, y, w, h, col);
 }
 
 void DeferDriver::RenderPixels(uint16_t numBlocks)

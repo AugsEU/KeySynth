@@ -122,8 +122,51 @@ void DisplayDriver::DrawLine(uint16_t sx, uint16_t sy, uint16_t ex, uint16_t ey,
     }
 }
 
-
 void DisplayDriver::DrawRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ILIColor col)
+{
+	FillRect(x, y, w, 1, col);
+	FillRect(x, y, 1, h, col);
+	FillRect(x, y+h, w, 1, col);
+	FillRect(x+w, y, 1, h+1, col);
+}
+
+void DisplayDriver::DrawCircle(uint16_t x, uint16_t y, uint16_t r, ILIColor color)
+{
+    DrawPixel(x,     y + r, color);
+    DrawPixel(x,     y - r, color);
+    DrawPixel(x + r, y,     color);
+    DrawPixel(x - r, y,     color);
+
+    int32_t dx = 0;
+    int32_t dy = r;
+    int32_t s = r * r;
+    int32_t r2 = s;
+
+    while (dx < dy)
+    {
+		// Make diagonal step
+        dx++;
+        dy--;
+        s += 2 * (dx - dy) + 2;
+
+        if (s < r2) // Check if we went too far
+        {
+            s += 2 * dy + 1;
+            dy++;
+        }
+
+        DrawPixel(x + dx, y + dy, color);
+        DrawPixel(x - dx, y + dy, color);
+        DrawPixel(x + dx, y - dy, color);
+        DrawPixel(x - dx, y - dy, color);
+        DrawPixel(x + dy, y + dx, color);
+        DrawPixel(x - dy, y + dx, color);
+        DrawPixel(x + dy, y - dx, color);
+        DrawPixel(x - dy, y - dx, color);
+    }
+}
+
+void DisplayDriver::FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ILIColor col)
 {
 	// Default impl, very bad perf. Should be overriden in all drivers
 	for(uint16_t px = x; px < x + w; ++px)
