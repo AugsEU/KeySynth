@@ -8,6 +8,7 @@
 #include <WaveGen.h>
 
 #include <Usart/RxFrontEnd.h>
+#include "Subtractive/SubWaveGen.h"
 
 // ============================================================================
 // Constants
@@ -24,6 +25,8 @@ void setup(void)
 	// Begin serial
 	Serial.begin(9600);
 	RxFrontEndBegin();
+
+	Subtractive::SynthInit();
 
 	// Start the I2S interrupts
 	BeginI2s();

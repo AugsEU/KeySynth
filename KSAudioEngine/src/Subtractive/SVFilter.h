@@ -1,26 +1,32 @@
-// ============================================================================
-// Includes
-// ============================================================================
-#include <waveGen.h>
-#include <I2S/AudioConfig.h>
-#include <arm_math.h>
-#include <Voice.h>
-#include "Subtractive/SubWaveGen.h"
 
 // ============================================================================
-// Globals
+// Include
 // ============================================================================
-volatile float_t gFreq = 440.0f;
-volatile float_t gVol = 1.0f;
+#include <stdint.h>
+#include <math.h>
 
+#ifndef __SVFILTER_H
+#define __SVFILTER_H
 
-// ============================================================================
-// Public funcs
-// ============================================================================
-
-/// @brief Fill sound buffer with sounds.
-void GenerateWave(uint16_t* out, size_t len)
+namespace Subtractive
 {
-	Subtractive::FillSoundBuffer(out, len/2);
+
+// ============================================================================
+// Types
+// ============================================================================
+struct SVFilter
+{
+    float_t mLp;             // Low-pass state
+    float_t mBp;             // Band-pass state
+    float_t mHp;             // High-pass state
+};
+
+// ============================================================================
+// Public functions
+// ============================================================================
+void SvfInit(SVFilter* pFilter);
+float_t SvfProcess(SVFilter* pFilter, float_t sample, float_t freq, float_t res, float_t mode);
+
 }
 
+#endif // __SVFILTER_H

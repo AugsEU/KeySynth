@@ -5,6 +5,8 @@
 #include <Tuning.h>
 #include <I2S/AudioConfig.h>
 
+
+
 // ============================================================================
 // Globals
 // ============================================================================
@@ -39,27 +41,41 @@ bool Voice::CanBeAllocated()
 // ============================================================================
 void BeginVoice(uint8_t note)
 {
-    for(size_t i = gFreeNoteSearchStart; i < VOICE_POLYPHONY; i++)
+    uint8_t bestVoiceIdx = 0xFF;
+    float bestVoiceValue = 0.0f;
+
+    for(uint8_t i = gFreeNoteSearchStart; i < VOICE_POLYPHONY; i++)
     {
         Voice& newVoice = gVoices[i];
-        if(newVoice.mNoteNum == INVALID_NOTE)
+        float currVoiceValue = Subtractive::VoiceEligibility(&newVoice.mSubVoice, note);
+        if(currVoiceValue > bestVoiceValue)
         {
-            newVoice.mPhaseShift = NoteToFreq(note + 48) / SAMPLERATE;
-            newVoice.mNoteNum = note;
-            gFreeNoteSearchStart = i + 1;
-            break;
-        }       
+            bestVoiceIdx = i;
+            bestVoiceValue = currVoiceValue;    
+            if(currVoiceValue >= 10.0f)
+            {
+                // This is good enough.
+                break;
+            }
+        }
+    }
+
+    if(bestVoiceIdx != 0xFF)
+    {
+        printf("Play note[%u]: %u\n", bestVoiceIdx, note);
+        Subtractive::VoiceOn(&gVoices[bestVoiceIdx].mSubVoice, note);
+        gVoices[bestVoiceIdx].mNoteNum = note;
     }
 }
 
 void ReleaseVoice(uint8_t note)
 {
-    for(int i = 0; i < VOICE_POLYPHONY; i++)
+    for(uint8_t i = 0; i < VOICE_POLYPHONY; i++)
     {
         if(gVoices[i].mNoteNum == note)
         {
-            // ToDo Release correctly
-            gVoices[i].mNoteNum = INVALID_NOTE;
+            printf("Stop note[%u]: %u\n", i, note);
+            Subtractive::VoiceOff(&gVoices[i].mSubVoice);
             gFreeNoteSearchStart = min(i, gFreeNoteSearchStart);
             return;
         }       
@@ -68,11 +84,12 @@ void ReleaseVoice(uint8_t note)
 
 void StopVoice(uint8_t note)
 {
-    for(int i = 0; i < VOICE_POLYPHONY; i++)
+    for(uint8_t i = 0; i < VOICE_POLYPHONY; i++)
     {
         if(gVoices[i].mNoteNum == note)
         {
-            // ToDo Release correctly
+            // ToDo Stop correctly
+            Subtractive::VoiceOff(&gVoices[i].mSubVoice);
             gVoices[i].mNoteNum = INVALID_NOTE;
             gFreeNoteSearchStart = min(i, gFreeNoteSearchStart);
             return;

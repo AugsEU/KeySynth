@@ -5,6 +5,7 @@
 // Include
 // ============================================================================
 #include <Arduino.h>
+#include "Subtractive/SubVoice.h"
 
 #ifndef HEADER_H
 #define HEADER_H
@@ -14,16 +15,28 @@
 constexpr uint8_t INVALID_NOTE = 0xFF;
 constexpr uint8_t VOICE_POLYPHONY = 8;
 
+
+
+
+
 // ============================================================================
-// Voice
+// Voice meta object
 // ============================================================================
 struct Voice
 {
     uint8_t mNoteNum = INVALID_NOTE;
-    float_t mPhaseShift = 0.0f;
+    
+    union
+    {
+        Subtractive::SubVoice mSubVoice;
+    };
 
     bool CanBeAllocated();
 };
+
+
+
+
 
 // ============================================================================
 // Public functions
@@ -31,6 +44,10 @@ struct Voice
 void BeginVoice(uint8_t note);
 void ReleaseVoice(uint8_t note);
 void StopVoice(uint8_t note);
+
+
+
+
 
 // ============================================================================
 // Public globals

@@ -198,14 +198,13 @@ constexpr float_t TwentyFourTET[24] =
     119.9558505931239409f, 123.4708253139750411f, 127.0887966558923949f,
 };
 
-extern float gParameters[128];
 
 const float_t* gLoadedTable = TwelveTET;
 
 /// @brief Convert note index to frequency.
 float_t NoteToFreq(uint8_t note)
 {
-    uint8_t octave = 0;
+    uint8_t octave = 1;
     while (note >= 24)
     {
         octave++;

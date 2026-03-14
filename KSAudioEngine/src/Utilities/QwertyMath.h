@@ -1,15 +1,21 @@
 // ============================================================================
 // Includes
 // ============================================================================
-#include <math.h>
 #include <stdint.h>
+#include <math.h>
 
-#ifndef TUNING_H
-#define TUNING_H
+
+#ifndef QWERTY_MATH_H
+#define QWERTY_MATH_H
 
 // ============================================================================
 // Public functions
 // ============================================================================
-float_t NoteToFreq(uint8_t note);
+uint32_t GetNextRand();
+float_t FastUnitExp(float_t x);
+float_t ComputeLfoMult(float_t lfoValue, float_t lfoAmount);
+float_t ComputeLoudnessMult(float_t loudness, float_t amount);
+float_t ShapeWave(float_t waveValue, float_t waveShape);
+float_t DrivenSample(float_t sample);
 
-#endif // TUNING_H
+#endif // QWERTY_MATH_H

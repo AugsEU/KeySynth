@@ -3,13 +3,20 @@
 // ============================================================================
 #include <math.h>
 #include <stdint.h>
+#include <stdbool.h>
 
-#ifndef TUNING_H
-#define TUNING_H
+#ifndef SUB_WAVEGEN_H
+#define SUB_WAVEGEN_H
+
+namespace Subtractive
+{
 
 // ============================================================================
 // Public functions
 // ============================================================================
-float_t NoteToFreq(uint8_t note);
+void SynthInit(void);
+void FillSoundBuffer(uint16_t* buf, uint16_t samples);
 
-#endif // TUNING_H
+}
+
+#endif // SUB_WAVEGEN_H
