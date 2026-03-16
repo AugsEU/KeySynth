@@ -4,6 +4,7 @@
 #include "DisplayDriver.h"
 #include "ILI9341_Constants.h"
 #include "ILI9341Macros.h"
+#include "Fonts.h"
 
 #include "Arduino.h"
 
@@ -20,7 +21,12 @@ namespace ILI9341
 
 DisplayDriver::DisplayDriver(T4_ILI9341 device) :
 	mDevice(device),
-	mStatus(Status::Offline)
+	mStatus(Status::Offline),
+    mCursorX(0),
+	mCursorY(0),
+	mFontSize(1),
+	mFontColor(0xFFFF),
+	mFontData(gFuturisticFont)
 {
 
 }
@@ -45,9 +51,9 @@ int DisplayDriver::Begin()
 	mDevice.VcomCtrl2(true, 0x40);
 
 	// Pixel formats
-	mDevice.MemoryAccessCtrl(RowOrder::BottomToTop, ColOrder::LeftToRight,
-							 RowColExchange::Normal, RowOrder::TopToBottom,
-							 RgbOrder::BGR,          ColOrder::LeftToRight);
+	mDevice.MemoryAccessCtrl(RowOrder::TopToBottom, ColOrder::RightToLeft,
+							 RowColExchange::Normal, RowOrder::BottomToTop,
+							 RgbOrder::BGR,          ColOrder::RightToLeft);
 	mDevice.PixelFormatSet(PixelFormat::Form16Bit);
 	mDevice.FrameRateCtrl(0x00, 0x1B);
 	
@@ -176,6 +182,61 @@ void DisplayDriver::FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ILI
 			DrawPixel(px, py, col);
 		}
 	}
+}
+
+
+
+void DisplayDriver::DrawText(const char* string)
+{
+    uint16_t lineBegin = mCursorX;
+    uint16_t charWidth = mFontSize * (FONT_CHAR_WIDTH+1);
+    uint16_t charHeight = mFontSize * (FONT_CHAR_HEIGHT+1);
+
+    for(const char* currChar = string; *currChar != '\0'; ++currChar)
+    {
+        char c = *currChar;
+        if(c >= 0x21 && c < 0x7F)
+        {
+            DrawChar(mCursorX, mCursorY, c);
+            //DrawRect(mCursorX, mCursorY, charWidth, charHeight, 0xFFFF);
+        }
+
+        mCursorX += charWidth;
+        if(c == '\n' || mCursorX + charWidth > T4_ILI9341::WIDTH)
+        {
+            mCursorY += charHeight;
+            mCursorX = lineBegin; // Todo: setup proper text bounds
+        }
+    }
+
+    mCursorY += charHeight;
+    mCursorX = lineBegin;
+}
+
+
+
+void DisplayDriver::DrawChar(uint16_t x, uint16_t y, char c)
+{
+    int idx = c - 0x21;
+    const uint8_t* currCol = &mFontData[idx*FONT_CHAR_WIDTH];
+
+    for(uint8_t col = 0; col < FONT_CHAR_WIDTH; col++)
+    {
+        uint8_t colData = *currCol;
+
+        uint16_t yc = y;
+        for(uint8_t row = 0; row < FONT_CHAR_HEIGHT; row++)
+        {
+            if(colData & (1 << row))
+            {
+                FillRect(x, yc, mFontSize, mFontSize, mFontColor);
+            }
+            yc+=mFontSize;
+        }
+
+        x += mFontSize;
+        currCol++;
+    }
 }
 
 // ============================================================================

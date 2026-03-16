@@ -143,6 +143,25 @@ void TestText()
 	gTftScreen.println("with my blurglecruncheon,");
 	gTftScreen.println("see if I don't!");
 #else // USE_ADAFRUIT_LIBRARY
+	gDriver.SetCursor(20, 30);
+	gDriver.SetTextColor(SC_WHITE);  gDriver.SetTextSize(1);
+	gDriver.DrawText("Hello World!");
+	gDriver.SetTextColor(SC_YELLOW); gDriver.SetTextSize(2);
+	gDriver.DrawText("1234.56");
+	gDriver.SetTextColor(SC_RED);    gDriver.SetTextSize(3);
+	gDriver.SetTextColor(SC_GREEN);
+	gDriver.SetTextSize(5);
+	gDriver.DrawText("Groop");
+	gDriver.SetTextSize(2);
+	gDriver.DrawText("I implore thee,");
+	gDriver.SetTextSize(1);
+	gDriver.DrawText("my foonting turlingdromes.");
+	gDriver.DrawText("And hooptiously drangle me");
+	gDriver.DrawText("with crinkly bindlewurdles,");
+	gDriver.DrawText("Or I will rend thee");
+	gDriver.DrawText("in the gobberwarts");
+	gDriver.DrawText("with my blurglecruncheon,");
+	gDriver.DrawText("see if I don't!");
 #endif // USE_ADAFRUIT_LIBRARY
 
 	END_PROFILE;

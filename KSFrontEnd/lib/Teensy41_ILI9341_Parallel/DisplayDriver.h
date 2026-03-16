@@ -26,6 +26,8 @@ public:
         Online // Device successfully setup and ready to use.
     };
 
+
+
 	/// @brief Create new display driver
 	/// @param device ILI device to interface with.
 	DisplayDriver(T4_ILI9341 device);
@@ -99,6 +101,47 @@ public:
 	/// @param color fill color
 	void FillCircle(uint16_t x, uint16_t y, uint16_t r, ILIColor color);
 
+
+
+	/// @brief Set text cursor to absolute position.
+	/// @param x cursor x-coordinate
+	/// @param y cursor y-coordinate
+	inline void SetCursor(uint16_t x, uint16_t y) { mCursorX = x; mCursorY = y; }
+
+
+
+	/// @brief Set the font's color for subsequent draws
+	/// @param col Font's color
+	inline void SetTextColor(ILIColor col) { mFontColor = col; }
+
+
+
+	/// @brief Set the font's size for subsquent draws
+	/// @param mult Multiplier to apply to the font's size.
+	inline void SetTextSize(uint16_t mult) { mFontSize = mult; }
+
+
+
+	/// @brief Set pixel data for font.
+	/// @param data Pixel data where each byte is one 8-pixel column. Chars 
+	///             assumed to be 5 pixels wide. Begin data at 0x21 to 0x7F
+	inline void SetFont(const uint8_t* data) { mFontData = data; }
+
+
+
+	/// @brief Draw a string using previously set parameters.
+	/// @param string String to draw.
+	void DrawText(const char* string);
+
+
+
+	/// @brief Draw a character at a point using previously set font params.
+	///        Does not move cursor.
+	/// @param x char x-coordinate
+	/// @param y char y-coordinate
+	/// @param c character to draw. Must be 0x21 to 0x7F
+	void DrawChar(uint16_t x, uint16_t y, char c);
+
 protected:
 
 	/// @brief Attempt to connect to device
@@ -107,6 +150,11 @@ protected:
 
 	T4_ILI9341 mDevice;
 	Status mStatus;
+	uint16_t mCursorX;
+	uint16_t mCursorY;
+	uint16_t mFontSize;
+	ILIColor mFontColor;
+	const uint8_t* mFontData;
 };
 
 }
