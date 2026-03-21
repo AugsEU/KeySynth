@@ -389,7 +389,12 @@ void TestTriangles()
 			cx + i, cy + i, // bottom right
 			gTftScreen.color565(0, 0, i));
 #else // USE_ADAFRUIT_LIBRARY
-			// Todo
+			gDriver.DrawTriangle(
+				cx, cy-i,
+				cx-i, cy+i,
+				cx+i, cy+i/2,
+				i
+			);
 #endif // USE_ADAFRUIT_LIBRARY
 	}
 
@@ -412,7 +417,10 @@ void TestFilledTriangles()
 		gTftScreen.drawTriangle(cx, cy - i, cx - i, cy + i, cx + i, cy + i,
 		gTftScreen.color565(i, i, 0));
 #else // USE_ADAFRUIT_LIBRARY
-		// Todo
+		gDriver.FillTriangle(cx, cy - i, cx - i, cy + i, cx + i, cy + i,
+		(i<<5| i));
+
+		gDriver.DrawTriangle(cx, cy - i, cx - i, cy + i, cx + i, cy + i, (i<<10|i<<5));
 #endif // USE_ADAFRUIT_LIBRARY
 	}
 
@@ -455,10 +463,7 @@ void TestFilledRoundRects()
 #if USE_ADAFRUIT_LIBRARY
 		gTftScreen.fillRoundRect(cx-i2, cy-i2, i, i, i/8, gTftScreen.color565(0, i, 0));
 #else // USE_ADAFRUIT_LIBRARY
-		// Todo
-		(void)cx;
-		(void)cy;
-		(void)i2;
+		gDriver.FillRoundedRect(cx-i2, cy-i2, i, i, i/8, (i*73)^0x32AF);
 #endif // USE_ADAFRUIT_LIBRARY
 	}
 

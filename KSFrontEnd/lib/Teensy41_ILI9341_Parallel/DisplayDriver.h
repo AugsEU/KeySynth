@@ -21,10 +21,10 @@ class DisplayDriver
 {
 public:
 	enum class Status
-    {
-        Offline,
-        Online // Device successfully setup and ready to use.
-    };
+	{
+		Offline,
+		Online // Device successfully setup and ready to use.
+	};
 
 	enum class CircleSection
 	{
@@ -43,8 +43,8 @@ public:
 
 
 	/// @brief Begin driver after the screen has been created
-    /// @return Error code.
-    int Begin();
+	/// @return Error code.
+	int Begin();
 
 
 
@@ -124,16 +124,54 @@ public:
 
 	/// @brief Draw rectangle outline with rounded corners
 	/// @param x top-left x-coordinate 
-	/// @param y top-right x-coordinate
+	/// @param y top-left y-coordinate
 	/// @param w width
 	/// @param h height
 	/// @param radius corner radius
 	/// @param color outline color
-	void DrawRoundedRect(int16_t x, int16_t y, int16_t w, int16_t h,
-                     		int16_t radius, uint16_t color);
+	void DrawRoundedRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
+					 		uint16_t radius, ILIColor color);
 
 
-							
+
+	/// @brief Fill rounded rect
+	/// @param x top-left x-coordinate
+	/// @param y top-left y-coordinate
+	/// @param w width
+	/// @param h height
+	/// @param radius corner radius
+	/// @param color outline color
+	void FillRoundedRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h,
+                                    uint16_t radius, ILIColor color);
+
+
+									
+	/// @brief Draw a triangle outline
+	/// @param x0 x-coord for vertex 0
+	/// @param y0 y-coord for vertex 0
+	/// @param x1 x-coord for vertex 1
+	/// @param y1 y-coord for vertex 1
+	/// @param x2 x-coord for vertex 2
+	/// @param y2 y-coord for vertex 2
+	/// @param color Color of outline
+	void DrawTriangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1,
+								uint16_t x2, int16_t y2, ILIColor color);
+
+
+
+	/// @brief Fill a triangle
+	/// @param x0 x-coord for vertex 0
+	/// @param y0 y-coord for vertex 0
+	/// @param x1 x-coord for vertex 1
+	/// @param y1 y-coord for vertex 1
+	/// @param x2 x-coord for vertex 2
+	/// @param y2 y-coord for vertex 2
+	/// @param color Triangle color
+	void FillTriangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1,
+								uint16_t x2, uint16_t y2, ILIColor color);
+
+
+
 	/// @brief Set text cursor to absolute position.
 	/// @param x cursor x-coordinate
 	/// @param y cursor y-coordinate
@@ -194,64 +232,64 @@ protected:
 template<DisplayDriver::CircleSection Section>
 void DisplayDriver::DrawCircleQuadrant(uint16_t x, uint16_t y, uint16_t r, ILIColor color)
 {
-    // Cardinal points for this quadrant
-    if constexpr (Section == CircleSection::TopLeft || Section == CircleSection::TopRight)
-        DrawPixel(x, y - r, color);
-    if constexpr (Section == CircleSection::BottomLeft || Section == CircleSection::BottomRight)
-        DrawPixel(x, y + r, color);
-    if constexpr (Section == CircleSection::TopRight || Section == CircleSection::BottomRight)
-        DrawPixel(x + r, y, color);
-    if constexpr (Section == CircleSection::TopLeft || Section == CircleSection::BottomLeft)
-        DrawPixel(x - r, y, color);
+	// Cardinal points for this quadrant
+	if constexpr (Section == CircleSection::TopLeft || Section == CircleSection::TopRight)
+		DrawPixel(x, y - r, color);
+	if constexpr (Section == CircleSection::BottomLeft || Section == CircleSection::BottomRight)
+		DrawPixel(x, y + r, color);
+	if constexpr (Section == CircleSection::TopRight || Section == CircleSection::BottomRight)
+		DrawPixel(x + r, y, color);
+	if constexpr (Section == CircleSection::TopLeft || Section == CircleSection::BottomLeft)
+		DrawPixel(x - r, y, color);
 
-    int32_t dx = 0;
-    int32_t dy = r;
-    int32_t s  = r * r;
-    int32_t r2 = s;
+	int32_t dx = 0;
+	int32_t dy = r;
+	int32_t s  = r * r;
+	int32_t r2 = s;
 
-    while (dx < dy)
-    {
-        dx++;
-        dy--;
-        s += 2 * (dx - dy) + 2;
-        if (s < r2)
-        {
-            s += 2 * dy + 1;
-            dy++;
-        }
+	while (dx < dy)
+	{
+		dx++;
+		dy--;
+		s += 2 * (dx - dy) + 2;
+		if (s < r2)
+		{
+			s += 2 * dy + 1;
+			dy++;
+		}
 
-        // +dx, +dy  → bottom right
-        if constexpr (Section == CircleSection::BottomRight)
-            DrawPixel(x + dx, y + dy, color);
+		// +dx, +dy  → bottom right
+		if constexpr (Section == CircleSection::BottomRight)
+			DrawPixel(x + dx, y + dy, color);
 
-        // -dx, +dy  → bottom left
-        if constexpr (Section == CircleSection::BottomLeft)
-            DrawPixel(x - dx, y + dy, color);
+		// -dx, +dy  → bottom left
+		if constexpr (Section == CircleSection::BottomLeft)
+			DrawPixel(x - dx, y + dy, color);
 
-        // +dx, -dy  → top right
-        if constexpr (Section == CircleSection::TopRight)
-            DrawPixel(x + dx, y - dy, color);
+		// +dx, -dy  → top right
+		if constexpr (Section == CircleSection::TopRight)
+			DrawPixel(x + dx, y - dy, color);
 
-        // -dx, -dy  → top left
-        if constexpr (Section == CircleSection::TopLeft)
-            DrawPixel(x - dx, y - dy, color);
+		// -dx, -dy  → top left
+		if constexpr (Section == CircleSection::TopLeft)
+			DrawPixel(x - dx, y - dy, color);
 
-        // +dy, +dx  → bottom right
-        if constexpr (Section == CircleSection::BottomRight)
-            DrawPixel(x + dy, y + dx, color);
+		// +dy, +dx  → bottom right
+		if constexpr (Section == CircleSection::BottomRight)
+			DrawPixel(x + dy, y + dx, color);
 
-        // -dy, +dx  → bottom left
-        if constexpr (Section == CircleSection::BottomLeft)
-            DrawPixel(x - dy, y + dx, color);
+		// -dy, +dx  → bottom left
+		if constexpr (Section == CircleSection::BottomLeft)
+			DrawPixel(x - dy, y + dx, color);
 
-        // +dy, -dx  → top right
-        if constexpr (Section == CircleSection::TopRight)
-            DrawPixel(x + dy, y - dx, color);
+		// +dy, -dx  → top right
+		if constexpr (Section == CircleSection::TopRight)
+			DrawPixel(x + dy, y - dx, color);
 
-        // -dy, -dx  → top left
-        if constexpr (Section == CircleSection::TopLeft)
-            DrawPixel(x - dy, y - dx, color);
-    }
+		// -dy, -dx  → top left
+		if constexpr (Section == CircleSection::TopLeft)
+			DrawPixel(x - dy, y - dx, color);
+	}
 }
 
 
