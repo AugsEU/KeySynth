@@ -25,7 +25,7 @@ public:
 	/// @brief Create ILI9341 driver that writes to buffer then later renders out to
 	/// the screen later (i.e. it is deferred).
 	/// @param device TFT screen device.
-	DeferDriver(T4_ILI9341 device);
+	DeferDriver(Device device);
 
 
 
@@ -66,10 +66,10 @@ private:
 	// Constants
 
 	static constexpr uint16_t DRAW_BLOCK_SIZE = 16; // 16x16 pixels
-	static constexpr uint16_t DB_GRID_WIDTH = T4_ILI9341::WIDTH / DRAW_BLOCK_SIZE;
-	static constexpr uint16_t DB_GRID_HEIGHT = T4_ILI9341::HEIGHT / DRAW_BLOCK_SIZE;
-	static_assert(T4_ILI9341::WIDTH % DRAW_BLOCK_SIZE == 0);
-	static_assert(T4_ILI9341::HEIGHT % DRAW_BLOCK_SIZE == 0);
+	static constexpr uint16_t DB_GRID_WIDTH = Device::WIDTH / DRAW_BLOCK_SIZE;
+	static constexpr uint16_t DB_GRID_HEIGHT = Device::HEIGHT / DRAW_BLOCK_SIZE;
+	static_assert(Device::WIDTH % DRAW_BLOCK_SIZE == 0);
+	static_assert(Device::HEIGHT % DRAW_BLOCK_SIZE == 0);
 
 	// Types
 

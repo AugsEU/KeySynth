@@ -16,14 +16,14 @@ namespace ILI9341
 // ============================================================================
 // T4_ILI9341
 // ============================================================================
-class T4_ILI9341
+class Device
 {
 public:
 	constexpr static int WIDTH = 240;
 	constexpr static int HEIGHT = 320;
 
 	// Init
-	T4_ILI9341(uint8_t cs, uint8_t cd, uint8_t wr, uint8_t rd);
+	Device(uint8_t cs, uint8_t cd, uint8_t wr, uint8_t rd);
 
 	// Command functions are named based off the datasheet. Many of this inconsistent but oh well...
 	// e.g. some are "get" some are "read", some have "read" at the start, others at the end...

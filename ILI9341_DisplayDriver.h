@@ -38,7 +38,7 @@ public:
 
 	/// @brief Create new display driver
 	/// @param device ILI device to interface with.
-	DisplayDriver(T4_ILI9341 device);
+	DisplayDriver(Device device);
 
 
 
@@ -217,7 +217,7 @@ protected:
 	/// @return Error code
 	int EstablishConnection();
 
-	T4_ILI9341 mDevice;
+	Device mDevice;
 	Status mStatus;
 	uint16_t mCursorX;
 	uint16_t mCursorY;

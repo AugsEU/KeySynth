@@ -13,7 +13,7 @@ namespace ILI9341
 // DeferDriver - Public
 // ============================================================================
 
-DeferDriver::DeferDriver(T4_ILI9341 device) : DisplayDriver(device)
+DeferDriver::DeferDriver(Device device) : DisplayDriver(device)
 {
 	// Initialise grid.
 	for(uint16_t bx = 0; bx < DB_GRID_WIDTH; ++bx)
@@ -36,7 +36,7 @@ DeferDriver::DeferDriver(T4_ILI9341 device) : DisplayDriver(device)
 
 void DeferDriver::DrawPixel(uint16_t x, uint16_t y, ILIColor col)
 {
-	if(x >= T4_ILI9341::WIDTH || y >= T4_ILI9341::HEIGHT)
+	if(x >= Device::WIDTH || y >= Device::HEIGHT)
 	{
 		return;
 	}
@@ -92,7 +92,7 @@ void DeferDriver::ForceClear(ILIColor col)
 
 void DeferDriver::FillRect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, ILIColor col)
 {
-	if(x > T4_ILI9341::WIDTH || y > T4_ILI9341::HEIGHT)
+	if(x > Device::WIDTH || y > Device::HEIGHT)
 	{
 		// oob, skip.
 		return;

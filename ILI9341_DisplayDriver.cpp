@@ -19,7 +19,7 @@ namespace ILI9341
 // Public
 // ============================================================================
 
-DisplayDriver::DisplayDriver(T4_ILI9341 device) :
+DisplayDriver::DisplayDriver(Device device) :
 	mDevice(device),
 	mStatus(Status::Offline),
 	mCursorX(0),
@@ -462,7 +462,7 @@ void DisplayDriver::DrawText(const char* string)
 		}
 
 		mCursorX += charWidth;
-		if(c == '\n' || mCursorX + charWidth > T4_ILI9341::WIDTH)
+		if(c == '\n' || mCursorX + charWidth > Device::WIDTH)
 		{
 			mCursorY += charHeight;
 			mCursorX = lineBegin; // Todo: setup proper text bounds

@@ -38,7 +38,7 @@ namespace ILI9341
 // T4_ILI9341
 // ============================================================================
 
-T4_ILI9341::T4_ILI9341(uint8_t cs, uint8_t cd, uint8_t wr, uint8_t rd) :
+Device::Device(uint8_t cs, uint8_t cd, uint8_t wr, uint8_t rd) :
     mPinCS(cs),
     mPinCD(cd),
     mPinWrite(wr),
@@ -61,14 +61,14 @@ T4_ILI9341::T4_ILI9341(uint8_t cs, uint8_t cd, uint8_t wr, uint8_t rd) :
 // Level 1 commands
 // ============================================================================
 
-void T4_ILI9341::SoftwareReset()
+void Device::SoftwareReset()
 {
     Cmd8Data0(ILI9341_CMD_SOFTWARE_RESET);
 }
 
 
 
-DisplayIdentification T4_ILI9341::ReadDisplayIdentification()
+DisplayIdentification Device::ReadDisplayIdentification()
 {
 	DisplayIdentification ret;
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_ID_INFO);
@@ -83,7 +83,7 @@ DisplayIdentification T4_ILI9341::ReadDisplayIdentification()
 }
 
 
-DisplayStatus T4_ILI9341::ReadDisplayStatus()
+DisplayStatus Device::ReadDisplayStatus()
 {
 	DisplayStatus ret;
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_STATUS);
@@ -101,7 +101,7 @@ DisplayStatus T4_ILI9341::ReadDisplayStatus()
 }
 
 
-DisplayPowerMode T4_ILI9341::ReadDisplayPowerMode()
+DisplayPowerMode Device::ReadDisplayPowerMode()
 {
 	DisplayPowerMode ret;
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_POWER_MODE);
@@ -114,7 +114,7 @@ DisplayPowerMode T4_ILI9341::ReadDisplayPowerMode()
 }
 
 
-DisplayMADCTL T4_ILI9341::ReadDisplayMADCTL()
+DisplayMADCTL Device::ReadDisplayMADCTL()
 {
 	DisplayMADCTL ret;
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_MADCTL);
@@ -127,7 +127,7 @@ DisplayMADCTL T4_ILI9341::ReadDisplayMADCTL()
 }
 
 
-PixelFormat T4_ILI9341::ReadDisplayPixelFormat()
+PixelFormat Device::ReadDisplayPixelFormat()
 {
 	PixelFormat ret;
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_PIXEL_FORMAT);
@@ -148,7 +148,7 @@ PixelFormat T4_ILI9341::ReadDisplayPixelFormat()
 }
 
 
-uint8_t T4_ILI9341::ReadDisplayImageFormat()
+uint8_t Device::ReadDisplayImageFormat()
 {
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_IMAGE_FORMAT);
 	
@@ -160,7 +160,7 @@ uint8_t T4_ILI9341::ReadDisplayImageFormat()
 }
 
 
-DisplaySignalMode T4_ILI9341::ReadDisplaySignalMode()
+DisplaySignalMode Device::ReadDisplaySignalMode()
 {	
 	DisplaySignalMode ret;
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_SIGNAL_MODE);
@@ -173,7 +173,7 @@ DisplaySignalMode T4_ILI9341::ReadDisplaySignalMode()
 }
 
 
-DisplaySelfDiagnostic T4_ILI9341::ReadDisplaySelfDiagnostic()
+DisplaySelfDiagnostic Device::ReadDisplaySelfDiagnostic()
 {
 	DisplaySelfDiagnostic ret;
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_SELF_DIAG_RESULT);
@@ -187,44 +187,44 @@ DisplaySelfDiagnostic T4_ILI9341::ReadDisplaySelfDiagnostic()
 
 
 
-void T4_ILI9341::EnterSleepMode()
+void Device::EnterSleepMode()
 {
 	Cmd8Data0(ILI9341_CMD_ENTER_SLEEP_MODE);
 }
 
 
-void T4_ILI9341::SleepOut()
+void Device::SleepOut()
 {
 	Cmd8Data0(ILI9341_CMD_SLEEP_OUT);
 }
 
 
-void T4_ILI9341::PartialModeOn()
+void Device::PartialModeOn()
 {
 	Cmd8Data0(ILI9341_CMD_PARTIAL_ON);
 }
 
 
-void T4_ILI9341::NormalDisplayModeOn()
+void Device::NormalDisplayModeOn()
 {
 	Cmd8Data0(ILI9341_CMD_NORMAL_ON);
 }
 
 
-void T4_ILI9341::DisplayInversionOff()
+void Device::DisplayInversionOff()
 {
 	Cmd8Data0(ILI9341_CMD_DISPLAY_INVERT_OFF);
 }
 
 
-void T4_ILI9341::DisplayInversionOn()
+void Device::DisplayInversionOn()
 {
 	Cmd8Data0(ILI9341_CMD_DISPLAY_INVERT_ON);
 }
 
 
 
-void T4_ILI9341::GammaSet(uint8_t gammaIndex)
+void Device::GammaSet(uint8_t gammaIndex)
 {
 	gammaIndex = (1 << gammaIndex);
 	Cmd8Data1(ILI9341_CMD_GAMMA_SET, gammaIndex);
@@ -232,20 +232,20 @@ void T4_ILI9341::GammaSet(uint8_t gammaIndex)
 
 
 
-void T4_ILI9341::DisplayOff()
+void Device::DisplayOff()
 {
 	Cmd8Data0(ILI9341_CMD_DISPLAY_OFF);
 }
 
 
-void T4_ILI9341::DisplayOn()
+void Device::DisplayOn()
 {
     Cmd8Data0(ILI9341_CMD_DISPLAY_ON);
 }
 
 
 
-void T4_ILI9341::ColumnAddrSet(uint16_t startCol, uint16_t endCol)
+void Device::ColumnAddrSet(uint16_t startCol, uint16_t endCol)
 {
 	uint8_t sc15_8 = startCol >> 8;
 	uint8_t sc7_0 = startCol & 0xFF;
@@ -255,7 +255,7 @@ void T4_ILI9341::ColumnAddrSet(uint16_t startCol, uint16_t endCol)
 }
 
 
-void T4_ILI9341::PageAddrSet(uint16_t startPage, uint16_t endPage)
+void Device::PageAddrSet(uint16_t startPage, uint16_t endPage)
 {
 	uint8_t sp15_8 = startPage >> 8;
 	uint8_t sp7_0 = startPage & 0xFF;
@@ -265,7 +265,7 @@ void T4_ILI9341::PageAddrSet(uint16_t startPage, uint16_t endPage)
 }
 
 
-void T4_ILI9341::MemoryWrite(uint16_t* buff, uint32_t size)
+void Device::MemoryWrite(uint16_t* buff, uint32_t size)
 {
 	BEGIN_CMD(ILI9341_CMD_MEMORY_WRITE);
 	BEGIN_DATA;
@@ -280,7 +280,7 @@ void T4_ILI9341::MemoryWrite(uint16_t* buff, uint32_t size)
 
 
 
-void T4_ILI9341::ColorSet(ColorLUT table)
+void Device::ColorSet(ColorLUT table)
 {
 	BEGIN_CMD(ILI9341_CMD_COLOR_SET);
 	BEGIN_DATA;
@@ -301,7 +301,7 @@ void T4_ILI9341::ColorSet(ColorLUT table)
 
 
 
-uint16_t* T4_ILI9341::MemoryRead(uint32_t size)
+uint16_t* Device::MemoryRead(uint32_t size)
 {
 	BeginReadMode(ILI9341_CMD_MEMORY_READ);
 	uint16_t* buf = (uint16_t*)malloc(size * sizeof(uint16_t));
@@ -318,7 +318,7 @@ uint16_t* T4_ILI9341::MemoryRead(uint32_t size)
 
 
 
-void T4_ILI9341::PartialArea(uint16_t startRow, uint16_t endRow)
+void Device::PartialArea(uint16_t startRow, uint16_t endRow)
 {
 	uint8_t sr15_8 = startRow >> 8;
 	uint8_t sr7_0 = startRow & 0xFF;
@@ -329,7 +329,7 @@ void T4_ILI9341::PartialArea(uint16_t startRow, uint16_t endRow)
 
 
 
-void T4_ILI9341::VerticalScrollingDefinition(uint16_t topFixedArea, 
+void Device::VerticalScrollingDefinition(uint16_t topFixedArea, 
 											uint16_t vertialScrollArea,
 											uint16_t bottomFixedArea)
 {
@@ -347,20 +347,20 @@ void T4_ILI9341::VerticalScrollingDefinition(uint16_t topFixedArea,
 
 
 
-void T4_ILI9341::TearingEffectLineOff()
+void Device::TearingEffectLineOff()
 {
 	Cmd8Data0(ILI9341_CMD_TEARING_EFX_OFF);
 }
 
 
-void T4_ILI9341::TearingEffectLineOn(TearingEffectMode mode)
+void Device::TearingEffectLineOn(TearingEffectMode mode)
 {
 	Cmd8Data0(ILI9341_CMD_TEARING_EFX_ON);
 }
 
 
 
-void T4_ILI9341::MemoryAccessCtrl(RowOrder rowOrder, 
+void Device::MemoryAccessCtrl(RowOrder rowOrder, 
 					ColOrder colOrder, 
 					RowColExchange exchange, 
 					RowOrder verticalRefresh,
@@ -380,7 +380,7 @@ void T4_ILI9341::MemoryAccessCtrl(RowOrder rowOrder,
 
 
 
-void T4_ILI9341::VerticalScrollStartAddr(uint16_t start)
+void Device::VerticalScrollStartAddr(uint16_t start)
 {
 	uint8_t vsp15_8 = start >> 8;
 	uint8_t vsp7_0 = start & 0xFF;
@@ -389,20 +389,20 @@ void T4_ILI9341::VerticalScrollStartAddr(uint16_t start)
 
 
 
-void T4_ILI9341::IdleModeOff()
+void Device::IdleModeOff()
 {
 	Cmd8Data0(ILI9341_CMD_IDLE_OFF);
 }
 
 
-void T4_ILI9341::IdleModeOn()
+void Device::IdleModeOn()
 {
 	Cmd8Data0(ILI9341_CMD_IDLE_ON);
 }
 
 
 
-void T4_ILI9341::PixelFormatSet(PixelFormat format)
+void Device::PixelFormatSet(PixelFormat format)
 {
 	uint8_t data = 0;
 	if(format == PixelFormat::Form16Bit)
@@ -419,7 +419,7 @@ void T4_ILI9341::PixelFormatSet(PixelFormat format)
 
 
 
-void T4_ILI9341::WriteMemoryContinue(uint16_t* buff, uint32_t size)
+void Device::WriteMemoryContinue(uint16_t* buff, uint32_t size)
 {
 	BEGIN_CMD(ILI9341_CMD_MEMORY_WRITE_CONT);
 	BEGIN_DATA;
@@ -433,7 +433,7 @@ void T4_ILI9341::WriteMemoryContinue(uint16_t* buff, uint32_t size)
 }
 
 
-uint16_t* T4_ILI9341::ReadMemoryContinue(uint32_t size)
+uint16_t* Device::ReadMemoryContinue(uint32_t size)
 {
 	BeginReadMode(ILI9341_CMD_MEMORY_READ_CONT);
 	uint16_t* buf = (uint16_t*)malloc(size * sizeof(uint16_t));
@@ -448,7 +448,7 @@ uint16_t* T4_ILI9341::ReadMemoryContinue(uint32_t size)
 	return buf;
 }
 
-void T4_ILI9341::SetTearScanline(uint16_t scanLine)
+void Device::SetTearScanline(uint16_t scanLine)
 {
 	uint8_t sts8 = (scanLine >> 8) & 0b00000001;
 	uint8_t sts7_0 = scanLine & 0xFF;
@@ -456,7 +456,7 @@ void T4_ILI9341::SetTearScanline(uint16_t scanLine)
 }
 
 
-uint16_t T4_ILI9341::GetScanline()
+uint16_t Device::GetScanline()
 {
 	BeginReadMode(ILI9341_CMD_GET_SCANLINE);
 	uint8_t gts9_8 = ReadNext8() & 0b00000011;
@@ -468,13 +468,13 @@ uint16_t T4_ILI9341::GetScanline()
 
 
 
-void T4_ILI9341::WriteDisplayBrightness(uint8_t brightness)
+void Device::WriteDisplayBrightness(uint8_t brightness)
 {
 	Cmd8Data1(ILI9341_CMD_WRITE_DISPLAY_BRIGHT, brightness);
 }
 
 
-uint8_t T4_ILI9341::ReadDisplayBrightness()
+uint8_t Device::ReadDisplayBrightness()
 {
 	BeginReadMode(ILI9341_CMD_READ_DISPLAY_BRIGHT);
 	uint8_t dbv = ReadNext8();
@@ -485,7 +485,7 @@ uint8_t T4_ILI9341::ReadDisplayBrightness()
 
 
 
-void T4_ILI9341::WriteCtrlDisplay(bool brightnessBlock, bool displayDimming, bool backlightOnOff)
+void Device::WriteCtrlDisplay(bool brightnessBlock, bool displayDimming, bool backlightOnOff)
 {
 	uint8_t data = 0;
 	if(brightnessBlock) data |= (1 << 5);
@@ -495,7 +495,7 @@ void T4_ILI9341::WriteCtrlDisplay(bool brightnessBlock, bool displayDimming, boo
 }
 
 
-CtrlDisplay T4_ILI9341::ReadCtrlDisplay()
+CtrlDisplay Device::ReadCtrlDisplay()
 {
 	CtrlDisplay ret;
 	BeginReadMode(ILI9341_CMD_READ_CTRL_DISPLAY);
@@ -507,14 +507,14 @@ CtrlDisplay T4_ILI9341::ReadCtrlDisplay()
 
 
 
-void T4_ILI9341::WriteAdaptiveBrightness(AdaptiveBrightnessCtrl mode)
+void Device::WriteAdaptiveBrightness(AdaptiveBrightnessCtrl mode)
 {
 	uint8_t modeInt = (uint8_t)mode;
 	Cmd8Data1(ILI9341_CMD_WRITE_CONTENT_ADAPT_BRIGHT, modeInt);
 }
 
 
-AdaptiveBrightnessCtrl T4_ILI9341::ReadAdaptiveBrightness()
+AdaptiveBrightnessCtrl Device::ReadAdaptiveBrightness()
 {
 	BeginReadMode(ILI9341_CMD_READ_CONTENT_ADAPT_BRIGHT);
 	AdaptiveBrightnessCtrl ret = (AdaptiveBrightnessCtrl)ReadNext8();
@@ -525,13 +525,13 @@ AdaptiveBrightnessCtrl T4_ILI9341::ReadAdaptiveBrightness()
 
 
 
-void T4_ILI9341::WriteCabcMinBrightness(uint8_t brightness)
+void Device::WriteCabcMinBrightness(uint8_t brightness)
 {
 	Cmd8Data1(ILI9341_CMD_WRITE_CABC_MIN_BRIGHT, brightness);
 }
 
 
-uint8_t T4_ILI9341::ReadCabcMinBrightness()
+uint8_t Device::ReadCabcMinBrightness()
 {
 	BeginReadMode(ILI9341_CMD_READ_CABC_MIN_BRIGHT);
 	uint8_t bright = ReadNext8();
@@ -542,7 +542,7 @@ uint8_t T4_ILI9341::ReadCabcMinBrightness()
 
 
 
-uint8_t T4_ILI9341::ReadId1()
+uint8_t Device::ReadId1()
 {
 	BeginReadMode(ILI9341_CMD_READ_ID1);
 	uint8_t id1 = ReadNext8();
@@ -552,7 +552,7 @@ uint8_t T4_ILI9341::ReadId1()
 }
 
 
-uint8_t T4_ILI9341::ReadId2()
+uint8_t Device::ReadId2()
 {
 	BeginReadMode(ILI9341_CMD_READ_ID2);
 	uint8_t id2 = ReadNext8();
@@ -562,7 +562,7 @@ uint8_t T4_ILI9341::ReadId2()
 }
 
 
-uint8_t T4_ILI9341::ReadId3()
+uint8_t Device::ReadId3()
 {
 	BeginReadMode(ILI9341_CMD_READ_ID3);
 	uint8_t id3 = ReadNext8();
@@ -572,7 +572,7 @@ uint8_t T4_ILI9341::ReadId3()
 }
 
 
-void T4_ILI9341::RgbInterfaceSignalCtrl(RgbBypassMode bypass,
+void Device::RgbInterfaceSignalCtrl(RgbBypassMode bypass,
 							RgbInterfaceRCM rcm,
 							SyncPolarity vspl, 
 							SyncPolarity hspl, 
@@ -592,21 +592,21 @@ void T4_ILI9341::RgbInterfaceSignalCtrl(RgbBypassMode bypass,
 
 
 
-void T4_ILI9341::FrameRateCtrl(uint8_t divisionRatio, uint8_t rtn)
+void Device::FrameRateCtrl(uint8_t divisionRatio, uint8_t rtn)
 {
 	Cmd8Data2(ILI9341_CMD2_FRAME_RATE_CTL_NORM, divisionRatio & 0b00000011,
 												rtn & 0b00011111);
 }
 
 
-void T4_ILI9341::FrameRateCtrlIdle(uint8_t divisionRatio, uint8_t rtn)
+void Device::FrameRateCtrlIdle(uint8_t divisionRatio, uint8_t rtn)
 {	
 	Cmd8Data2(ILI9341_CMD2_FRAME_RATE_CTL_IDLE, divisionRatio & 0b00000011,
 												rtn & 0b00011111);
 }
 
 
-void T4_ILI9341::FrameRateCtrlPartial(uint8_t divisionRatio, uint8_t rtn)
+void Device::FrameRateCtrlPartial(uint8_t divisionRatio, uint8_t rtn)
 {
 	Cmd8Data2(ILI9341_CMD2_FRAME_RATE_CTL_PARTIAL, divisionRatio & 0b00000011,
 												rtn & 0b00011111);
@@ -614,7 +614,7 @@ void T4_ILI9341::FrameRateCtrlPartial(uint8_t divisionRatio, uint8_t rtn)
 
 
 
-void T4_ILI9341::DisplayInversionCtrl(bool fullColor, bool idle, bool partial)
+void Device::DisplayInversionCtrl(bool fullColor, bool idle, bool partial)
 {
 	uint8_t data = 0;
 	if(fullColor) data |= (1 << 2);
@@ -625,7 +625,7 @@ void T4_ILI9341::DisplayInversionCtrl(bool fullColor, bool idle, bool partial)
 }
 
 
-void T4_ILI9341::BlankPorchCtrl(uint8_t vfp, uint8_t vbp, uint8_t hfp, uint8_t hbp)
+void Device::BlankPorchCtrl(uint8_t vfp, uint8_t vbp, uint8_t hfp, uint8_t hbp)
 {
 	Cmd8Data4(ILI9341_CMD2_BLANK_PORCH_CTL, vfp & 0b01111111, vbp & 0b01111111,
 										 	hfp & 0b00011111, hbp & 0b00011111);
@@ -633,7 +633,7 @@ void T4_ILI9341::BlankPorchCtrl(uint8_t vfp, uint8_t vbp, uint8_t hfp, uint8_t h
 
 
 
-void T4_ILI9341::DisplayFunctionCtrl(ScanMode scanMode, 
+void Device::DisplayFunctionCtrl(ScanMode scanMode, 
 						SourceOutput pt,
 						ShiftDirectionOfSourceDriver ss,
 						LiquidCrystalType rev,
@@ -661,7 +661,7 @@ void T4_ILI9341::DisplayFunctionCtrl(ScanMode scanMode,
 }
 
  // No idea what these params stand for...
-void T4_ILI9341::EntryModeSet(bool lowVoltageDetection, GateOuputLevel output)
+void Device::EntryModeSet(bool lowVoltageDetection, GateOuputLevel output)
 {
 	uint8_t data = ((uint8_t)output << 1) | (uint8_t)(!lowVoltageDetection);
 	Cmd8Data1(ILI9341_CMD2_ENTRY_MODE_SET, data);
@@ -670,13 +670,13 @@ void T4_ILI9341::EntryModeSet(bool lowVoltageDetection, GateOuputLevel output)
 
 
 // T4_ILI9341::You must read datasheet to understand these...
-void T4_ILI9341::BacklightControl1(uint8_t levelUi)
+void Device::BacklightControl1(uint8_t levelUi)
 {
 	Cmd8Data1(ILI9341_CMD2_BACKLIGHT_CTL_1, levelUi & 0b00001111);
 }
 
 
-void T4_ILI9341::BacklightControl2(uint8_t levelStillPicture, uint8_t levelMovingImage)
+void Device::BacklightControl2(uint8_t levelStillPicture, uint8_t levelMovingImage)
 {
 	uint8_t thmv = levelMovingImage & 0b00001111;
 	uint8_t thst = levelStillPicture & 0b00001111;
@@ -684,13 +684,13 @@ void T4_ILI9341::BacklightControl2(uint8_t levelStillPicture, uint8_t levelMovin
 }
 
 
-void T4_ILI9341::BacklightControl3(uint8_t dthUi)
+void Device::BacklightControl3(uint8_t dthUi)
 {
 	Cmd8Data1(ILI9341_CMD2_BACKLIGHT_CTL_3, dthUi & 0b00001111);
 }
 
 
-void T4_ILI9341::BacklightControl4(uint8_t dth_st, uint8_t dth_mv)
+void Device::BacklightControl4(uint8_t dth_st, uint8_t dth_mv)
 {
 	dth_st &= 0b00001111;
 	dth_mv &= 0b00001111;
@@ -698,7 +698,7 @@ void T4_ILI9341::BacklightControl4(uint8_t dth_st, uint8_t dth_mv)
 }
 
 
-void T4_ILI9341::BacklightControl5(uint8_t dim1, uint8_t dim2)
+void Device::BacklightControl5(uint8_t dim1, uint8_t dim2)
 {
 	dim1 &= 0b00000111;
 	dim2 &= 0b00001111;
@@ -706,13 +706,13 @@ void T4_ILI9341::BacklightControl5(uint8_t dim1, uint8_t dim2)
 }
 
 
-void T4_ILI9341::BacklightControl7(uint8_t pwm_div)
+void Device::BacklightControl7(uint8_t pwm_div)
 {
 	Cmd8Data1(ILI9341_CMD2_BACKLIGHT_CTL_7, pwm_div);
 }
 
 
-void T4_ILI9341::BacklightControl8(bool ledpwmpol, bool ledonpol, bool ledonr)
+void Device::BacklightControl8(bool ledpwmpol, bool ledonpol, bool ledonr)
 {
 	uint8_t data = 0;
 	
@@ -725,27 +725,27 @@ void T4_ILI9341::BacklightControl8(bool ledpwmpol, bool ledonpol, bool ledonr)
 
 
 
-void T4_ILI9341::PowerCtrl1(uint8_t gvddLevel)
+void Device::PowerCtrl1(uint8_t gvddLevel)
 {
 	Cmd8Data1(ILI9341_CMD2_POWER_CTL_1, gvddLevel & 0b00111111);
 }
 
 
-void T4_ILI9341::PowerCtrl2(uint8_t stepUpFactor)
+void Device::PowerCtrl2(uint8_t stepUpFactor)
 {
 	Cmd8Data1(ILI9341_CMD2_POWER_CTL_2, stepUpFactor & 0b00000111);
 }
 
 
 
-void T4_ILI9341::VcomCtrl1(uint8_t vcomhVoltage, uint8_t vcomlVoltage)
+void Device::VcomCtrl1(uint8_t vcomhVoltage, uint8_t vcomlVoltage)
 {
 	Cmd8Data2(ILI9341_CMD2_VCOM_CTL_1,  vcomhVoltage & 0b01111111, 
 										vcomlVoltage & 0b01111111);
 }
 
 
-void T4_ILI9341::VcomCtrl2(bool nVM, uint8_t vcomOffset)
+void Device::VcomCtrl2(bool nVM, uint8_t vcomOffset)
 {
 	uint8_t data = vcomOffset & 0b01111111;
 	if(nVM)
@@ -757,13 +757,13 @@ void T4_ILI9341::VcomCtrl2(bool nVM, uint8_t vcomOffset)
 
 
 
-void T4_ILI9341::NvMemoryWrite(PGMAddr pgmAddress, uint8_t pgmData)
+void Device::NvMemoryWrite(PGMAddr pgmAddress, uint8_t pgmData)
 {
 	Cmd8Data2(ILI9341_CMD2_NV_MEM_WRITE, (uint8_t)pgmAddress & 0b00000111, pgmData);
 }
 
 
-void T4_ILI9341::NvMemoryProtectionKey(uint32_t key)
+void Device::NvMemoryProtectionKey(uint32_t key)
 {
 	uint8_t key32_16 = key >> 16;
 	uint8_t key15_8 = key >> 8;
@@ -772,7 +772,7 @@ void T4_ILI9341::NvMemoryProtectionKey(uint32_t key)
 }
 
 
-NvMemoryStatus T4_ILI9341::NvStatusRead()
+NvMemoryStatus Device::NvStatusRead()
 {
 	NvMemoryStatus ret;
 	BeginReadMode(ILI9341_CMD2_NV_MEM_STATUS_READ);
@@ -792,7 +792,7 @@ NvMemoryStatus T4_ILI9341::NvStatusRead()
 }
 
 
-Id4 T4_ILI9341::ReadId4()
+Id4 Device::ReadId4()
 {
 	Id4 ret;
 	BeginReadMode(ILI9341_CMD2_READ_ID4);
@@ -809,7 +809,7 @@ Id4 T4_ILI9341::ReadId4()
 
 
 
-void T4_ILI9341::PositiveGammaCorrection(GammaCorrection table)
+void Device::PositiveGammaCorrection(GammaCorrection table)
 {
 	uint8_t* buf = (uint8_t*)&table;
 	Cmd8DataN(ILI9341_CMD2_POS_GAMMA_CORRECTION, buf, sizeof(GammaCorrection));
@@ -817,7 +817,7 @@ void T4_ILI9341::PositiveGammaCorrection(GammaCorrection table)
 
 
 
-void T4_ILI9341::NegativeGammaCorrection(GammaCorrection table)
+void Device::NegativeGammaCorrection(GammaCorrection table)
 {
 	uint8_t* buf = (uint8_t*)&table;
 	Cmd8DataN(ILI9341_CMD2_NEG_GAMMA_CORRECTION, buf, sizeof(GammaCorrection));
@@ -825,7 +825,7 @@ void T4_ILI9341::NegativeGammaCorrection(GammaCorrection table)
 
 
 
-void T4_ILI9341::DigitalGammaControl1(GammaColorCorrection1 table)
+void Device::DigitalGammaControl1(GammaColorCorrection1 table)
 {
 	uint8_t buf[GammaColorCorrection1::NUM_ENTRIES];
 	for(size_t i = 0; i < GammaColorCorrection1::NUM_ENTRIES; ++i)
@@ -837,7 +837,7 @@ void T4_ILI9341::DigitalGammaControl1(GammaColorCorrection1 table)
 }
 
 
-void T4_ILI9341::DigitalGammaControl2(GammaColorCorrection2 table)
+void Device::DigitalGammaControl2(GammaColorCorrection2 table)
 {
 	uint8_t buf[GammaColorCorrection2::NUM_ENTRIES];
 	for(size_t i = 0; i < GammaColorCorrection2::NUM_ENTRIES; ++i)
@@ -850,7 +850,7 @@ void T4_ILI9341::DigitalGammaControl2(GammaColorCorrection2 table)
 
 
 
-void T4_ILI9341::InterfaceControl(bool myEor, bool mxEor, bool mvEor, bool bgrEor, uint8_t mdt, bool weMode,
+void Device::InterfaceControl(bool myEor, bool mxEor, bool mvEor, bool bgrEor, uint8_t mdt, bool weMode,
 						Endianess endian, DisplayOperationMode dm, GramInterfaceMode rm,
 						bool rim, ColorFormat65K epf)
 {
@@ -877,7 +877,7 @@ void T4_ILI9341::InterfaceControl(bool myEor, bool mxEor, bool mvEor, bool bgrEo
 
 
 // T4_ILI9341::Extend register commands
-void T4_ILI9341::PowerCtrlA(uint8_t vcore, uint8_t ddvdh)
+void Device::PowerCtrlA(uint8_t vcore, uint8_t ddvdh)
 {
 	uint8_t data0 = 0x39;
 	uint8_t data1 = 0x2C;
@@ -891,7 +891,7 @@ void T4_ILI9341::PowerCtrlA(uint8_t vcore, uint8_t ddvdh)
 }
 
 
-void T4_ILI9341::PowerCtrlB(uint8_t powerCtrl, bool pceq, bool drvEna, 
+void Device::PowerCtrlB(uint8_t powerCtrl, bool pceq, bool drvEna, 
 			uint8_t drvVml, uint8_t drvVmh, bool esdProtection)
 {
 	uint8_t data0 = 0x00;
@@ -910,7 +910,7 @@ void T4_ILI9341::PowerCtrlB(uint8_t powerCtrl, bool pceq, bool drvEna,
 }
 
 
-void T4_ILI9341::DriverTimingCtrlA1(bool eq, bool now, bool cr, PreChargeTimingControl pc)
+void Device::DriverTimingCtrlA1(bool eq, bool now, bool cr, PreChargeTimingControl pc)
 {
 	uint8_t data0 = 0x84;
 	data0 |= (uint8_t)now;
@@ -926,7 +926,7 @@ void T4_ILI9341::DriverTimingCtrlA1(bool eq, bool now, bool cr, PreChargeTimingC
 }
 
 
-void T4_ILI9341::DriverTimingCtrlA2(bool eqe, bool nowe, bool cre, PreChargeTimingControl pc)
+void Device::DriverTimingCtrlA2(bool eqe, bool nowe, bool cre, PreChargeTimingControl pc)
 {
 	uint8_t data0 = 0x84;
 	data0 |= (uint8_t)nowe;
@@ -941,7 +941,7 @@ void T4_ILI9341::DriverTimingCtrlA2(bool eqe, bool nowe, bool cre, PreChargeTimi
 	Cmd8Data3(ILI9341_EXT_REG_CMD_DRIVER_TIME_CTL_A1, data0, data1, data2);
 }
 
-void T4_ILI9341::DriverTimingCtrlB(uint8_t vgSwT1, uint8_t vgSwT2, uint8_t vgSwT3, uint8_t vgSwT4)
+void Device::DriverTimingCtrlB(uint8_t vgSwT1, uint8_t vgSwT2, uint8_t vgSwT3, uint8_t vgSwT4)
 {
 	uint8_t data0 = 0;
 	data0 |= (vgSwT4 && 0b11) << 6;
@@ -953,7 +953,7 @@ void T4_ILI9341::DriverTimingCtrlB(uint8_t vgSwT1, uint8_t vgSwT2, uint8_t vgSwT
 }
 
 
-void T4_ILI9341::PowerSequenceCtrl(uint8_t cp1SoftStart, uint8_t cp23SoftStart, uint8_t enVcl,
+void Device::PowerSequenceCtrl(uint8_t cp1SoftStart, uint8_t cp23SoftStart, uint8_t enVcl,
 						uint8_t enDdvdh, uint8_t enVgh, uint8_t enVgl, bool ddvdhEnable)
 {
 	uint8_t data0 = 0x44;
@@ -975,13 +975,13 @@ void T4_ILI9341::PowerSequenceCtrl(uint8_t cp1SoftStart, uint8_t cp23SoftStart, 
 }
 
 
-void T4_ILI9341::Enable3Gamma(bool enable)
+void Device::Enable3Gamma(bool enable)
 {
 	Cmd8Data1(ILI9341_EXT_REG_CMD_ENABLE_3G, 0x02 | (enable));
 }
 
 
-void T4_ILI9341::PumpRatioCtrl(PumpRatio ratio)
+void Device::PumpRatioCtrl(PumpRatio ratio)
 {
 	Cmd8Data1(ILI9341_EXT_REG_CMD_PUMP_RATIO_CTL, (uint8_t)ratio << 4);
 }
@@ -990,13 +990,13 @@ void T4_ILI9341::PumpRatioCtrl(PumpRatio ratio)
 // Data bus
 // ============================================================================
 
-void T4_ILI9341::Cmd8Data0(uint8_t cmd)
+void Device::Cmd8Data0(uint8_t cmd)
 {
 	BEGIN_CMD(cmd);
 	END_CMD;
 }
 
-void T4_ILI9341::Cmd8Data1(uint8_t cmd, uint8_t d0)
+void Device::Cmd8Data1(uint8_t cmd, uint8_t d0)
 {
 	BEGIN_CMD(cmd);
 	BEGIN_DATA;
@@ -1004,7 +1004,7 @@ void T4_ILI9341::Cmd8Data1(uint8_t cmd, uint8_t d0)
 	END_CMD;
 }
 
-void T4_ILI9341::Cmd8Data2(uint8_t cmd, uint8_t d0, uint8_t d1)
+void Device::Cmd8Data2(uint8_t cmd, uint8_t d0, uint8_t d1)
 {
 	BEGIN_CMD(cmd);
 	BEGIN_DATA;
@@ -1013,7 +1013,7 @@ void T4_ILI9341::Cmd8Data2(uint8_t cmd, uint8_t d0, uint8_t d1)
 	END_CMD;
 }
 
-void T4_ILI9341::Cmd8Data3(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2)
+void Device::Cmd8Data3(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2)
 {
 	BEGIN_CMD(cmd);
 	BEGIN_DATA;
@@ -1023,7 +1023,7 @@ void T4_ILI9341::Cmd8Data3(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2)
 	END_CMD;
 }
 
-void T4_ILI9341::Cmd8Data4(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3)
+void Device::Cmd8Data4(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3)
 {
 	BEGIN_CMD(cmd);
 	BEGIN_DATA;
@@ -1034,7 +1034,7 @@ void T4_ILI9341::Cmd8Data4(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint
 	END_CMD;
 }
 
-void T4_ILI9341::Cmd8Data5(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+void Device::Cmd8Data5(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
 							uint8_t d4)
 {
 	BEGIN_CMD(cmd);
@@ -1047,7 +1047,7 @@ void T4_ILI9341::Cmd8Data5(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint
 	END_CMD;
 }
 
-void T4_ILI9341::Cmd8Data6(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
+void Device::Cmd8Data6(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
 							uint8_t d4, uint8_t d5)
 {
 	BEGIN_CMD(cmd);
@@ -1061,7 +1061,7 @@ void T4_ILI9341::Cmd8Data6(uint8_t cmd, uint8_t d0, uint8_t d1, uint8_t d2, uint
 	END_CMD;
 }
 
-void T4_ILI9341::Cmd8DataN(uint8_t cmd, uint8_t* d, uint32_t n)
+void Device::Cmd8DataN(uint8_t cmd, uint8_t* d, uint32_t n)
 {
 	BEGIN_CMD(cmd);
 	BEGIN_DATA;
@@ -1072,7 +1072,7 @@ void T4_ILI9341::Cmd8DataN(uint8_t cmd, uint8_t* d, uint32_t n)
 	END_CMD;
 }
 
-void T4_ILI9341::BeginReadMode(uint8_t cmd)
+void Device::BeginReadMode(uint8_t cmd)
 {
 	BEGIN_CMD(cmd);
 	BEGIN_DATA;
@@ -1081,13 +1081,13 @@ void T4_ILI9341::BeginReadMode(uint8_t cmd)
 	(void)discard;
 }
 
-uint8_t T4_ILI9341::ReadNext8()
+uint8_t Device::ReadNext8()
 {
 	ILI9341_STROBE_PIN(mPinRead);
 	return ILI9341_READ_DATA_BUS();
 }
 
-void T4_ILI9341::EndReadMode()
+void Device::EndReadMode()
 {
 	ILI9341_END_READ();
 	END_CMD;
