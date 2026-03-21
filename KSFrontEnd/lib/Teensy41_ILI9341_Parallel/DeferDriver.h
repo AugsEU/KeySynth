@@ -6,7 +6,7 @@
 // Include
 // ============================================================================
 #include <stdint.h>
-#include "DisplayDriver.h"
+#include "ILI9341_DisplayDriver.h"
 #include "ILI9341_Device.h"
 
 #ifndef ILI9341_DEFER_DRIVER_H
