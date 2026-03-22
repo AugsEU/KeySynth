@@ -9,6 +9,7 @@
 #include <Adafruit_TFTLCD.h> // Hardware-specific library
 #else // USE_ADAFRUIT_LIBRARY
 #include <ILI9341_DeferDriver.h>
+#include <ILI9341_ImmediateDriver.h>
 #include <ILI9341_Constants.h>
 #include <ILI9341_Device.h>
 #endif // USE_ADAFRUIT_LIBRARY
@@ -37,8 +38,8 @@
 				    Serial.printf("%s, %f %f \n", __PRETTY_FUNCTION__, (float)preRender / 1000.0f, (float)start / 1000.0f); \
 					delay(500)
 
-#define GET_WIDTH() ILI9341::T4_ILI9341::WIDTH
-#define GET_HEIGHT() ILI9341::T4_ILI9341::HEIGHT
+#define GET_WIDTH() ILI9341::Device::WIDTH
+#define GET_HEIGHT() ILI9341::Device::HEIGHT
 
 #endif // USE_ADAFRUIT_LIBRARY
 
@@ -52,7 +53,7 @@
 #if USE_ADAFRUIT_LIBRARY
 extern Adafruit_TFTLCD gTftScreen;
 #else // USE_ADAFRUIT_LIBRARY
-extern ILI9341::DeferDriver gDriver;
+extern ILI9341::ImmediateDriver gDriver;
 #endif // USE_ADAFRUIT_LIBRARY
 
 // ============================================================================
@@ -79,6 +80,7 @@ void RunScreenTest()
 	// Wait for serial
 	while(!Serial) {}
 
+	printf("Begin test...\n");
 	TestFilledRoundRects();
 	TestRoundRects();
 	TestFilledTriangles();

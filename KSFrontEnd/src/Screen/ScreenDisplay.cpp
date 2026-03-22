@@ -10,6 +10,7 @@
 #else // USE_ADAFRUIT_LIBRARY
 #include <ILI9341_DeferDriver.h>
 #include <ILI9341_Constants.h>
+#include <ILI9341_ImmediateDriver.h>
 #endif // USE_ADAFRUIT_LIBRARY
 
 
@@ -35,8 +36,8 @@
 #if USE_ADAFRUIT_LIBRARY
 Adafruit_TFTLCD gTftScreen(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 #else // USE_ADAFRUIT_LIBRARY
-ILI9341::T4_ILI9341 gDevice(LCD_CS, LCD_CD, LCD_WR, LCD_RD);
-ILI9341::DeferDriver gDriver(gDevice);
+ILI9341::Device gDevice(LCD_CS, LCD_CD, LCD_WR, LCD_RD);
+ILI9341::ImmediateDriver gDriver(gDevice);
 #endif // USE_ADAFRUIT_LIBRARY
 
 
@@ -50,6 +51,7 @@ void SetupScreenDisplay(void)
  	gTftScreen.reset();
 	gTftScreen.begin(0x9341);
 #else // USE_ADAFRUIT_LIBRARY
+printf("Begin screen...\n");
 	int err = gDriver.Begin();
 	if(err != ILI9341_OK)
 	{
