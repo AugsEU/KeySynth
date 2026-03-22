@@ -279,6 +279,19 @@ void Device::MemoryWrite(uint16_t* buff, uint32_t size)
 }
 
 
+void Device::MemoryWrite(ILIColor color, uint32_t size)
+{
+	BEGIN_CMD(ILI9341_CMD_MEMORY_WRITE);
+	BEGIN_DATA;
+	uint8_t high = color >> 8;
+	uint8_t low = color;
+	for(uint32_t i = 0; i < size; ++i)
+	{
+		WRITE_DATA(high);
+		WRITE_DATA(low);
+	}
+	END_CMD;
+}
 
 void Device::ColorSet(ColorLUT table)
 {

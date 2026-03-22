@@ -55,6 +55,7 @@ public:
 	void ColumnAddrSet(uint16_t startCol, uint16_t endCol);
 	void PageAddrSet(uint16_t startPage, uint16_t endPage);
 	void MemoryWrite(uint16_t* buff, uint32_t size);
+	void MemoryWrite(ILIColor color, uint32_t size);
 
 	void ColorSet(ColorLUT table);
 

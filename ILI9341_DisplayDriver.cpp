@@ -79,10 +79,8 @@ void DisplayDriver::ForceClear(ILIColor col)
 {
 	mDevice.ColumnAddrSet(0, mDevice.WIDTH - 1);
 	mDevice.PageAddrSet(0, mDevice.HEIGHT - 1);
-
-	uint16_t buff[mDevice.HEIGHT * mDevice.WIDTH];
-	memset(buff, col, sizeof(buff));
-	mDevice.MemoryWrite(buff, mDevice.HEIGHT * mDevice.WIDTH);
+	
+	mDevice.MemoryWrite(col, mDevice.HEIGHT * mDevice.WIDTH);
 }
 
 
