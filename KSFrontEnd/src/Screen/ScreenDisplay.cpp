@@ -37,7 +37,7 @@
 Adafruit_TFTLCD gTftScreen(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 #else // USE_ADAFRUIT_LIBRARY
 ILI9341::Device gDevice(LCD_CS, LCD_CD, LCD_WR, LCD_RD);
-ILI9341::ImmediateDriver gDriver(gDevice);
+ILI9341::DeferDriver gDriver(gDevice);
 #endif // USE_ADAFRUIT_LIBRARY
 
 
@@ -51,7 +51,6 @@ void SetupScreenDisplay(void)
  	gTftScreen.reset();
 	gTftScreen.begin(0x9341);
 #else // USE_ADAFRUIT_LIBRARY
-printf("Begin screen...\n");
 	int err = gDriver.Begin();
 	if(err != ILI9341_OK)
 	{

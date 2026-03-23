@@ -53,7 +53,7 @@
 #if USE_ADAFRUIT_LIBRARY
 extern Adafruit_TFTLCD gTftScreen;
 #else // USE_ADAFRUIT_LIBRARY
-extern ILI9341::ImmediateDriver gDriver;
+extern ILI9341::DeferDriver gDriver;
 #endif // USE_ADAFRUIT_LIBRARY
 
 // ============================================================================
@@ -80,7 +80,6 @@ void RunScreenTest()
 	// Wait for serial
 	while(!Serial) {}
 
-	printf("Begin test...\n");
 	TestFilledRoundRects();
 	TestRoundRects();
 	TestFilledTriangles();
