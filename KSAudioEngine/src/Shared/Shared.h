@@ -5,7 +5,7 @@
 // Include
 // ============================================================================
 #include <Arduino.h>
-
+#include "Shared/SubParams.h"
 
 #ifndef SHARED_H
 #define SHARED_H
@@ -14,8 +14,9 @@
 // ============================================================================
 constexpr int AUDIO_USART_BAUD_RATE = 115200;
 constexpr uint8_t MESSAGE_BEGIN = 0xAB;
-constexpr uint32_t SAMPLE_RATE = 44000;
+constexpr uint32_t SAMPLE_RATE = 48000;
 
+constexpr size_t NUM_PARAMETERS = ASP_NUM_PARAMS;
 
 
 
@@ -29,6 +30,15 @@ enum MessageHeader : uint8_t
     NoteOff = 0x83,     // Turn this off now!
     SetParam = 0x84,    // Set a parameter
     NotifyOnline = 0xFF // We are awake
+};
+
+struct SynthParameter
+{
+	union
+	{
+		float_t mFloatValue;
+		uint32_t mIntValue;
+	};
 };
 
 #endif // SHARED_H

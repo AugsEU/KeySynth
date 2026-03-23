@@ -3,7 +3,7 @@
 // ============================================================================
 #include "Envelope.h"
 #include "Parameters.h"
-#include "SubParams.h"
+#include "Shared/SubParams.h"
 
 namespace Subtractive
 {

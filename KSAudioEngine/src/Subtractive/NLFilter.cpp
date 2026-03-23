@@ -2,7 +2,7 @@
 // Includes
 // ============================================================================
 #include "NLFilter.h"
-#include "SubParams.h"
+#include "Shared/SubParams.h"
 
 #define NLFILTER_FREQ_MAX 0.73f
 #define FAST_FILTER_CLIP 1

@@ -6,7 +6,7 @@
 #include <Tuning.h>
 
 #include "Parameters.h"
-#include "SubParams.h"
+#include "Shared/SubParams.h"
 
 #include "I2S/AudioConfig.h"
 #include "Utilities/QwertyMath.h"

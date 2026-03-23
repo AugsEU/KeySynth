@@ -5,7 +5,7 @@
 #include "Oscillator.h"
 #include "Midi.h"
 #include "Tuning.h"
-#include "SubParams.h"
+#include "Shared/SubParams.h"
 #include "SubVoice.h"
 #include "NLFilter.h"
 #include "Voice.h"
