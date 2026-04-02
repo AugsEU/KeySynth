@@ -4,14 +4,7 @@
 #include "Screen/ScreenDisplay.h"
 #include "Screen/ScreenTest.h"
 
-#if USE_ADAFRUIT_LIBRARY
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_TFTLCD.h> // Hardware-specific library
-#else // USE_ADAFRUIT_LIBRARY
-#include <ILI9341_DeferDriver.h>
-#include <ILI9341_Constants.h>
-#include <ILI9341_ImmediateDriver.h>
-#endif // USE_ADAFRUIT_LIBRARY
+
 
 
 
@@ -37,7 +30,7 @@
 Adafruit_TFTLCD gTftScreen(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 #else // USE_ADAFRUIT_LIBRARY
 ILI9341::Device gDevice(LCD_CS, LCD_CD, LCD_WR, LCD_RD);
-ILI9341::DeferDriver gDriver(gDevice);
+Display_t gDriver(gDevice);
 #endif // USE_ADAFRUIT_LIBRARY
 
 
@@ -65,6 +58,10 @@ void SetupScreenDisplay(void)
 
 void ScreenDisplayUpdate()
 {
-
+	gDriver.RenderPixels(4);
 }
 
+Display_t& GetScreen()
+{
+	return gDriver;
+}

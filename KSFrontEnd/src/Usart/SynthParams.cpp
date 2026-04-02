@@ -2,164 +2,76 @@
 // Include
 // ============================================================================
 #include "SynthParams.h"
-#include "Shared/SubParams.h"
+
 #include "Shared/Shared.h"
+#include "SynthParamBounds.h"
+
 #include <math.h>
 
 // ============================================================================
 // Globals
 // ============================================================================
-SynthParam gSynthParams[ASP_NUM_PARAMS];
+SynthParamBounds gSynthParamBounds[NUM_PARAMETERS];
+int8_t gSynthParamValues[NUM_PARAMETERS];
 
 
-
-
-
-// ============================================================================
-// SynthParam
-// ============================================================================
-SynthParam::SynthParam(uint8_t paramNum, int8_t maxValue)
-{
-    mParamNum = paramNum;
-    mBound = maxValue;
-}
-
-void SynthParam::ApplyDelta(int8_t delta)
-{
-    int8_t& value = GetValue();
-    value += delta;
-    int8_t max = GetMaxValue();
-    int8_t min = GetMinValue();
-    if(value > max)
-    {
-        value = max;
-    }
-    else if(value < min)
-    {
-        value = min;
-    }
-}
-
-float SynthParam::GetNormFloatValue(int8_t value)
-{
-    int8_t max = GetMaxValue();
-    int8_t min = GetMinValue();
-    if(min < 0 && value < 0)
-    {
-        return -(float)value / (float)min;
-    }
-
-    return (float)value / (float)max;
-}
-
-float SynthParam::ScaleFloat(uint8_t paramNum, float fv)
-{
-    switch (paramNum)
-    {
-    // General
-    case ASP_DRIVE:
-	case ASP_GAIN: // 0 to 1
-        fv *= fv;
-		break;
-	case ASP_DELAY_TIME: // 0 to 1 
-    case ASP_DELAY_FEEDBACK:
-    case ASP_DELAY_SHEAR:
-    case ASP_DELAY_MODE:
-		break;
-
-    // DCO
-	case ASP_DCO_TUNE_1:
-	case ASP_DCO_TUNE_2:
-        fv = fv * fv * fv;
-        fv = powf(4, fv);
-		break;
-	case ASP_DCO_VOL_1:
-	case ASP_DCO_VOL_2:
-        fv *= fv;
-		break;
-	case ASP_DCO_WS_1: // 0.0f to 1.0f
-	case ASP_DCO_WS_2:
-		break;
-
-    // ENV
-	case ASP_ENV_ATTACK1: // 1.0f / (SAMPLE_RATE * (8.01f - 8.0f * n));
-    case ASP_ENV_DECAY1:
-    case ASP_ENV_RELEASE1:
-	case ASP_ENV_ATTACK2:
-    case ASP_ENV_DECAY2:
-    case ASP_ENV_RELEASE2:
-    case ASP_LFO_ATTACK:
-        fv *= fv;// Give weight to small values.
-        fv = 1.0f - fv;
-        fv = 1.0f / ((float)SAMPLE_RATE * (8.0 + 0.01 - 8.0 * fv));
-		break;
-	case ASP_ENV_SUSTAIN1: // 0 to 1 
-    case ASP_ENV_SUSTAIN2:
-		break;
-
-    // VCF
-	case ASP_VCF_CUTOFF: // x*x
-        fv = fv * fv;
-		break;
-	case ASP_VCF_RES: // 0 to 1 weight high values
-    case ASP_VCF_FOLLOW:
-        fv = 1.0f - fv;
-        fv *= fv * fv;
-        fv = 1.0f - fv;
-		break;
-
-    // LFO
-	case ASP_LFO_RATE: // (x*x*50+0.1)*SAMPLE_PERIOD 
-        fv *= fv;
-        fv *= 50.0f;
-        fv += 0.1f;
-        fv *= (1.0f / (float)SAMPLE_RATE);
-		break;
-	case ASP_LFO_WOBBLE: // -0.5f to 0.5f
-    case ASP_LFO_OSC1_VOLUME:
-    case ASP_LFO_OSC2_VOLUME:
-    case ASP_LFO_OSC1_SHAPE:
-    case ASP_LFO_OSC2_SHAPE:
-    case ASP_LFO_VCF_CUTOFF:
-    case ASP_LFO_VCF_RES:
-        fv *= 0.5f;
-		break;
-    case ASP_LFO_OSC1_TUNE: // -1 to 1 weighted to small values
-    case ASP_LFO_OSC2_TUNE:
-        fv *= fabsf(fv);
-        break;
-    }
-
-    return fv;
-}
-
-int8_t SynthParam::GetMaxValue()
-{
-    if(mBound > 0)
-    {
-        return mBound;
-    }
-
-    return -mBound;
-}
-
-int8_t SynthParam::GetMinValue()
-{
-    if(mBound < 0)
-    {
-        return mBound;
-    }
-
-    return 0;
-}
-
-int8_t& SynthParam::GetValue()
-{
-    return gLoadedPreset.mValues[mParamNum];
-}
 
 
 
 // ============================================================================
 // Public functions
 // ============================================================================
+void InitParams()
+{
+    memset(gSynthParamValues, 0, sizeof(gSynthParamValues));
+
+    // General          Type                                                        Bound
+    gSynthParamBounds[ASP_TUNING             ] = SynthParamBounds(NUM_TUNINGS-1);
+    gSynthParamBounds[ASP_DRIVE              ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_GAIN               ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_DELAY_TIME         ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_DELAY_FEEDBACK     ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_DELAY_SHEAR        ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_DELAY_MODE         ] = SynthParamBounds(NUM_DELAY_MODES-1);
+    gSynthParamBounds[ASP_SOUND_TYPE         ] = SynthParamBounds(NUM_SOUNT_TYPES-1);
+ 
+    // DCO 
+    gSynthParamBounds[ASP_DCO_WAVE_TYPE_1    ] = SynthParamBounds(NUM_OSC_MODES-1);
+    gSynthParamBounds[ASP_DCO_TUNE_1         ] = SynthParamBounds(-50);
+    gSynthParamBounds[ASP_DCO_VOL_1          ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_DCO_WS_1           ] = SynthParamBounds(20);
+    gSynthParamBounds[ASP_DCO_WAVE_TYPE_2    ] = SynthParamBounds(NUM_OSC_MODES-1);
+    gSynthParamBounds[ASP_DCO_TUNE_2         ] = SynthParamBounds(-50);
+    gSynthParamBounds[ASP_DCO_VOL_2          ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_DCO_WS_2           ] = SynthParamBounds(20);
+
+    // ENV
+    gSynthParamBounds[ASP_ENV_ATTACK1        ] = SynthParamBounds(99);
+    gSynthParamBounds[ASP_ENV_DECAY1         ] = SynthParamBounds(99);
+    gSynthParamBounds[ASP_ENV_SUSTAIN1       ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_ENV_RELEASE1       ] = SynthParamBounds(99);
+    gSynthParamBounds[ASP_ENV_ATTACK2        ] = SynthParamBounds(99);
+    gSynthParamBounds[ASP_ENV_DECAY2         ] = SynthParamBounds(99);
+    gSynthParamBounds[ASP_ENV_SUSTAIN2       ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_ENV_RELEASE2       ] = SynthParamBounds(99);
+   
+    // VCF   
+    gSynthParamBounds[ASP_VCF_CUTOFF         ] = SynthParamBounds(50);
+    gSynthParamBounds[ASP_VCF_RES            ] = SynthParamBounds(20);
+    gSynthParamBounds[ASP_VCF_MODE           ] = SynthParamBounds(NUM_FILTER_MODES-1);
+    gSynthParamBounds[ASP_VCF_FOLLOW         ] = SynthParamBounds(20);
+   
+    // LFO   
+    gSynthParamBounds[ASP_LFO_RATE           ] = SynthParamBounds(99);
+    gSynthParamBounds[ASP_LFO_WAVE_TYPE      ] = SynthParamBounds(NUM_LFO_OSC_MODES-1);
+    gSynthParamBounds[ASP_LFO_ATTACK         ] = SynthParamBounds(99);
+    gSynthParamBounds[ASP_LFO_WOBBLE         ] = SynthParamBounds(-20);
+    gSynthParamBounds[ASP_LFO_OSC1_TUNE      ] = SynthParamBounds(-20);
+    gSynthParamBounds[ASP_LFO_OSC1_VOLUME    ] = SynthParamBounds(-20);
+    gSynthParamBounds[ASP_LFO_OSC1_SHAPE     ] = SynthParamBounds(-20);
+    gSynthParamBounds[ASP_LFO_OSC2_TUNE      ] = SynthParamBounds(-20);
+    gSynthParamBounds[ASP_LFO_OSC2_VOLUME    ] = SynthParamBounds(-20);
+    gSynthParamBounds[ASP_LFO_OSC2_SHAPE     ] = SynthParamBounds(-20);
+    gSynthParamBounds[ASP_LFO_VCF_CUTOFF     ] = SynthParamBounds(-20);
+    gSynthParamBounds[ASP_LFO_VCF_RES        ] = SynthParamBounds(-20);
+}

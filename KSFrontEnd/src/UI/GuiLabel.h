@@ -1,23 +1,28 @@
 // ============================================================================
-// Synths parameters to send over to backend synth
+// Stores max size of gui elements
 // ----------------------------------------------------------------------------
 // ============================================================================
 // Include
 // ============================================================================
 #include <stdint.h>
 
+#include "GuiElement.h"
 
-
-
-
-// ============================================================================
-// SynthParamBounds: Parameter bounds
-// ============================================================================
-
-
-
+#ifndef GUI_LABEL_H
+#define GUI_LABEL_H
 
 // ============================================================================
-// Public functions
+// GuiLabel
 // ============================================================================
-void InitParams();
+class GuiLabel final : public GuiElement
+{
+public:
+	void Draw(bool selected) final;
+
+	const char* mString = nullptr;
+	uint16_t mTextSize = 2;
+	ILI9341::ILIColor mTextColor = ILI9341_GREY;
+	ILI9341::ILIColor mHighlightColor = ILI9341_WHITE;
+};
+
+#endif // GUI_LABEL_H
