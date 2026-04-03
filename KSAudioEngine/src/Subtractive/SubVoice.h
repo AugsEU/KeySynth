@@ -1,4 +1,9 @@
 // ============================================================================
+// Voice for subtractive synth
+// ----------------------------------------------------------------------------
+#pragma once
+#include <pch.h>
+// ============================================================================
 // Includes
 // ============================================================================
 #include <stdint.h>
@@ -7,8 +12,7 @@
 #include "Oscillator.h"
 #include "Envelope.h"
 
-#ifndef SUB_VOICE_H
-#define SUB_VOICE_H
+
 
 namespace Subtractive
 {
@@ -52,5 +56,3 @@ float_t VoiceGetSample(SubVoice* pVoice,
 float VoiceEligibility(SubVoice* pVoice, uint8_t noteIdx);
 
 }
-
-#endif // SUB_VOICE_H

@@ -1,12 +1,15 @@
 // ============================================================================
+// Oscillator for subtractive synth
+// ----------------------------------------------------------------------------
+#pragma once
+#include <pch.h>
+// ============================================================================
 // Includes
 // ============================================================================
 #include <math.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifndef INC_OSCILLATOR_H_
-#define INC_OSCILLATOR_H_
 
 namespace Subtractive
 {
@@ -33,4 +36,3 @@ float_t OscOrgan(Oscillator* osc, float_t shape);
 
 }
 
-#endif /* INC_OSCILLATOR_H_ */

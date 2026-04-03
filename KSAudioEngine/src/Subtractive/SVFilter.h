@@ -1,12 +1,15 @@
-
+// ============================================================================
+// SVfilter for subtractive synth
+// ----------------------------------------------------------------------------
+#pragma once
+#include <pch.h>
 // ============================================================================
 // Include
 // ============================================================================
 #include <stdint.h>
 #include <math.h>
 
-#ifndef __SVFILTER_H
-#define __SVFILTER_H
+
 
 namespace Subtractive
 {
@@ -28,5 +31,3 @@ void SvfInit(SVFilter* pFilter);
 float_t SvfProcess(SVFilter* pFilter, float_t sample, float_t freq, float_t res, float_t mode);
 
 }
-
-#endif // __SVFILTER_H

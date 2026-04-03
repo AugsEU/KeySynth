@@ -1,11 +1,15 @@
 // ============================================================================
+// Non-linear filter for subtractive synth
+// ----------------------------------------------------------------------------
+#pragma once
+#include <pch.h>
+// ============================================================================
 // Includes
 // ============================================================================
 #include <stdint.h>
 #include <math.h>
 
-#ifndef NL_FILTER_H
-#define NL_FILTER_H
+
 
 // ============================================================================
 // Public constants
@@ -41,5 +45,3 @@ void 	SetFilterType(uint8_t type);
 float_t   CalcFilterSample(float_t smpl);
 
 }
-
-#endif /* NL_FILTER_H */
