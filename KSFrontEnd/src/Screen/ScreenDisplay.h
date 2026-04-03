@@ -1,6 +1,8 @@
 // ============================================================================
 // Functions to display things on the screen.
 // ----------------------------------------------------------------------------
+#pragma once
+#include <pch.h>
 // ============================================================================
 // Include
 // ============================================================================
@@ -16,9 +18,6 @@
 #include <ILI9341_DeferDriver.h>
 #include <ILI9341_ImmediateDriver.h>
 #endif // USE_ADAFRUIT_LIBRARY
-
-#ifndef SCREEN_DISPLAY_H
-#define SCREEN_DISPLAY_H
 
 // ============================================================================
 // Public constants
@@ -48,5 +47,3 @@ void ScreenDisplayUpdate();
 /// @brief Get main screen driver
 /// @return Screen driver
 Display_t& GetScreen();
-
-#endif //SCREEN_DISPLAY_H

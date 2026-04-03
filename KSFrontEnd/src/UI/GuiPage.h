@@ -13,8 +13,6 @@
 #include "GuiElementSize.h"
 
 
-#ifndef GUI_PAGE_H
-#define GUI_PAGE_H
 
 // ============================================================================
 // GuiPage
@@ -29,5 +27,3 @@ protected:
 	int mSelectedElementIndex = -1;
 	uTimeMs mPrevUpdate = 0;
 };
-
-#endif // GUI_PAGE_H

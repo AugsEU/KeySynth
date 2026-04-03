@@ -11,8 +11,6 @@
 #include <ILI9341_Types.h>
 
 
-#ifndef GUI_ELEMENT_H
-#define GUI_ELEMENT_H
 
 // ============================================================================
 // GuiElement
@@ -42,5 +40,3 @@ public:
 	uint16_t mX;
 	uint16_t mY;
 };
-
-#endif // GUI_ELEMENT_H

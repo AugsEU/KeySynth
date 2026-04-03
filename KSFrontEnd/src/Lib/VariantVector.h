@@ -1,6 +1,8 @@
 // ============================================================================
 // Vector which acts like Vector<T*> but doesn't use dynamic allocations
 // ----------------------------------------------------------------------------
+#pragma once
+#include <pch.h>
 // ============================================================================
 // Include
 // ============================================================================
@@ -10,9 +12,10 @@
 #include <utility>
 
 
-#ifndef VARIANT_VECTOR_H
-#define VARIANT_VECTOR_H
 
+// ============================================================================
+// VariantVector
+// ============================================================================
 template<typename T, std::size_t MAX_SIZE, std::size_t CAPACITY>
 class VariantVector
 {
@@ -121,5 +124,3 @@ public:
     T* const* begin() const { return mPointers; }
     T* const* end()   const { return mPointers + mSize; }
 };
-
-#endif // VARIANT_VECTOR_H

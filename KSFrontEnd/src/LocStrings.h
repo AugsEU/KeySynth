@@ -1,14 +1,17 @@
 // ============================================================================
 // String in language displayable to user.
 // ----------------------------------------------------------------------------
+#pragma once
+#include <pch.h>
 // ============================================================================
 // Include
 // ============================================================================
 #include <stdint.h>
 
-#ifndef LOC_STRINGS_H
-#define LOC_STRINGS_H
 
+// ============================================================================
+// Public functions
+// ============================================================================
 /// @brief Convert tuning to string(max 7 len)
 const char* const TuningToString(uint8_t tuning);
 
@@ -26,5 +29,3 @@ const char* const FilterModeToString(uint8_t filt);
 
 /// @brief Convert numeric paramter to string(max 4 len) 
 const char* const AugNumberParamToString(uint8_t param);
-
-#endif // LOC_STRINGS_H
