@@ -3,8 +3,7 @@
 // ============================================================================
 #include "SynthParams.h"
 
-#include "Shared/Shared.h"
-#include "SynthParamBounds.h"
+
 
 #include <math.h>
 

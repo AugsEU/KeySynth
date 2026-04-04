@@ -31,11 +31,13 @@ public:
 
 	/// @brief Called whenever a key is pressed
 	/// @param keycode Key code pressed
-	virtual void OnKeyPress(uint8_t keycode) {};
+	/// @return True if the input is stolen
+	virtual bool OnKeyPress(uint8_t keycode) { return false; }
 
 	/// @brief Called whenever a key is released
 	/// @param keycode Key code released
-	virtual void OnKeyRelease(uint8_t keycode) {};
+	/// @return True if the input is stolen
+	virtual bool OnKeyRelease(uint8_t keycode) { return false; }
 
 	uint16_t mX;
 	uint16_t mY;

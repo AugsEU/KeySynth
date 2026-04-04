@@ -11,16 +11,3 @@
 
 // Arduino
 #include <Arduino.h>
-
-// Lib
-#include "Lib/TimeMs.h"
-#include "Lib/Keycodes.h"
-
-#include "Shared/Debug.h"
-
-// ============================================================================
-// Macros
-// ============================================================================
-
-// Get compiletime size of array
-#define KS_ARRAY_SIZE(arr) sizeof(arr)/sizeof(arr[0])

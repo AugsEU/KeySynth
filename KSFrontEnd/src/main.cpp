@@ -9,6 +9,7 @@
 
 #include <Midi/NoteMaps.h>
 #include <Usart/TxBackend.h>
+#include <Usart/SynthParams.h>
 #include <Screen/ScreenDisplay.h>
 
 
@@ -51,6 +52,7 @@ USBHIDParser gHidParser(gUsbHost);
 void setup()
 {
 	// SERIAL
+	InitParams();
 	TxBackendBegin();
 
 	// USB
@@ -58,7 +60,7 @@ void setup()
 	gUsbKeyboard.attachRawPress(OnRawPress);
 	gUsbKeyboard.attachRawRelease(OnRawRelease);
 	gUsbKeyboard.forceHIDProtocol();
-	
+
 	// Screen
 	SetupScreenDisplay();
 }
@@ -83,8 +85,18 @@ void OnRawPress(uint8_t keycode)
 	Serial.println(keycode, HEX);
 #endif
 
-	uint8_t noteNum = KeyCodeToNoteNum(keycode, NoteLayout::Isometric);
-	TxBackendNotePress(noteNum);
+	bool stolen = false;
+	GuiPage* pPage = GetCurrentUiPage();
+
+	if(pPage)
+		stolen = pPage->OnKeyPress(keycode);
+
+	if(!stolen)
+	{
+		// Transmit as note
+		uint8_t noteNum = KeyCodeToNoteNum(keycode, NoteLayout::Isometric);
+		TxBackendNotePress(noteNum);
+	}
 }
 
 

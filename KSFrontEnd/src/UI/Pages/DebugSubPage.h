@@ -1,20 +1,27 @@
 // ============================================================================
-// Stores max size of gui elements
+// Debug page to demo subtractive synth
 // ----------------------------------------------------------------------------
 #pragma once
 #include <pch.h>
 // ============================================================================
 // Include
 // ============================================================================
-#include "GuiLabel.h"
-#include "GuiLabelCounter.h"
-
+#include <UI/GuiPage.h>
 
 // ============================================================================
-// Constants
+// DebugSubPage
 // ============================================================================
-constexpr size_t ELEMENT_MAX_SIZE = sizeof(GuiLabelCounter);
+class DebugSubPage final : public GuiPage
+{
+public:
+	/// @brief Constructor
+	DebugSubPage();
 
-// Add to this list
-static_assert(ELEMENT_MAX_SIZE >= sizeof(GuiLabel));
-static_assert(ELEMENT_MAX_SIZE >= sizeof(GuiLabelCounter));
+	/// @brief Called once on opening
+	void OnOpen() final;
+
+	/// @brief Called once a key is pressed
+	/// @param keycode Key code pressed
+	/// @return If the input is stolen or not
+	bool OnKeyPress(uint8_t keycode);
+};

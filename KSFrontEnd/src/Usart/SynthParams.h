@@ -7,7 +7,8 @@
 // Include
 // ============================================================================
 #include <stdint.h>
-
+#include "Shared/Shared.h"
+#include "SynthParamBounds.h"
 
 
 
@@ -15,7 +16,8 @@
 // ============================================================================
 // SynthParamBounds: Parameter bounds
 // ============================================================================
-
+extern SynthParamBounds gSynthParamBounds[NUM_PARAMETERS];
+extern int8_t gSynthParamValues[NUM_PARAMETERS];
 
 
 

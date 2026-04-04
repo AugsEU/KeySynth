@@ -7,6 +7,7 @@
 // Include
 // ============================================================================
 #include <Arduino.h>
+#include <UI/GuiPage.h>
 
 #define USE_ADAFRUIT_LIBRARY 0
 
@@ -18,6 +19,9 @@
 #include <ILI9341_DeferDriver.h>
 #include <ILI9341_ImmediateDriver.h>
 #endif // USE_ADAFRUIT_LIBRARY
+
+
+
 
 // ============================================================================
 // Public constants
@@ -33,6 +37,15 @@ constexpr uint16_t SC_WHITE   = 0xFFFF;
 
 #define Display_t ILI9341::DeferDriver
 
+// ============================================================================
+// Public types
+// ============================================================================
+enum GuiPageType : size_t
+{
+	None,
+	DebugSubtractive
+};
+
 
 // ============================================================================
 // Public functions
@@ -47,3 +60,11 @@ void ScreenDisplayUpdate();
 /// @brief Get main screen driver
 /// @return Screen driver
 Display_t& GetScreen();
+
+/// @brief Get current ui page
+/// @return Current ui page
+GuiPage* GetCurrentUiPage();
+
+/// @brief Move to a new page
+/// @param type Type of page to move to 
+void SelectUiPage(GuiPageType type);

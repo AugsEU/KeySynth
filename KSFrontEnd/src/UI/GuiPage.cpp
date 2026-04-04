@@ -18,7 +18,7 @@ void GuiPage::Update()
 		return;
 	}
 
-	for(int i = 0; i < mElements.size(); ++i)
+	for(size_t i = 0; i < mElements.size(); ++i)
 	{
 		GuiElement* pElement = mElements[i];
 		pElement->Update(start - mPrevUpdate, i == mSelectedElementIndex);
@@ -27,12 +27,21 @@ void GuiPage::Update()
 	mPrevUpdate = start;
 }
 
-
 void GuiPage::Draw()
 {
-	for(int i = 0; i < mElements.size(); ++i)
+	for(size_t i = 0; i < mElements.size(); ++i)
 	{
 		GuiElement* pElement = mElements[i];
 		pElement->Draw(i == mSelectedElementIndex);
 	}
+}
+
+GuiElement* GuiPage::GetSelectedElement()
+{
+	if(mSelectedElementIndex >= mElements.size())
+	{
+		return nullptr;
+	}
+
+	return mElements[mSelectedElementIndex];
 }

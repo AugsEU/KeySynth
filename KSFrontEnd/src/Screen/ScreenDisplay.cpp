@@ -4,7 +4,7 @@
 #include "Screen/ScreenDisplay.h"
 #include "Screen/ScreenTest.h"
 
-
+#include "UI/Pages/DebugSubPage.h"
 
 
 
@@ -33,6 +33,20 @@ ILI9341::Device gDevice(LCD_CS, LCD_CD, LCD_WR, LCD_RD);
 Display_t gDriver(gDevice);
 #endif // USE_ADAFRUIT_LIBRARY
 
+// Screen pages
+static GuiPageType gCurrPageType = GuiPageType::None;
+static DebugSubPage gSubPage;
+
+
+
+
+
+// ============================================================================
+// Private functions
+// ============================================================================
+
+
+
 
 
 // ============================================================================
@@ -54,14 +68,60 @@ void SetupScreenDisplay(void)
 #if SCREEN_TEST_ENABLE
 	RunScreenTest();
 #endif // SCREEN_TEST_ENABLE
+
+	SelectUiPage(GuiPageType::DebugSubtractive);
 }
 
 void ScreenDisplayUpdate()
 {
-	gDriver.RenderPixels(4);
+	static int sPageUpdateCounter = 0;
+	GuiPage* currPage = GetCurrentUiPage();
+	if(currPage)
+	{
+		if(sPageUpdateCounter-- < 0)
+		{
+			sPageUpdateCounter = 5;
+			currPage->Update();
+		}
+
+		currPage->Draw();
+	}
+
+	gDriver.RenderAllPixels();
 }
 
 Display_t& GetScreen()
 {
 	return gDriver;
+}
+
+GuiPage* GetCurrentUiPage()
+{
+	switch (gCurrPageType)
+	{
+	case GuiPageType::DebugSubtractive:
+		return &gSubPage;
+	default:
+		break;
+	}
+
+	return nullptr;
+}
+
+void SelectUiPage(GuiPageType type)
+{
+	GuiPage* currPage = GetCurrentUiPage();
+	if(currPage)
+	{
+		currPage->OnClose();
+	}
+
+	gCurrPageType = type;
+
+	GuiPage* newPage = GetCurrentUiPage();
+
+	if(newPage)
+	{
+		newPage->OnOpen();
+	}
 }
