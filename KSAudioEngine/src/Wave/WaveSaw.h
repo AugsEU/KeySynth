@@ -1,33 +1,26 @@
 // ============================================================================
-// Oscillator for subtractive synth
+// Sine wave generation functions
 // ----------------------------------------------------------------------------
 #pragma once
 #include <pch.h>
 // ============================================================================
-// Includes
+// Include
 // ============================================================================
-#include <math.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <Wave/WaveAll.h>
+#include "WavePolyBlep.h"
 
+// ============================================================================
+// Public functions (inline for performance)
+// ============================================================================
 
-namespace Subtractive
+/// @brief Get value of oscillator as saw tooth with PolyBLEP
+static inline float SawWaveBLEP(float phase, float dt)
 {
+	phase += 0.5;
+    if (phase >= 1.0f) 
+    {
+        phase -= 1.0f;
+    }
 
-// ============================================================================
-// Types
-// ============================================================================
-struct Oscillator
-{
-	float_t 	mPhase;	// Radians
-};
-
-// ============================================================================
-// Public functions
-// ============================================================================
-void OscInit(Oscillator* osc);
-void OscPhaseInc(Oscillator* osc, float_t phaseInc);
-
+    float saw = 2.0f * phase - 1.0f;
+    return saw - PolyBlep(phase, dt);
 }
-

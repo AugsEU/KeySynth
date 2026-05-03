@@ -21,7 +21,7 @@
 // Globals
 // ============================================================================
 SynthParameter gParameters[NUM_PARAMETERS];
-
+SynthMode gMode;
 
 // ============================================================================
 // Public functions
@@ -50,4 +50,14 @@ uint32_t GetIntParam(size_t idx)
 void SetIntParam(size_t idx, uint32_t param)
 {
 	gParameters[idx].mIntValue = param;
+}
+
+SynthMode GetSynthMode()
+{
+	return gMode;
+}
+
+void SetSynthMode(SynthMode mode)
+{
+	gMode = mode;
 }

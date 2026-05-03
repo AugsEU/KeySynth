@@ -192,19 +192,19 @@ void FillSoundBuffer(uint16_t* buf, uint16_t samples)
 	for (pos = 0; pos < samples; pos++)
 	{		
 		/*--- LFO ---*/
-		OscPhaseInc(&gLFO, lfoPhaseInc * ComputeLfoMult(OscSine(&gLFOWobbler), lfoWobble));
+		OscPhaseInc(&gLFO, lfoPhaseInc * ComputeLfoMult(SineQuadraic(gLFOWobbler.mPhase), lfoWobble));
 		OscPhaseInc(&gLFOWobbler, lfoWobblePhaseInc);
 		switch (lfoWaveSelect)
 		{
 		default:
 		case OSC_MODE_SINE:
-			lfoValue = OscSine(&gLFO);
+			lfoValue = SineQuadraic(gLFO.mPhase);
 			break;
 		case OSC_MODE_SQUARE:
-			lfoValue = OscSquareLF(&gLFO);
+			lfoValue = SquareWaveLFO(gLFO.mPhase);
 			break;
 		case OSC_MODE_SAW:
-			lfoValue = OscSawTooth(&gLFO, lfoPhaseInc);
+			lfoValue = SawWaveBLEP(gLFO.mPhase, lfoPhaseInc);
 			break;
 		}
 

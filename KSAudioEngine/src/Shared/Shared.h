@@ -30,7 +30,13 @@ enum MessageHeader : uint8_t
     NoteRelease = 0x82, // Note is released, do release env
     NoteOff = 0x83,     // Turn this off now!
     SetParam = 0x84,    // Set a parameter
+	SetMode = 0x85,		// Change which engine we are using.
     NotifyOnline = 0xFF // We are awake
+};
+
+enum class SynthMode : uint8_t
+{
+	Subtractive = 0x00
 };
 
 struct SynthParameter

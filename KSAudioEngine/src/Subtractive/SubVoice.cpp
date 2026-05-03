@@ -113,18 +113,18 @@ float_t VoiceGetSample(SubVoice* pVoice,
     {
     default:
     case OSC_MODE_SINE:
-        osc1 = OscSine(&pVoice->mOsc1);
+        osc1 = SineQuadraic(pVoice->mOsc1.mPhase);
         osc1 = ShapeWave(osc1, shape1);
         break;
     case OSC_MODE_SQUARE:
-        osc1 = OscSquareBLEP(&pVoice->mOsc1, dt, shape1);
+        osc1 = SquareWaveBLEPShape(pVoice->mOsc1.mPhase, dt, shape1);
         break;
     case OSC_MODE_SAW:
-        osc1 = OscSawTooth(&pVoice->mOsc1, dt);
+        osc1 = SawWaveBLEP(pVoice->mOsc1.mPhase, dt);
         osc1 = ShapeWave(osc1, shape1);
         break;
     case OSC_MODE_ORGAN:
-        osc1 = OscOrgan(&pVoice->mOsc1, shape1);
+        osc1 = SquareWaveOrgan(pVoice->mOsc1.mPhase, shape1);
         break;
     }
     osc1 *= GetFloatParam(ASP_DCO_VOL_1);
@@ -142,18 +142,18 @@ float_t VoiceGetSample(SubVoice* pVoice,
     {
     default:
     case OSC_MODE_SINE:
-        osc2 = OscSine(&pVoice->mOsc2);
+        osc2 = SineQuadraic(pVoice->mOsc2.mPhase);
         osc2 = ShapeWave(osc2, shape2);
         break;
     case OSC_MODE_SQUARE:
-        osc2 = OscSquareBLEP(&pVoice->mOsc2, dt, shape2);
+        osc2 = SquareWaveBLEPShape(pVoice->mOsc2.mPhase, dt, shape2);
         break;
     case OSC_MODE_SAW:
-        osc2 = OscSawTooth(&pVoice->mOsc2, dt);
+        osc2 = SawWaveBLEP(pVoice->mOsc2.mPhase, dt);
         osc2 = ShapeWave(osc2, shape2);
         break;
     case OSC_MODE_ORGAN:
-        osc2= OscOrgan(&pVoice->mOsc2, shape1);
+        osc2= SquareWaveOrgan(pVoice->mOsc2.mPhase, shape1);
         break;
     }
     osc2 *= GetFloatParam(ASP_DCO_VOL_2);
