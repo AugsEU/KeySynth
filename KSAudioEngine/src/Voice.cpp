@@ -41,6 +41,9 @@ bool Voice::CanBeAllocated()
 // ============================================================================
 void BeginVoice(uint8_t note)
 {
+    if(note == 0xFF)
+        return;
+
     uint8_t bestVoiceIdx = 0xFF;
     float bestVoiceValue = 0.0f;
 
@@ -62,7 +65,6 @@ void BeginVoice(uint8_t note)
 
     if(bestVoiceIdx != 0xFF)
     {
-        printf("Play note[%u]: %u\n", bestVoiceIdx, note);
         Subtractive::VoiceOn(&gVoices[bestVoiceIdx].mSubVoice, note);
         gVoices[bestVoiceIdx].mNoteNum = note;
     }
@@ -70,11 +72,13 @@ void BeginVoice(uint8_t note)
 
 void ReleaseVoice(uint8_t note)
 {
+    if(note == 0xFF)
+        return;
+
     for(uint8_t i = 0; i < VOICE_POLYPHONY; i++)
     {
         if(gVoices[i].mNoteNum == note)
         {
-            printf("Stop note[%u]: %u\n", i, note);
             Subtractive::VoiceOff(&gVoices[i].mSubVoice);
             gFreeNoteSearchStart = min(i, gFreeNoteSearchStart);
             return;
@@ -84,6 +88,9 @@ void ReleaseVoice(uint8_t note)
 
 void StopVoice(uint8_t note)
 {
+    if(note == 0xFF)
+        return;
+
     for(uint8_t i = 0; i < VOICE_POLYPHONY; i++)
     {
         if(gVoices[i].mNoteNum == note)

@@ -27,7 +27,7 @@ public:
 	virtual void OnClose() {}
 
 	/// @brief Update page and all elements, call this regularly
-	void Update();
+	virtual void Update();
 
 	/// @brief Draw all elemetns, call this each frame.
 	void Draw();

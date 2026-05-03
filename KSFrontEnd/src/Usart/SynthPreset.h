@@ -1,27 +1,30 @@
 // ============================================================================
-// Utilities to transmit to the audio backend
+// Synths parameters to send over to backend synth
 // ----------------------------------------------------------------------------
 #pragma once
 #include <pch.h>
 // ============================================================================
 // Include
 // ============================================================================
-#include <Arduino.h>
+#include "Shared/SubParams.h"
 
+// ============================================================================
+// Constants
+// ============================================================================
+constexpr size_t NUM_FACTORY_PRESETS = 18;
+constexpr uint8_t PRESET_NUM_CHARS = 8;
+constexpr uintptr_t EEPROM_PRESET_OFFSET = 0;
+constexpr uint8_t MAX_USER_PRESETS = 64;
 
 
 // ============================================================================
-// Public globals
+// SubSynthPreset
 // ============================================================================
-#define AUSERIAL Serial3
+struct SubSynthPreset
+{
+    char mName[PRESET_NUM_CHARS];
+    int8_t mValues[ASP_NUM_PARAMS];
+};
 
-// ============================================================================
-// Public functions
-// ============================================================================
-void TxBackendBegin();
-
-void TxBackendNotePress(uint8_t noteNum);
-void TxBackendNoteRelease(uint8_t noteNum);
-void TxBackendNoteOff(uint8_t noteNum);
-void TxBackendSetParam(uint8_t paramNum, float_t paramValue);
-void TxBackendSetParam(uint8_t paramNum, int32_t paramValue);
+char* GetSubMemPresetName(size_t index);
+void LoadSubMemPreset(size_t index);

@@ -2,8 +2,8 @@
 // Include
 // ============================================================================
 #include "SynthParams.h"
-
-
+#include "Usart/TxBackend.h"
+#include "Usart/SynthPreset.h"
 
 #include <math.h>
 
@@ -20,9 +20,10 @@ int8_t gSynthParamValues[NUM_PARAMETERS];
 // ============================================================================
 // Public functions
 // ============================================================================
-void InitParams()
+void InitParamsForSubtractive()
 {
     memset(gSynthParamValues, 0, sizeof(gSynthParamValues));
+    LoadSubMemPreset(10);
 
     // General          Type                                                        Bound
     gSynthParamBounds[ASP_TUNING             ] = SynthParamBounds(NUM_TUNINGS-1);
@@ -73,4 +74,44 @@ void InitParams()
     gSynthParamBounds[ASP_LFO_OSC2_SHAPE     ] = SynthParamBounds(-20);
     gSynthParamBounds[ASP_LFO_VCF_CUTOFF     ] = SynthParamBounds(-20);
     gSynthParamBounds[ASP_LFO_VCF_RES        ] = SynthParamBounds(-20);
+}
+
+void SendParamForSubtractive(size_t paramNum)
+{
+    int8_t value = gSynthParamValues[paramNum];
+    if(IsSubtractiveParamFloat(paramNum))
+    {
+        SynthParamBounds& bounds = gSynthParamBounds[paramNum];
+
+        float fvalue = bounds.GetNormFloatValue(value);
+        fvalue = bounds.ScaleFloatForSubParam(paramNum, fvalue);
+
+        printf("Send param %u -> %f\n", paramNum, fvalue);
+        TxBackendSetParam(paramNum, fvalue);
+    }
+    else
+    {
+        TxBackendSetParam(paramNum, (int32_t)value);
+    }
+}
+
+bool IsSubtractiveParamFloat(size_t paramNum)
+{
+    switch (paramNum)
+    {
+    case ASP_LFO_WAVE_TYPE:
+    case ASP_VCF_MODE:
+    case ASP_DCO_WAVE_TYPE_2:
+    case ASP_DCO_WAVE_TYPE_1:
+    case ASP_SOUND_TYPE:
+    case ASP_DELAY_MODE:
+    case ASP_TUNING:
+        return false;
+        break;
+    
+    default:
+        break;
+    }
+
+    return true;
 }

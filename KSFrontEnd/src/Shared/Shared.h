@@ -13,7 +13,7 @@
 // ============================================================================
 // Constants
 // ============================================================================
-constexpr int AUDIO_USART_BAUD_RATE = 115200;
+constexpr int AUDIO_USART_BAUD_RATE = 31250;
 constexpr uint8_t MESSAGE_BEGIN = 0xAB;
 constexpr uint32_t SAMPLE_RATE = 48000;
 

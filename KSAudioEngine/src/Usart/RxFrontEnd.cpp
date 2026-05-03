@@ -4,6 +4,7 @@
 #include <Usart/RxFrontEnd.h>
 #include <Shared/Shared.h>
 #include <Voice.h>
+#include <Parameters.h>
 
 // ============================================================================
 // Constants
@@ -47,7 +48,7 @@ void RxFrontEndPoll()
 		else
 		{
 			gMsgBuff[gMsgBuffWriteHead++] = (uint8_t)rxByte;
-			if(gMsgBuffWriteHead == GetMessageLength())
+			if(gMsgBuffWriteHead == GetMessageLength() && gMsgBuffWriteHead != 0)
             {
                 HandleMessage(gMsgBuff, gMsgBuffWriteHead);
                 gMsgBuffWriteHead = WRITE_HEAD_DETACHED;
@@ -88,6 +89,7 @@ size_t GetMessageLength()
 
 void HandleMessage(uint8_t* buf, size_t len)
 {
+    float_t value = 0;
 	switch (GetCurrMessageHeader())
     {
     case MessageHeader::NotifyOnline:
@@ -105,7 +107,9 @@ void HandleMessage(uint8_t* buf, size_t len)
         return;
 
     case MessageHeader::SetParam:
-        // ToDo: set parameter
+        memcpy((void*)&value, &buf[2], sizeof(float_t)); // need to copy because of alignment
+        printf("Set [%u] %02x %02x %02x %02x\n", len, buf[2], buf[3], buf[4], buf[5]);
+        SetFloatParam(buf[1], value);
         return;
 
     default: // Invalid header, ignore

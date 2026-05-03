@@ -9,11 +9,12 @@
 
 #include <Usart/RxFrontEnd.h>
 #include "Subtractive/SubWaveGen.h"
+#include "Voice.h"
 
 // ============================================================================
 // Constants
 // ============================================================================
-#define ENABLE_CPU_PROFILE_REPORT 1
+#define ENABLE_CPU_PROFILE_REPORT 0
 
 
 // ============================================================================

@@ -52,7 +52,7 @@ USBHIDParser gHidParser(gUsbHost);
 void setup()
 {
 	// SERIAL
-	InitParams();
+	InitParamsForSubtractive();
 	TxBackendBegin();
 
 	// USB

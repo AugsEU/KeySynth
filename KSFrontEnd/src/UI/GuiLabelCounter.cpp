@@ -32,7 +32,7 @@ bool GuiLabelCounter::OnKeyPress(uint8_t keycode)
 
 		return true;
 	}
-	else
+	else if(keycode == mMinusKeycode)
 	{
 		mValue -= 1;
 		if(mValue < mMinValue)

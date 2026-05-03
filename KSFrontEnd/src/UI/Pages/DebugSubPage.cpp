@@ -43,10 +43,37 @@ void DebugSubPage::OnOpen()
 	for(size_t i = 0; i < ASP_NUM_PARAMS; ++i)
 	{
 		GuiLabelCounter* pCounter = (GuiLabelCounter*)mElements[i];
-		pCounter->mMaxValue = gSynthParamBounds->GetMaxValue();
-		pCounter->mMinValue = gSynthParamBounds->GetMinValue();
+		pCounter->mMaxValue = gSynthParamBounds[i].GetMaxValue();
+		pCounter->mMinValue = gSynthParamBounds[i].GetMinValue();
+		pCounter->mValue = gSynthParamValues[i];
 	}
 }
+
+
+
+void DebugSubPage::Update()
+{
+	// Send some params
+	for(int i = 0; i < 4; ++i)
+	{
+		GuiLabelCounter* pCounter = (GuiLabelCounter*)mElements[mParamWriteHead];
+		int value = pCounter->mValue;
+
+		gSynthParamValues[mParamWriteHead] = (int8_t)value;
+		SendParamForSubtractive(mParamWriteHead);
+
+		mParamWriteHead++;
+		if(mParamWriteHead >= ASP_NUM_PARAMS)
+		{
+			mParamWriteHead = 0;
+		}
+	}
+	 
+	// Do basic update
+	GuiPage::Update();
+}
+
+
 
 bool DebugSubPage::OnKeyPress(uint8_t keycode)
 {

@@ -24,4 +24,6 @@ extern int8_t gSynthParamValues[NUM_PARAMETERS];
 // ============================================================================
 // Public functions
 // ============================================================================
-void InitParams();
+void InitParamsForSubtractive();
+void SendParamForSubtractive(size_t paramNum);
+bool IsSubtractiveParamFloat(size_t paramNum);

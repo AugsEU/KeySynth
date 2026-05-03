@@ -19,9 +19,15 @@ public:
 
 	/// @brief Called once on opening
 	void OnOpen() final;
+	
+	/// @brief Called when updating a frame
+	void Update() final;
 
 	/// @brief Called once a key is pressed
 	/// @param keycode Key code pressed
 	/// @return If the input is stolen or not
 	bool OnKeyPress(uint8_t keycode);
+
+private:
+	size_t mParamWriteHead = 0;
 };
