@@ -43,7 +43,7 @@ struct SynthParameter
 {
 	union
 	{
-		float_t mFloatValue;
+		float mFloatValue;
 		uint32_t mIntValue;
 	};
 };

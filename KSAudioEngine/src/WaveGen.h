@@ -11,8 +11,8 @@
 // ============================================================================
 // Public globals
 // ============================================================================
-extern volatile float_t gFreq;
-extern volatile float_t gVol;
+extern volatile float gFreq;
+extern volatile float gVol;
 
 
 

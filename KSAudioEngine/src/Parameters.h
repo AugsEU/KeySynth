@@ -17,7 +17,7 @@
 
 void ZeroOutParams();
 
-float_t GetFloatParam(size_t idx);
+float GetFloatParam(size_t idx);
 void SetFloatParam(size_t idx, float param);
 
 uint32_t GetIntParam(size_t idx);

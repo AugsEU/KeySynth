@@ -24,9 +24,9 @@ inline static float SineQuintic(float phase)
     const float B = -41.11008f;
     const float C = 6.28155;
 
-    float_t x = phase;
-    float_t x2;
-    float_t x4;
+    float x = phase;
+    float x2;
+    float x4;
     
     if (x < 0.25f)
     {

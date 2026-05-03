@@ -30,12 +30,12 @@ enum EnvelopeSection
 struct Envelope
 {
     EnvelopeSection mSection;
-    float_t mAttack;
-    float_t mDecay;
-    float_t mSustain;
-    float_t mRelease;
+    float mAttack;
+    float mDecay;
+    float mSustain;
+    float mRelease;
     
-    float_t mVolume;
+    float mVolume;
 };
 
 // ============================================================================

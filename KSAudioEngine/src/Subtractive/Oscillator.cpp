@@ -24,7 +24,7 @@ void OscInit(Oscillator* osc)
 
 
 /// @brief Increment phase of oscillator by 1 sample.
-void OscPhaseInc(Oscillator* osc, float_t phaseInc)
+void OscPhaseInc(Oscillator* osc, float phaseInc)
 {
     osc->mPhase += phaseInc;
 

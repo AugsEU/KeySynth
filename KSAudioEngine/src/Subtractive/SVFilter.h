@@ -19,15 +19,15 @@ namespace Subtractive
 // ============================================================================
 struct SVFilter
 {
-    float_t mLp;             // Low-pass state
-    float_t mBp;             // Band-pass state
-    float_t mHp;             // High-pass state
+    float mLp;             // Low-pass state
+    float mBp;             // Band-pass state
+    float mHp;             // High-pass state
 };
 
 // ============================================================================
 // Public functions
 // ============================================================================
 void SvfInit(SVFilter* pFilter);
-float_t SvfProcess(SVFilter* pFilter, float_t sample, float_t freq, float_t res, float_t mode);
+float SvfProcess(SVFilter* pFilter, float sample, float freq, float res, float mode);
 
 }

@@ -15,11 +15,11 @@ static inline float SquareWave(float phase)
 }
 
 /// @brief Compute wave for low frequency oscillator
-static inline float_t SquareWaveLFO(float phase)
+static inline float SquareWaveLFO(float phase)
 {
-    const float_t DT = 0.01f;
+    const float DT = 0.01f;
 
-    float_t value = phase < 0.5f ? 1.0f : -1.0f;
+    float value = phase < 0.5f ? 1.0f : -1.0f;
     if(phase < DT)
     {
         value = phase * (1.0f / DT);
@@ -62,12 +62,12 @@ static inline float_t SquareWaveLFO(float phase)
 }
 
 /// @brief Square wave with polyBLEP and wave shaping
-static inline float_t SquareWaveBLEPShape(float phase, float_t dt, float_t shape)
+static inline float SquareWaveBLEPShape(float phase, float dt, float shape)
 {
     shape += 0.255f;
     shape *= 0.6125f;
 
-    float_t value = phase < shape ? 1.0f : -1.0f;
+    float value = phase < shape ? 1.0f : -1.0f;
     if(phase < dt)
     {
         value = phase / dt;
@@ -112,11 +112,11 @@ static inline float_t SquareWaveBLEPShape(float phase, float_t dt, float_t shape
 /// @brief Square wave with organ-like sound
 static inline float SquareWaveOrgan(float phase, float shape)
 {
-    const float_t DT = 0.1f;
+    const float DT = 0.1f;
     shape += 0.45f;
     shape *= 0.52f;
 
-    float_t value = phase < shape ? 1.0f : -1.0f;
+    float value = phase < shape ? 1.0f : -1.0f;
     if(phase < DT)
     {
         value = phase * (1.0f / DT);

@@ -78,7 +78,7 @@ size_t GetMessageLength()
         return sizeof(MessageHeader) + sizeof(uint8_t);
 
     case MessageHeader::SetParam:
-        return sizeof(MessageHeader) + sizeof(uint8_t) + sizeof(float_t);
+        return sizeof(MessageHeader) + sizeof(uint8_t) + sizeof(float);
 
     default:
         break;
@@ -89,7 +89,7 @@ size_t GetMessageLength()
 
 void HandleMessage(uint8_t* buf, size_t len)
 {
-    float_t value = 0;
+    float value = 0;
 	switch (GetCurrMessageHeader())
     {
     case MessageHeader::NotifyOnline:
@@ -107,7 +107,7 @@ void HandleMessage(uint8_t* buf, size_t len)
         return;
 
     case MessageHeader::SetParam:
-        memcpy((void*)&value, &buf[2], sizeof(float_t)); // need to copy because of alignment
+        memcpy((void*)&value, &buf[2], sizeof(float)); // need to copy because of alignment
         printf("Set [%u] %02x %02x %02x %02x\n", len, buf[2], buf[3], buf[4], buf[5]);
         SetFloatParam(buf[1], value);
         return;

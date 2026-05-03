@@ -4,7 +4,7 @@
 // General
 #define ASP_TUNING              0 // Int param
 #define ASP_DRIVE               1 // 1.0f + GetFloatParam(ASP_DRIVE) * (DRIVE_ALPHA-1.0f);
-#define ASP_GAIN                2 // (2.0f / (float_t)MIDI_POLYPHONY) * GetFloatParam(ASP_GAIN);
+#define ASP_GAIN                2 // (2.0f / (float)MIDI_POLYPHONY) * GetFloatParam(ASP_GAIN);
 
 // Delay
 #define ASP_DELAY_TIME          3 // GetFloatParam(ASP_DELAY_TIME) * DELAY_BUFFER_LEN

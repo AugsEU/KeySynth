@@ -90,11 +90,11 @@ void VoicePrepSampleBlock(SubVoice* pVoice)
     pVoice->mLfoDelta = GetFloatParam(ASP_LFO_ATTACK);
 }
 
-float_t VoiceGetSample(SubVoice* pVoice, 
+float VoiceGetSample(SubVoice* pVoice, 
                         uint32_t waveType1, uint32_t waveType2, 
-                        float_t tune1, float_t tune2, 
-                        float_t shape1, float_t shape2,
-                        float_t lfoValue)
+                        float tune1, float tune2, 
+                        float shape1, float shape2,
+                        float lfoValue)
 {
     if(pVoice->mLfoAmount < 1.0f)
     {
@@ -102,13 +102,13 @@ float_t VoiceGetSample(SubVoice* pVoice,
     }
     lfoValue *= pVoice->mLfoAmount;
 
-    float_t osc1TuneLFO = FastUnitExp(GetFloatParam(ASP_LFO_OSC1_TUNE) * lfoValue);
-    float_t osc2TuneLFO = FastUnitExp(GetFloatParam(ASP_LFO_OSC2_TUNE) * lfoValue);
-    float_t dt = pVoice->mFreq;
+    float osc1TuneLFO = FastUnitExp(GetFloatParam(ASP_LFO_OSC1_TUNE) * lfoValue);
+    float osc2TuneLFO = FastUnitExp(GetFloatParam(ASP_LFO_OSC2_TUNE) * lfoValue);
+    float dt = pVoice->mFreq;
 
     // Osc1
     OscPhaseInc(&pVoice->mOsc1, dt * tune1 * osc1TuneLFO);
-    float_t osc1;
+    float osc1;
     switch (waveType1)
     {
     default:
@@ -137,7 +137,7 @@ float_t VoiceGetSample(SubVoice* pVoice,
 #if !MONO_OSC
     // Osc2
     OscPhaseInc(&pVoice->mOsc2, dt * tune2 * osc2TuneLFO);
-    float_t osc2;
+    float osc2;
     switch (waveType2)
     {
     default:

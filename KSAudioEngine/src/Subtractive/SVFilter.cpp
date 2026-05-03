@@ -22,7 +22,7 @@ void SvfInit(SVFilter* pFilter)
 }
 
 /// @brief Process 1 sample
-float_t SvfProcess(SVFilter* pFilter, float_t sample, float_t freq, float_t res, float_t mode)
+float SvfProcess(SVFilter* pFilter, float sample, float freq, float res, float mode)
 {
     res *= res;
     res *= 5.0f;

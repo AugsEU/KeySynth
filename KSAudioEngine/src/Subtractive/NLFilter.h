@@ -27,21 +27,21 @@ namespace Subtractive
 struct NLFilter
 {
 	uint8_t 	mType;
-	float_t	    mFreq;
-	float_t		mGain;
-	float_t		mQ;
-	float_t		mSample0;
-	float_t		mSample1;
+	float	    mFreq;
+	float		mGain;
+	float		mQ;
+	float		mSample0;
+	float		mSample1;
 };
 
 // ============================================================================
 // Public functions
 // ============================================================================
 void 	InitFilter();
-void 	SetFilterFreq(float_t val);
-void 	SetFilterRes(float_t val);
+void 	SetFilterFreq(float val);
+void 	SetFilterRes(float val);
 void 	SetFilterType(uint8_t type);
 
-float_t   CalcFilterSample(float_t smpl);
+float   CalcFilterSample(float smpl);
 
 }

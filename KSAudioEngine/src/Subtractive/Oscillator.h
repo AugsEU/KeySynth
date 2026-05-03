@@ -20,14 +20,14 @@ namespace Subtractive
 // ============================================================================
 struct Oscillator
 {
-	float_t 	mPhase;	// Radians
+	float 	mPhase;	// Radians
 };
 
 // ============================================================================
 // Public functions
 // ============================================================================
 void OscInit(Oscillator* osc);
-void OscPhaseInc(Oscillator* osc, float_t phaseInc);
+void OscPhaseInc(Oscillator* osc, float phaseInc);
 
 }
 

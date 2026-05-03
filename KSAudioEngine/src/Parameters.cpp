@@ -32,7 +32,7 @@ void ZeroOutParams()
 	memset(gParameters, 0x00, sizeof(gParameters));
 }
 
-float_t GetFloatParam(size_t idx)
+float GetFloatParam(size_t idx)
 {
 	return gParameters[idx].mFloatValue;
 }

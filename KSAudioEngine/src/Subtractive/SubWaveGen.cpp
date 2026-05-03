@@ -40,7 +40,7 @@ static int32_t gDelayReadOffsetOffset = 0;
 
 static Oscillator gLFO;
 static Oscillator gLFOWobbler;
-static float_t gCurrLoudness = 0.0f;
+static float gCurrLoudness = 0.0f;
 
 // ============================================================================
 // Public functions
@@ -158,31 +158,31 @@ void FillSoundBuffer(uint16_t* buf, uint16_t samples)
 	// DCO
 	uint32_t waveType1 = GetIntParam(ASP_DCO_WAVE_TYPE_1);
 	uint32_t waveType2 = GetIntParam(ASP_DCO_WAVE_TYPE_2);
-	float_t tune1 = GetFloatParam(ASP_DCO_TUNE_1);
-	float_t tune2 = GetFloatParam(ASP_DCO_TUNE_2);
-	float_t shape1;// = 1.5f * GetFloatParam(ASP_DCO_WS_1) - 0.25f;
-	float_t shape2;// = 1.5f * GetFloatParam(ASP_DCO_WS_2) - 0.25f;
-	float_t shape1Lfo = GetFloatParam(ASP_LFO_OSC1_SHAPE);
-	float_t shape2Lfo = GetFloatParam(ASP_LFO_OSC2_SHAPE);
+	float tune1 = GetFloatParam(ASP_DCO_TUNE_1);
+	float tune2 = GetFloatParam(ASP_DCO_TUNE_2);
+	float shape1;// = 1.5f * GetFloatParam(ASP_DCO_WS_1) - 0.25f;
+	float shape2;// = 1.5f * GetFloatParam(ASP_DCO_WS_2) - 0.25f;
+	float shape1Lfo = GetFloatParam(ASP_LFO_OSC1_SHAPE);
+	float shape2Lfo = GetFloatParam(ASP_LFO_OSC2_SHAPE);
 
 	// VCF
 	SetFilterType(GetIntParam(ASP_VCF_MODE));
-	float_t filterFreqMod, filterFreq = GetFloatParam(ASP_VCF_CUTOFF);
-	float_t filterRes = GetFloatParam(ASP_VCF_RES);
-	float_t filterFreqLfo = GetFloatParam(ASP_LFO_VCF_CUTOFF);
-	float_t filterResLfo = GetFloatParam(ASP_LFO_VCF_RES);
-	float_t filterFollow = GetFloatParam(ASP_VCF_FOLLOW);
+	float filterFreqMod, filterFreq = GetFloatParam(ASP_VCF_CUTOFF);
+	float filterRes = GetFloatParam(ASP_VCF_RES);
+	float filterFreqLfo = GetFloatParam(ASP_LFO_VCF_CUTOFF);
+	float filterResLfo = GetFloatParam(ASP_LFO_VCF_RES);
+	float filterFollow = GetFloatParam(ASP_VCF_FOLLOW);
 
 	// LFO
-	float_t lfoValue;
+	float lfoValue;
 	uint32_t lfoWaveSelect = GetIntParam(ASP_LFO_WAVE_TYPE);
-	float_t lfoPhaseInc = GetFloatParam(ASP_LFO_RATE);
-	float_t lfoWobblePhaseInc = lfoPhaseInc * 0.061804697157f;
-	float_t lfoWobble = GetFloatParam(ASP_LFO_WOBBLE);
+	float lfoPhaseInc = GetFloatParam(ASP_LFO_RATE);
+	float lfoWobblePhaseInc = lfoPhaseInc * 0.061804697157f;
+	float lfoWobble = GetFloatParam(ASP_LFO_WOBBLE);
 
 	// Drive & Gain
-	float_t gain = GetFloatParam(ASP_GAIN);
-	float_t drive = GetFloatParam(ASP_DRIVE);
+	float gain = GetFloatParam(ASP_GAIN);
+	float drive = GetFloatParam(ASP_DRIVE);
 
 	for(int i = 0; i < VOICE_POLYPHONY; i++)
 	{
@@ -209,7 +209,7 @@ void FillSoundBuffer(uint16_t* buf, uint16_t samples)
 		}
 
 		/*--- Generate waveform ---*/
-		float_t	y = 0.0f;
+		float	y = 0.0f;
 		shape1 = 1.5f * GetFloatParam(ASP_DCO_WS_1) * ComputeLfoMult(lfoValue, shape1Lfo) - 0.25f;
 		shape2 = 1.5f * GetFloatParam(ASP_DCO_WS_2) * ComputeLfoMult(lfoValue, shape2Lfo) - 0.25f;
 
@@ -219,7 +219,7 @@ void FillSoundBuffer(uint16_t* buf, uint16_t samples)
 		}
 
 		/*--- Measure loudness ---*/
-		float_t sampLoud = fabsf(y) * 6.0f;
+		float sampLoud = fabsf(y) * 6.0f;
 		if(sampLoud > 1.0f) sampLoud = 1.0f;
 		gCurrLoudness = LOUDNESS_ALPHA * sampLoud + (1.0f - LOUDNESS_ALPHA) * gCurrLoudness;
 

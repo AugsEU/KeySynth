@@ -22,7 +22,7 @@ namespace Subtractive
 // ============================================================================
 struct SubVoice
 {
-    float_t mFreq; // Note: Oscillator frequency may vary from this.
+    float mFreq; // Note: Oscillator frequency may vary from this.
     uint8_t mPlayingNoteIdx;
 
     Oscillator mOsc1;
@@ -31,8 +31,8 @@ struct SubVoice
     Oscillator mOsc2;
     Envelope mEnv2;
 
-    float_t mLfoDelta;
-    float_t mLfoAmount;
+    float mLfoDelta;
+    float mLfoAmount;
 };
 
 
@@ -47,11 +47,11 @@ void VoiceOnSteal(SubVoice* pVoice, uint8_t playingNoteIdx);
 void VoiceOff(SubVoice* pVoice);
 
 void VoicePrepSampleBlock(SubVoice* pVoice);
-float_t VoiceGetSample(SubVoice* pVoice, 
+float VoiceGetSample(SubVoice* pVoice, 
     uint32_t waveShape1, uint32_t waveShape2, 
-    float_t tune1, float_t tune2, 
-    float_t shape1, float_t shape2,
-    float_t lfoValue);
+    float tune1, float tune2, 
+    float shape1, float shape2,
+    float lfoValue);
 
 float VoiceEligibility(SubVoice* pVoice, uint8_t noteIdx);
 

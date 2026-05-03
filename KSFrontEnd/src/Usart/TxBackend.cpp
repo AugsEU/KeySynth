@@ -58,16 +58,16 @@ void TxBackendNoteOff(uint8_t noteNum)
     EndMessage();
 }
 
-void TxBackendSetParam(uint8_t paramNum, float_t paramValue)
+void TxBackendSetParam(uint8_t paramNum, float paramValue)
 {
-    static_assert(sizeof(float_t) == 4);
+    static_assert(sizeof(float) == 4);
 
     const uint8_t* paramBytes = reinterpret_cast<const uint8_t*>(&paramValue);
     
     BeginMessage(MessageHeader::SetParam);
     
     AUSERIAL.write(paramNum);
-    AUSERIAL.write(paramBytes, sizeof(float_t));
+    AUSERIAL.write(paramBytes, sizeof(float));
 
     EndMessage();
 }

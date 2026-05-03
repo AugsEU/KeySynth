@@ -20,15 +20,15 @@ uint32_t GetNextRand()
     return gSeed;
 }
 
-float_t FastUnitExp(float_t x)
+float FastUnitExp(float x)
 {
-    float_t g = 0.75 * x;
+    float g = 0.75 * x;
     g += 0.25f;
     x *= g;
     return x + 1.0f;
 }
 
-float_t ComputeLfoMult(float_t lfoValue, float_t lfoAmount)
+float ComputeLfoMult(float lfoValue, float lfoAmount)
 {
     if(signbit(lfoAmount)) // If negative
     {
@@ -42,15 +42,15 @@ float_t ComputeLfoMult(float_t lfoValue, float_t lfoAmount)
     return 1.0f + lfoAmount * lfoValue;
 }
 
-float_t ComputeLoudnessMult(float_t loudness, float_t amount)
+float ComputeLoudnessMult(float loudness, float amount)
 {
     loudness -= 1.0f;
     return 1.0f + loudness * amount;
 }
 
-float_t ShapeWave(float_t waveValue, float_t waveShape)
+float ShapeWave(float waveValue, float waveShape)
 {
-    float_t g = waveValue * waveValue;
+    float g = waveValue * waveValue;
     g *= g;
     // g *= g;
 
@@ -67,9 +67,9 @@ float_t ShapeWave(float_t waveValue, float_t waveShape)
 #define DRIVE_B ((DRIVE_K+1.0f)*(1.0f-DRIVE_M))
 #define DRIVE_C (DRIVE_M)
 
-float_t DrivenSample(float_t sample)
+float DrivenSample(float sample)
 {
-    float_t p;
+    float p;
     if(signbit(sample))
     {
         sample = -sample;

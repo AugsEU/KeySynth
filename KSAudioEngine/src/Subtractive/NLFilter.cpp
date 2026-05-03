@@ -14,8 +14,8 @@ namespace Subtractive
 // Forward decl
 // ============================================================================
 
-float_t FilterClip(float_t n);
-float_t LowpassClip(float_t n);
+float FilterClip(float n);
+float LowpassClip(float n);
 
 // ============================================================================
 // Globals
@@ -37,7 +37,7 @@ void InitFilter()
 	SetFilterFreq(0.0f);
 }
 
-void SetFilterRes(float_t val)
+void SetFilterRes(float val)
 {
 	gNLFilter.mQ = 1.0f - val;
 	if(gNLFilter.mQ < 0.01f)
@@ -46,11 +46,11 @@ void SetFilterRes(float_t val)
     }
 }
 
-void SetFilterFreq(float_t val)
+void SetFilterFreq(float val)
 {
 	val *= (NLFILTER_FREQ_MAX * 0.5f);
 	gNLFilter.mFreq = val;
-	float_t g = val * val; // Gain = 18xxx + 3x
+	float g = val * val; // Gain = 18xxx + 3x
     g *= val;
     g *= 18.0f;
     val *= 3.0f;
@@ -63,18 +63,18 @@ void SetFilterType(uint8_t val)
 	gNLFilter.mType = val;
 }
 
-float_t CalcFilterSample(float_t smpl)
+float CalcFilterSample(float smpl)
 {
     if(gNLFilter.mType == FILTER_MODE_OFF) // Low pass
 	{
         return smpl;
     }
 
-	float_t out;
-	float_t r;
-	const float_t fg 	= gNLFilter.mGain;
-    const float_t samp0 = gNLFilter.mSample0;
-	const float_t samp1 = gNLFilter.mSample1;
+	float out;
+	float r;
+	const float fg 	= gNLFilter.mGain;
+    const float samp0 = gNLFilter.mSample0;
+	const float samp1 = gNLFilter.mSample1;
 
 	if (gNLFilter.mFreq >= 0.4499f)
     {
@@ -85,14 +85,14 @@ float_t CalcFilterSample(float_t smpl)
         r= gNLFilter.mQ;
     } 
 
-	const float_t df = fg*fg;
-	const float_t s = FilterClip(smpl * 0.8f);
-	const float_t d0 = 1.0f / (1.0f + 2.0f * fg * r);
+	const float df = fg*fg;
+	const float s = FilterClip(smpl * 0.8f);
+	const float d0 = 1.0f / (1.0f + 2.0f * fg * r);
 
-	const float_t fdb = df * d0;
-	float_t y1= (fdb * s+ samp1 + fg * d0 * samp0) / (fdb + 1.0f);
-	const float_t dx = s - y1;
-	const float_t y0 = (FilterClip(samp0) + fg * dx) * d0;
+	const float fdb = df * d0;
+	float y1= (fdb * s+ samp1 + fg * d0 * samp0) / (fdb + 1.0f);
+	const float dx = s - y1;
+	const float y0 = (FilterClip(samp0) + fg * dx) * d0;
 
 	gNLFilter.mSample0 = FilterClip(gNLFilter.mSample0) + 2.0f * fg * (dx - 2.0f * r * y0);
 	gNLFilter.mSample1 += 2.0f * fg * y0;
@@ -103,8 +103,8 @@ float_t CalcFilterSample(float_t smpl)
 	}
 	else // High pass
 	{
-		const float_t efg = 2*r*y0;
-		const float_t h = s - efg - y1;
+		const float efg = 2*r*y0;
+		const float h = s - efg - y1;
 		out = h * FLTR_GAIN;
 
         if (out > 1.0f) out=1.0f;
@@ -115,12 +115,12 @@ float_t CalcFilterSample(float_t smpl)
 }
 
 #if FAST_FILTER_CLIP
-float_t FilterClip(float_t n)
+float FilterClip(float n)
 {
     if(n < -4.0f) return -2.0f;
     else if(n > 4.0f) return 2.0f;
 	
-    float_t a=n*n;
+    float a=n*n;
     a *= 0.125f;
 
     if(signbit(n))
@@ -131,12 +131,12 @@ float_t FilterClip(float_t n)
     return n - a;
 }
 
-float_t LowpassClip(float_t n)
+float LowpassClip(float n)
 {
 	if(n < -2.0f) return -1.0f;
 	else if(n > 2.0f) return 1.0f;
 
-	float_t a = n*n;
+	float a = n*n;
 	a *= 0.25f;
 	
 	if(signbit(n))
@@ -147,15 +147,15 @@ float_t LowpassClip(float_t n)
     return n - a;
 }
 #else
-float_t FilterClip(float_t n)
+float FilterClip(float n)
 {
-	float_t a=0.5*n;
-	float_t b = a*a;
+	float a=0.5*n;
+	float b = a*a;
 	a = ((b + 105)*b + 945) / ((15*b + 420)*b + 945);
 	return n * a;
 }
 
-float_t LowpassClip(float_t n)
+float LowpassClip(float n)
 {
 	if(n < -1.95f) return -1.0f;
 	else if(n > 1.95f) return 1.0f;
