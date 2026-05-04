@@ -2,44 +2,46 @@
 // Includes
 // ============================================================================
 #include "SVFilter.h"
-
-#include <math.h>
-#include <stdint.h>
-
-namespace Subtractive
-{
+#include "Shared/SubParams.h"
 
 // ============================================================================
 // Public functions
 // ============================================================================
 
-/// @brief Init the filter
-void SvfInit(SVFilter* pFilter)
+SVFilter::SVFilter()
 {
-    pFilter->mLp = 0.0f;
-    pFilter->mBp = 0.0f;
-    pFilter->mHp = 0.0f;
+    mLp = 0.0f;
+    mBp = 0.0f;
+    mHp = 0.0f;
+
+	mFreq = 0.0f;
+	mRes = 0.0f;
+	SetFilterType(FILTER_MODE_HP);
 }
 
-/// @brief Process 1 sample
-float SvfProcess(SVFilter* pFilter, float sample, float freq, float res, float mode)
+void SVFilter::SetFilterType(uint8_t type)
 {
+	mTypeMult = (float)(type == FILTER_MODE_LP);
+}
+
+float SVFilter::NextSample(float sample)
+{
+	float res = mRes;
     res *= res;
     res *= 5.0f;
     res += 1.0f;
     res = 1.0f / res;
 
+	float freq = mFreq;
     freq *= 0.98f;
     freq *= freq;
     freq += 0.01f;
     freq = 0.01f + 0.99f * freq * freq;;
 
     // Filter processing
-    pFilter->mHp = sample - pFilter->mLp - res * pFilter->mBp;
-    pFilter->mBp += pFilter->mHp * freq;
-    pFilter->mLp += pFilter->mBp; 
+    mHp = sample - mLp - res * mBp;
+    mBp += mHp * freq;
+    mLp += mBp; 
     
-    return (pFilter->mLp * mode) + (pFilter->mHp * (1.0f - mode));
-}
-
+    return (mLp * mTypeMult) + (mHp * (1.0f - mTypeMult));
 }

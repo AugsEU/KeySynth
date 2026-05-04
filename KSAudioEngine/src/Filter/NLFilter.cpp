@@ -2,87 +2,92 @@
 // Includes
 // ============================================================================
 #include "NLFilter.h"
-#include "Shared/SubParams.h"
+#include <Shared/SubParams.h>
 
-#define NLFILTER_FREQ_MAX 0.73f
+
+
+
+
+// ============================================================================
+// Constants
+// ============================================================================
 #define FAST_FILTER_CLIP 1
 
-namespace Subtractive
-{
+constexpr float FREQ_MAX = 0.73f;
+constexpr float GAIN = 0.87f;
+constexpr float MAX_FREQ = 2200.0f;
+constexpr float MIN_FREQ = 20.0f;
+
+
 
 // ============================================================================
 // Forward decl
 // ============================================================================
-
 float FilterClip(float n);
 float LowpassClip(float n);
 
-// ============================================================================
-// Globals
-// ============================================================================
 
-NLFilter gNLFilter;
 
 // ============================================================================
 // Public functions
 // ============================================================================
 
-void InitFilter()
+NLFilter::NLFilter()
 {
-	gNLFilter.mType = FILTER_MODE_OFF;
-	gNLFilter.mSample0 = 0;
-	gNLFilter.mSample1 = 0;
-	gNLFilter.mQ = 0.9f;
+	mType = FILTER_MODE_OFF;
+	mSample0 = 0;
+	mSample1 = 0;
+	mQ = 0.9f;
 
 	SetFilterFreq(0.0f);
 }
 
-void SetFilterRes(float val)
+void NLFilter::SetFilterFreq(float val)
 {
-	gNLFilter.mQ = 1.0f - val;
-	if(gNLFilter.mQ < 0.01f)
-    {
-        gNLFilter.mQ = 0.01f;
-    }
-}
-
-void SetFilterFreq(float val)
-{
-	val *= (NLFILTER_FREQ_MAX * 0.5f);
-	gNLFilter.mFreq = val;
+	val *= (FREQ_MAX * 0.5f);
+	mFreq = val;
 	float g = val * val; // Gain = 18xxx + 3x
     g *= val;
     g *= 18.0f;
     val *= 3.0f;
 
-	gNLFilter.mGain = g + val;
+	mGain = g + val;
 }
 
-void SetFilterType(uint8_t val)
+void NLFilter::SetFilterRes(float val)
 {
-	gNLFilter.mType = val;
+	mQ = 1.0f - val;
+	if(mQ < 0.01f)
+    {
+        mQ = 0.01f;
+    }
 }
 
-float CalcFilterSample(float smpl)
+void NLFilter::SetFilterType(uint8_t type)
 {
-    if(gNLFilter.mType == FILTER_MODE_OFF) // Low pass
+	mType = type;
+}
+
+float NLFilter::NextSample(float smpl)
+{
+	if(mType == FILTER_MODE_OFF) // Bypass
 	{
         return smpl;
     }
 
 	float out;
 	float r;
-	const float fg 	= gNLFilter.mGain;
-    const float samp0 = gNLFilter.mSample0;
-	const float samp1 = gNLFilter.mSample1;
+	const float fg 	= mGain;
+    const float samp0 = mSample0;
+	const float samp1 = mSample1;
 
-	if (gNLFilter.mFreq >= 0.4499f)
+	if (mFreq >= 0.4499f)
     {
         r = 1.0f;
     }
 	else
     {
-        r= gNLFilter.mQ;
+        r= mQ;
     } 
 
 	const float df = fg*fg;
@@ -94,10 +99,10 @@ float CalcFilterSample(float smpl)
 	const float dx = s - y1;
 	const float y0 = (FilterClip(samp0) + fg * dx) * d0;
 
-	gNLFilter.mSample0 = FilterClip(gNLFilter.mSample0) + 2.0f * fg * (dx - 2.0f * r * y0);
-	gNLFilter.mSample1 += 2.0f * fg * y0;
+	mSample0 = FilterClip(mSample0) + 2.0f * fg * (dx - 2.0f * r * y0);
+	mSample1 += 2.0f * fg * y0;
 
-	if(gNLFilter.mType == FILTER_MODE_LP) // Low pass
+	if(mType == FILTER_MODE_LP) // Low pass
 	{
 		return LowpassClip(y1);
 	}
@@ -105,7 +110,7 @@ float CalcFilterSample(float smpl)
 	{
 		const float efg = 2*r*y0;
 		const float h = s - efg - y1;
-		out = h * FLTR_GAIN;
+		out = h * GAIN;
 
         if (out > 1.0f) out=1.0f;
 	    if (out < -1.0f) out= -1.0f;
@@ -114,6 +119,9 @@ float CalcFilterSample(float smpl)
 	return out;
 }
 
+// ============================================================================
+// Private functions
+// ============================================================================
 #if FAST_FILTER_CLIP
 float FilterClip(float n)
 {
@@ -163,5 +171,3 @@ float LowpassClip(float n)
 	return 4.15f*n/(4.29f+n*n);
 }
 #endif
-
-}

@@ -7,9 +7,9 @@
 #include "Tuning.h"
 #include "Shared/SubParams.h"
 #include "SubVoice.h"
-#include "NLFilter.h"
 #include "Voice.h"
 #include "Parameters.h"
+#include <Filter/NLFilter.h>
 #include "Utilities/QwertyMath.h"
 #include "I2S/AudioConfig.h"
 
@@ -40,6 +40,7 @@ static int32_t gDelayReadOffsetOffset = 0;
 
 static Oscillator gLFO;
 static Oscillator gLFOWobbler;
+static NLFilter gFilter;
 static float gCurrLoudness = 0.0f;
 
 // ============================================================================
@@ -64,7 +65,7 @@ void SynthInit(void)
 	OscInit(&gLFOWobbler);
 
 	ZeroOutParams();
-	InitFilter();
+	gFilter = NLFilter();
 
 	// Default test preset
 	SetFloatParam(ASP_GAIN, 1.4f);
@@ -166,7 +167,7 @@ void FillSoundBuffer(uint16_t* buf, uint16_t samples)
 	float shape2Lfo = GetFloatParam(ASP_LFO_OSC2_SHAPE);
 
 	// VCF
-	SetFilterType(GetIntParam(ASP_VCF_MODE));
+	gFilter.SetFilterType(GetIntParam(ASP_VCF_MODE));
 	float filterFreqMod, filterFreq = GetFloatParam(ASP_VCF_CUTOFF);
 	float filterRes = GetFloatParam(ASP_VCF_RES);
 	float filterFreqLfo = GetFloatParam(ASP_LFO_VCF_CUTOFF);
@@ -227,9 +228,9 @@ void FillSoundBuffer(uint16_t* buf, uint16_t samples)
 		y *= (1.0f / (VOICE_POLYPHONY + 1.0f)); // Normalise
 		filterFreqMod = ComputeLfoMult(lfoValue, filterFreqLfo);
 		filterFreqMod *=  ComputeLoudnessMult(gCurrLoudness, filterFollow);
-		SetFilterFreq(filterFreq * filterFreqMod);
-		SetFilterRes(filterRes * ComputeLfoMult(lfoValue, filterResLfo));
-		y = CalcFilterSample(y);
+		gFilter.SetFilterFreq(filterFreq * filterFreqMod);
+		gFilter.SetFilterRes(filterRes * ComputeLfoMult(lfoValue, filterResLfo));
+		y = gFilter.NextSample(y);
 
 		/*--- Drive & Gain ---*/
 		y = drive * DrivenSample(y) + (1.0f - drive) * y;
