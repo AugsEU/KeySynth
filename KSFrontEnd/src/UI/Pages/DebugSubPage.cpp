@@ -31,7 +31,7 @@ DebugSubPage::DebugSubPage()
 		if (y > ILI9341::Device::HEIGHT - 30)
 		{
 			y = 20;
-			x += 70;
+			x += 170;
 		}
 	}
 }

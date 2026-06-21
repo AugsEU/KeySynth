@@ -61,6 +61,10 @@ void ScreenDisplayUpdate();
 /// @return Screen driver
 Display_t& GetScreen();
 
+/// @brief Get main screen device
+/// @return Screen device
+ILI9341::Device& GetScreenDevice();
+
 /// @brief Get current ui page
 /// @return Current ui page
 GuiPage* GetCurrentUiPage();

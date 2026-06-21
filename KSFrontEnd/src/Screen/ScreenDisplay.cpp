@@ -59,6 +59,12 @@ void SetupScreenDisplay(void)
 	gTftScreen.begin(0x9341);
 #else // USE_ADAFRUIT_LIBRARY
 	int err = gDriver.Begin();
+	gDevice.MemoryAccessCtrl(ILI9341::RowOrder::TopToBottom,
+		ILI9341::ColOrder::LeftToRight,
+		ILI9341::RowColExchange::Reverse,
+		ILI9341::RowOrder::TopToBottom,
+		ILI9341::RgbOrder::RGB,
+		ILI9341::ColOrder::LeftToRight);
 	if(err != ILI9341_OK)
 	{
 		Serial.printf("Display error. %x", (uint32_t)err);
@@ -93,6 +99,11 @@ void ScreenDisplayUpdate()
 Display_t& GetScreen()
 {
 	return gDriver;
+}
+
+ILI9341::Device& GetScreenDevice()
+{
+	return gDevice;
 }
 
 GuiPage* GetCurrentUiPage()

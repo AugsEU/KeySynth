@@ -86,7 +86,6 @@ void SendParamForSubtractive(size_t paramNum)
         float fvalue = bounds.GetNormFloatValue(value);
         fvalue = bounds.ScaleFloatForSubParam(paramNum, fvalue);
 
-        printf("Send param %u -> %f\n", paramNum, fvalue);
         TxBackendSetParam(paramNum, fvalue);
     }
     else
