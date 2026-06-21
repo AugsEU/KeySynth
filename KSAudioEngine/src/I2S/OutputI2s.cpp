@@ -39,6 +39,7 @@
 #include "OutputI2s.h"
 #include "I2sTimers.h"
 
+#include <Adafruit_TLV320DAC3100.h>
 
 
 
@@ -47,7 +48,7 @@
 // ============================================================================
 void ConfigI2s(bool only_bclk = false);
 void OnDmaTransmit();
-
+void BeginTLV();
 
 
 
@@ -57,7 +58,7 @@ void OnDmaTransmit();
 // ============================================================================
 DMAChannel gDma(false);
 DMAMEM __attribute__((aligned(32))) static uint32_t i2s_tx_buffer[AUDIO_BLOCK_SAMPLES*NUM_DMA_SECTIONS];
-
+Adafruit_TLV320DAC3100 gTlvCodec;
 
 
 
@@ -72,6 +73,8 @@ DMAMEM __attribute__((aligned(32))) static uint32_t i2s_tx_buffer[AUDIO_BLOCK_SA
 /// @brief Begin I2S setup DMA and interrupts.
 void BeginI2s()
 {
+	BeginTLV();
+
 	gDma.begin(true); // Allocate the DMA channel first
 	ConfigI2s();
 
@@ -210,4 +213,110 @@ void ConfigI2s(bool only_bclk)
 	I2S1_RCR4 = I2S_RCR4_FRSZ((2-1)) | I2S_RCR4_SYWD((32-1)) | I2S_RCR4_MF
 		    | I2S_RCR4_FSE | I2S_RCR4_FSP | I2S_RCR4_FSD;
 	I2S1_RCR5 = I2S_RCR5_WNW((32-1)) | I2S_RCR5_W0W((32-1)) | I2S_RCR5_FBT((32-1));
+}
+
+/// @brief Begin the TLV320 device
+void BeginTLV()
+{
+	constexpr int TLV_RESET = 5;
+	pinMode(TLV_RESET, OUTPUT);
+	digitalWrite(TLV_RESET, LOW);
+	delay(100);
+	digitalWrite(TLV_RESET, HIGH);
+
+	AUG_LOG("Init TLV DAC");
+	delay(100);
+	if (!gTlvCodec.begin())
+	{
+		printf("Failed to initialize codec!");
+	}
+	delay(15);
+
+	// Interface Control
+	if (!gTlvCodec.setCodecInterface(TLV320DAC3100_FORMAT_I2S,     // Format: I2S
+								TLV320DAC3100_DATA_LEN_16))  // Length: 16 bits
+	{
+		AUG_LOG("Failed to configure codec interface!");
+	}
+
+	// Clock MUX and PLL settings
+	if (!gTlvCodec.setCodecClockInput(TLV320DAC3100_CODEC_CLKIN_PLL) ||
+		!gTlvCodec.setPLLClockInput(TLV320DAC3100_PLL_CLKIN_BCLK))
+	{
+		AUG_LOG("Failed to configure codec clocks!");
+	}
+
+	if (!gTlvCodec.setPLLValues(1, 2, 32, 0))  // P=2, R=2, J=32, D=0
+	{
+		AUG_LOG("Failed to configure PLL values!");
+	}
+
+	// DAC/ADC Config
+	if (!gTlvCodec.setNDAC(true, 8) || // Enable NDAC with value 8
+		!gTlvCodec.setMDAC(true, 2)) // Enable MDAC with value 2
+	{
+		AUG_LOG("Failed to configure DAC dividers!");
+	}
+
+	if (!gTlvCodec.powerPLL(true)) // Power up the PLL
+	{
+		AUG_LOG("Failed to power up PLL!");
+	}
+
+	// DAC Setup
+	if (!gTlvCodec.setDACDataPath(true, true,                    // Power up both DACs
+								TLV320_DAC_PATH_NORMAL,        // Normal left path
+								TLV320_DAC_PATH_NORMAL,        // Normal right path
+								TLV320_VOLUME_STEP_1SAMPLE)) // Step: 1 per sample
+	{
+		AUG_LOG("Failed to configure DAC data path!");
+	}
+
+	if (!gTlvCodec.configureAnalogInputs(TLV320_DAC_ROUTE_MIXER, // Left DAC to mixer
+									TLV320_DAC_ROUTE_MIXER, // Right DAC to mixer
+									false, false, false,    // No AIN routing
+									false)) // No HPL->HPR
+	{               
+		AUG_LOG("Failed to configure DAC routing!");
+	}
+
+	// DAC Volume Control
+	if (!gTlvCodec.setDACVolumeControl(
+			false, false, TLV320_VOL_INDEPENDENT) || // Unmute both channels
+		!gTlvCodec.setChannelVolume(false, 18) ||        // Left DAC +0dB
+		!gTlvCodec.setChannelVolume(true, 18))         // Right DAC +0dB
+	{
+		AUG_LOG("Failed to configure DAC volumes!");
+	}
+
+	// Headphone and Speaker Setup
+	if (!gTlvCodec.configureHeadphoneDriver(
+			true, true,                     // Power up both drivers
+			TLV320_HP_COMMON_1_35V,         // Default common mode
+			false) ||                       // Don't power down on SCD
+		!gTlvCodec.configureHPL_PGA(0, true) || // Set HPL gain, unmute
+		!gTlvCodec.configureHPR_PGA(0, true) || // Set HPR gain, unmute
+		!gTlvCodec.setHPLVolume(true, 6) ||     // Enable and set HPL volume
+		!gTlvCodec.setHPRVolume(true, 6))       // Enable and set HPR volume
+	{
+		AUG_LOG("Failed to configure headphone outputs!");
+	}
+
+	if (!gTlvCodec.enableSpeaker(true) ||                // Dis/Enable speaker amp
+		!gTlvCodec.configureSPK_PGA(TLV320_SPK_GAIN_6DB, // Set gain to 6dB
+								true) ||             // Unmute
+		!gTlvCodec.setSPKVolume(true, 0))   // Enable and set volume to 0dB
+	{
+		AUG_LOG("Failed to configure speaker output!");
+	}
+
+	if (!gTlvCodec.configMicBias(false, true, TLV320_MICBIAS_AVDD) ||
+		!gTlvCodec.setHeadsetDetect(true) ||
+		!gTlvCodec.setInt1Source(true, true, false, false, false,
+							false) || // GPIO1 is detect headset or button press
+		!gTlvCodec.setGPIO1Mode(TLV320_GPIO1_INT1))
+	{
+		AUG_LOG("Failed to configure headset detect");
+	}
+	AUG_LOG("TLV config done!");
 }

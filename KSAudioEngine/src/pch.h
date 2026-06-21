@@ -11,3 +11,6 @@
 
 // Arduino
 #include <Arduino.h>
+
+// Lib
+#include <Shared/Debug.h>

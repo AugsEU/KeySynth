@@ -89,7 +89,7 @@ size_t GetMessageLength()
 
 void HandleMessage(uint8_t* buf, size_t len)
 {
-    float value = 0;
+    //float value = 0;
 	switch (GetCurrMessageHeader())
     {
     case MessageHeader::NotifyOnline:
