@@ -21,13 +21,13 @@ DebugSubPage::DebugSubPage()
 		AUG_ASSERT(newCounter, "GuiLblCter Fail");
 
 		newCounter->mString = AugNumberParamToString((uint8_t)i);
-		newCounter->mTextSize = 1;
-		newCounter->mTextColor = 0x2222;
+		newCounter->mTextSize = 2;
+		newCounter->mTextColor = 0x5555;
 
 		newCounter->mAddKeycode = KS_KEYCODE_RIGHT_ARROW;
 		newCounter->mMinusKeycode = KS_KEYCODE_LEFT_ARROW;
 
-		y += 10;
+		y += 20;
 		if (y > ILI9341::Device::HEIGHT - 30)
 		{
 			y = 20;
@@ -38,11 +38,11 @@ DebugSubPage::DebugSubPage()
 
 void DebugSubPage::OnOpen()
 {
-	mSelectedElementIndex = 0;
+	SelectElem(0);
 
 	for(size_t i = 0; i < ASP_NUM_PARAMS; ++i)
 	{
-		GuiLabelCounter* pCounter = (GuiLabelCounter*)mElements[i];
+		GuiLabelCounter* pCounter = GetElement<GuiLabelCounter>(i);
 		pCounter->mMaxValue = gSynthParamBounds[i].GetMaxValue();
 		pCounter->mMinValue = gSynthParamBounds[i].GetMinValue();
 		pCounter->mValue = gSynthParamValues[i];
@@ -56,7 +56,7 @@ void DebugSubPage::Update()
 	// Send some params
 	for(int i = 0; i < 4; ++i)
 	{
-		GuiLabelCounter* pCounter = (GuiLabelCounter*)mElements[mParamWriteHead];
+		GuiLabelCounter* pCounter = GetElement<GuiLabelCounter>(mParamWriteHead);
 		int value = pCounter->mValue;
 
 		gSynthParamValues[mParamWriteHead] = (int8_t)value;
@@ -71,31 +71,4 @@ void DebugSubPage::Update()
 	 
 	// Do basic update
 	GuiPage::Update();
-}
-
-
-
-bool DebugSubPage::OnKeyPress(uint8_t keycode)
-{
-	if(keycode == KS_KEYCODE_UP_ARROW)
-	{
-		if(mSelectedElementIndex > 0)
-			mSelectedElementIndex--;
-		
-		return true;
-	}
-	else if(keycode == KS_KEYCODE_DOWN_ARROW)
-	{
-		if(mSelectedElementIndex < mElements.size() - 1)
-			mSelectedElementIndex++;
-		
-		return true;
-	}
-	
-	bool elemStole = false;
-	GuiElement* pElem = GetSelectedElement();
-	if(pElem)
-		elemStole = pElem->OnKeyPress(keycode);	
-
-	return elemStole;
 }

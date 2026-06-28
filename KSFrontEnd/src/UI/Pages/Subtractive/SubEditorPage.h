@@ -1,5 +1,5 @@
 // ============================================================================
-// Debug page to demo subtractive synth
+// Base class for subtractive synth edit pages
 // ----------------------------------------------------------------------------
 #pragma once
 #include <pch.h>
@@ -9,20 +9,10 @@
 #include <UI/GuiPage.h>
 
 // ============================================================================
-// DebugSubPage
+// SubEditorPage
 // ============================================================================
-class DebugSubPage final : public GuiPage
+class SubEditorPage : public GuiPage
 {
-public:
-	/// @brief Constructor
-	DebugSubPage();
-
-	/// @brief Called once on opening
-	void OnOpen() final;
-	
-	/// @brief Called when updating a frame
-	void Update() final;
-
-private:
-	size_t mParamWriteHead = 0;
+protected:
+	void LoadSubValueToLabel(ElemId id, uint8_t paramNum);
 };

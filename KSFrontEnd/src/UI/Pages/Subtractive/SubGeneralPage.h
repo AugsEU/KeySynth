@@ -1,21 +1,21 @@
 // ============================================================================
-// Debug page to demo subtractive synth
+// Subtractive synth general settings page + presets
 // ----------------------------------------------------------------------------
 #pragma once
 #include <pch.h>
 // ============================================================================
 // Include
 // ============================================================================
-#include <UI/GuiPage.h>
+#include "SubEditorPage.h"
 
 // ============================================================================
-// DebugSubPage
+// SubGeneralPage
 // ============================================================================
-class DebugSubPage final : public GuiPage
+class SubGeneralPage final : public SubEditorPage
 {
 public:
 	/// @brief Constructor
-	DebugSubPage();
+	SubGeneralPage();
 
 	/// @brief Called once on opening
 	void OnOpen() final;
@@ -24,5 +24,7 @@ public:
 	void Update() final;
 
 private:
-	size_t mParamWriteHead = 0;
+	ElemId mTuningId = EMPTY_ID;
+	ElemId mDriveId = EMPTY_ID;
+	ElemId mGainId = EMPTY_ID;
 };

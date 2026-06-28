@@ -43,7 +43,8 @@ constexpr uint16_t SC_WHITE   = 0xFFFF;
 enum GuiPageType : size_t
 {
 	None,
-	DebugSubtractive
+	DebugSubtractive,
+	SubGeneral
 };
 
 

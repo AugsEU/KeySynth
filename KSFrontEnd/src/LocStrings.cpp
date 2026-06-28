@@ -129,8 +129,10 @@ const char* const AugNumberParamToString(uint8_t param)
 {
     switch (param)
     {
+    case ASP_TUNING:
+        return "Tuning";
     case ASP_DRIVE:
-        return "Drve";
+        return "Drive";
     case ASP_GAIN:
         return "Gain";
     case ASP_DELAY_TIME:

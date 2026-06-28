@@ -5,7 +5,7 @@
 #include "Screen/ScreenTest.h"
 
 #include "UI/Pages/DebugSubPage.h"
-
+#include "UI/Pages/Subtractive/SubGeneralPage.h"
 
 
 
@@ -36,10 +36,7 @@ Display_t gDriver(gDevice);
 // Screen pages
 static GuiPageType gCurrPageType = GuiPageType::None;
 static DebugSubPage gSubPage;
-
-
-
-
+static SubGeneralPage gSubGeneralPage;
 
 // ============================================================================
 // Private functions
@@ -65,6 +62,7 @@ void SetupScreenDisplay(void)
 		ILI9341::RowOrder::TopToBottom,
 		ILI9341::RgbOrder::RGB,
 		ILI9341::ColOrder::LeftToRight);
+	gDriver.ForceClear(0x0000);
 	if(err != ILI9341_OK)
 	{
 		Serial.printf("Display error. %x", (uint32_t)err);
@@ -75,7 +73,7 @@ void SetupScreenDisplay(void)
 	RunScreenTest();
 #endif // SCREEN_TEST_ENABLE
 
-	SelectUiPage(GuiPageType::DebugSubtractive);
+	SelectUiPage(GuiPageType::SubGeneral);
 }
 
 void ScreenDisplayUpdate()
@@ -112,6 +110,8 @@ GuiPage* GetCurrentUiPage()
 	{
 	case GuiPageType::DebugSubtractive:
 		return &gSubPage;
+	case GuiPageType::SubGeneral:
+		return &gSubGeneralPage;
 	default:
 		break;
 	}

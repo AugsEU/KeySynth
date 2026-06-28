@@ -15,8 +15,9 @@ void GuiLabelCounter::Draw(bool selected)
 	screen.SetTextColor(selected ? mHighlightColor : mTextColor);
 	screen.SetTextSize(mTextSize);
 
+	// Hack: add space at the end to deal with changing numbers
 	char strBuf[64];
-	snprintf(strBuf, KS_ARRAY_SIZE(strBuf), "%s <%d>", mString, mValue);
+	snprintf(strBuf, KS_ARRAY_SIZE(strBuf), "%s <%d> ", mString, mValue);
 
 	screen.DrawText(strBuf, ILI9341_BLACK);
 }
@@ -30,6 +31,7 @@ bool GuiLabelCounter::OnKeyPress(uint8_t keycode)
 		if(mValue > mMaxValue) 
 			mValue = mMaxValue;
 
+		mFlags.isDirty = true;
 		return true;
 	}
 	else if(keycode == mMinusKeycode)
@@ -38,6 +40,7 @@ bool GuiLabelCounter::OnKeyPress(uint8_t keycode)
 		if(mValue < mMinValue)
 			mValue = mMinValue;
 			
+		mFlags.isDirty = true;
 		return true;
 	}
 
