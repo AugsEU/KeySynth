@@ -5,7 +5,7 @@
 #include "SynthPreset.h"
 #include "SynthParams.h"
 
-
+extern int8_t gSynthParamValues[NUM_PARAMETERS];
 
 // ============================================================================
 // Constants

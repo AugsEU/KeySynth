@@ -4,10 +4,14 @@
 #include "Screen/ScreenDisplay.h"
 #include "Screen/ScreenTest.h"
 
-#include "UI/Pages/DebugSubPage.h"
+#include "UI/Pages/General/HomePage.h"
+
 #include "UI/Pages/Subtractive/SubGeneralPage.h"
-
-
+#include "UI/Pages/Subtractive/SubOscPage.h"
+#include "UI/Pages/Subtractive/SubEnvPage.h"
+#include "UI/Pages/Subtractive/SubFiltPage.h"
+#include "UI/Pages/Subtractive/SubLfoPage.h"
+#include "UI/Pages/Subtractive/SubDelayPage.h"
 
 
 // ============================================================================
@@ -34,9 +38,7 @@ Display_t gDriver(gDevice);
 #endif // USE_ADAFRUIT_LIBRARY
 
 // Screen pages
-static GuiPageType gCurrPageType = GuiPageType::None;
-static DebugSubPage gSubPage;
-static SubGeneralPage gSubGeneralPage;
+static GuiPageType gCurrPageType = GuiPageType::Home;
 
 // ============================================================================
 // Private functions
@@ -73,7 +75,7 @@ void SetupScreenDisplay(void)
 	RunScreenTest();
 #endif // SCREEN_TEST_ENABLE
 
-	SelectUiPage(GuiPageType::SubGeneral);
+	SelectUiPage(GuiPageType::Home);
 }
 
 void ScreenDisplayUpdate()
@@ -106,17 +108,41 @@ ILI9341::Device& GetScreenDevice()
 
 GuiPage* GetCurrentUiPage()
 {
+	static HomePage sHomePage;
+
+	static SubGeneralPage sSubGeneralPage;
+	static SubOscPage sSubOscPage;
+	static SubEnvPage sSubEnvPage;
+	static SubFiltPage sSubFiltPage;
+	static SubLfoPage sSubLfoPage;
+	static SubDelayPage sSubDelayPage;
+
 	switch (gCurrPageType)
 	{
-	case GuiPageType::DebugSubtractive:
-		return &gSubPage;
+	case GuiPageType::Home:
+		return &sHomePage;
 	case GuiPageType::SubGeneral:
-		return &gSubGeneralPage;
-	default:
+		return &sSubGeneralPage;
+	case GuiPageType::SubOsc:
+		return &sSubOscPage;
+	case GuiPageType::SubEnv:
+		return &sSubEnvPage;
+	case GuiPageType::SubFilt:
+		return &sSubFiltPage;
+	case GuiPageType::SubLfo:
+		return &sSubLfoPage;
+	case GuiPageType::SubDelay:
+		return &sSubDelayPage;
+	case GuiPageType::NumGuiPages:
 		break;
 	}
 
 	return nullptr;
+}
+
+GuiPageType GetCurrentUiPageType()
+{
+	return gCurrPageType;
 }
 
 void SelectUiPage(GuiPageType type)
@@ -127,12 +153,15 @@ void SelectUiPage(GuiPageType type)
 		currPage->OnClose();
 	}
 
+	
+	gDriver.ForceClear(SC_BLACK);
 	gCurrPageType = type;
 
 	GuiPage* newPage = GetCurrentUiPage();
 
 	if(newPage)
 	{
+		newPage->InvalidateAll();
 		newPage->OnOpen();
 	}
 }

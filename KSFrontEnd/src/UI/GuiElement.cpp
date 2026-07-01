@@ -21,6 +21,8 @@ GuiElement::GuiElement(uint16_t x, uint16_t y) :
 
 	// All elements start dirty since they need to be drawn at least once
 	mFlags.isDirty = true;
+	
+	mFlags.changed = false;
 }
 
 

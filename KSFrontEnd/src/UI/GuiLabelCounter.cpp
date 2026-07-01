@@ -31,7 +31,7 @@ bool GuiLabelCounter::OnKeyPress(uint8_t keycode)
 		if(mValue > mMaxValue) 
 			mValue = mMaxValue;
 
-		mFlags.isDirty = true;
+		SetChanged();
 		return true;
 	}
 	else if(keycode == mMinusKeycode)
@@ -40,7 +40,7 @@ bool GuiLabelCounter::OnKeyPress(uint8_t keycode)
 		if(mValue < mMinValue)
 			mValue = mMinValue;
 			
-		mFlags.isDirty = true;
+		SetChanged();
 		return true;
 	}
 

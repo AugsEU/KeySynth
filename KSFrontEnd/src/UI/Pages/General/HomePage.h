@@ -1,5 +1,5 @@
 // ============================================================================
-// Debug page to demo subtractive synth
+// Home page for GUI
 // ----------------------------------------------------------------------------
 #pragma once
 #include <pch.h>
@@ -9,13 +9,13 @@
 #include <UI/GuiPage.h>
 
 // ============================================================================
-// DebugSubPage
+// HomePage
 // ============================================================================
-class DebugSubPage final : public GuiPage
+class HomePage final : public GuiPage
 {
 public:
 	/// @brief Constructor
-	DebugSubPage();
+	HomePage();
 
 	/// @brief Called once on opening
 	void OnOpen() final;
@@ -24,5 +24,5 @@ public:
 	void Update() final;
 
 private:
-	size_t mParamWriteHead = 0;
+	
 };

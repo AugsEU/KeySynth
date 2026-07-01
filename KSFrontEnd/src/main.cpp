@@ -11,6 +11,7 @@
 #include <Usart/TxBackend.h>
 #include <Usart/SynthParams.h>
 #include <Screen/ScreenDisplay.h>
+#include <UI/Pages/PageNavigation.h>
 
 
 // ============================================================================
@@ -63,6 +64,9 @@ void setup()
 
 	// Screen
 	SetupScreenDisplay();
+
+	// UI
+	InitialisePageNavigation();
 }
 
 
@@ -90,6 +94,9 @@ void OnRawPress(uint8_t keycode)
 
 	if(pPage)
 		stolen = pPage->OnKeyPress(keycode);
+
+	if(!stolen)
+		stolen = NavigatePage(keycode);
 
 	if(!stolen)
 	{

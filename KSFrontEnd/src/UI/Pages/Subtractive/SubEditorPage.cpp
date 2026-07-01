@@ -14,5 +14,5 @@ void SubEditorPage::LoadSubValueToLabel(ElemId id, uint8_t paramNum)
 
 	pCounter->mMaxValue = gSynthParamBounds[paramNum].GetMaxValue();
 	pCounter->mMinValue = gSynthParamBounds[paramNum].GetMinValue();
-	pCounter->mValue = gSynthParamValues[paramNum];
+	pCounter->mValue = GetSynthParamValue(paramNum);
 }

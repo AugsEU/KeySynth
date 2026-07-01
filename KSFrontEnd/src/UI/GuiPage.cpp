@@ -68,6 +68,15 @@ bool GuiPage::OnKeyPress(uint8_t keycode)
 	return elemStole;
 }
 
+void GuiPage::InvalidateAll()
+{
+	// Force all elements to be dirty
+	for(auto it : mElements)
+	{
+		it->mFlags.isDirty = true;
+	}
+}
+
 // ============================================================================
 // Utility
 // ============================================================================

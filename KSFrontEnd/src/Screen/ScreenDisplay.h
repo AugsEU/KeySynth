@@ -42,9 +42,15 @@ constexpr uint16_t SC_WHITE   = 0xFFFF;
 // ============================================================================
 enum GuiPageType : size_t
 {
-	None,
-	DebugSubtractive,
-	SubGeneral
+	Home,
+	// Subtractive synth editing pages
+	SubGeneral,
+	SubOsc,
+	SubEnv,
+	SubFilt,
+	SubLfo,
+	SubDelay,
+	NumGuiPages,
 };
 
 
@@ -69,6 +75,10 @@ ILI9341::Device& GetScreenDevice();
 /// @brief Get current ui page
 /// @return Current ui page
 GuiPage* GetCurrentUiPage();
+
+/// @brief Get enum type of current ui page
+/// @return Enum type of current ui page
+GuiPageType GetCurrentUiPageType();
 
 /// @brief Move to a new page
 /// @param type Type of page to move to 

@@ -13,6 +13,19 @@
 
 #include "Gui.h"
 
+// ============================================================================
+// Macros
+// ============================================================================
+
+// Do statement on change
+#define ON_ELEM_CHANGE(id, T, statement) \
+	do \
+	{ \
+		T* elem = GetElement<T>(id); \
+		if(elem->ConsumeChange()) statement \
+	} while (false)
+
+
 
 // ============================================================================
 // GuiPage
@@ -40,6 +53,9 @@ public:
 	/// @param keycode Key code pressed
 	/// @return If the input is stolen or not
 	virtual bool OnKeyPress(uint8_t keycode);
+
+	/// @brief Invalidate screen and force redraw
+	void InvalidateAll();
 
 	// ========================================================================
 	// Utility

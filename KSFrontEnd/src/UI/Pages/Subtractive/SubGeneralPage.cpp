@@ -5,6 +5,7 @@
 
 #include "Shared\SubParams.h"
 #include "LocStrings.h"
+#include "Usart/SynthParams.h"
 
 // ============================================================================
 // SubGeneralPage
@@ -37,4 +38,8 @@ void SubGeneralPage::OnOpen()
 void SubGeneralPage::Update()
 {
 	GuiPage::Update();
+
+	SEND_COUNTER_TO_SYNTH(mTuningId, ASP_TUNING);
+	SEND_COUNTER_TO_SYNTH(mDriveId, ASP_DRIVE);
+	SEND_COUNTER_TO_SYNTH(mGainId, ASP_GAIN);
 }

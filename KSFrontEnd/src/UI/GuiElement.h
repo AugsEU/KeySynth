@@ -20,7 +20,8 @@ class GuiElement
 public:
 	struct __attribute__((packed)) Flags
 	{
-		bool isDirty : 1;
+		bool isDirty : 1; // Does need to be redrawn?
+		bool changed : 1; // Has the value changed?
 	};
 	static_assert(sizeof(Flags) == 1, "Check if this changes mysteriously.");
 
@@ -66,7 +67,19 @@ public:
 	void SetDirty() { mFlags.isDirty = true; }
 
 	/// @brief Is element dirty
-	bool IsDirty() { return mFlags.isDirty; }
+	bool IsDirty() const { return mFlags.isDirty; }
+
+	/// @brief Set element changed flag
+	void SetChanged() { mFlags.changed = true; SetDirty(); }
+
+	/// @brief Check change and reset changed flags
+	/// @return If the change flag was set
+	bool ConsumeChange()
+	{
+		bool prev = mFlags.changed;
+		mFlags.changed = false;
+		return prev;
+	}
 
 	/// @brief Get element we should navigate to
 	/// @param keyPressed Button pressed

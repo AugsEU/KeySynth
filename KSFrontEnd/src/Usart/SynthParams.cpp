@@ -20,6 +20,17 @@ int8_t gSynthParamValues[NUM_PARAMETERS];
 // ============================================================================
 // Public functions
 // ============================================================================
+
+int8_t GetSynthParamValue(size_t paramNum)
+{
+    return gSynthParamValues[paramNum];
+}
+
+void ForceSendAllParams()
+{
+    
+}
+
 void InitParamsForSubtractive()
 {
     memset(gSynthParamValues, 0, sizeof(gSynthParamValues));
@@ -76,9 +87,16 @@ void InitParamsForSubtractive()
     gSynthParamBounds[ASP_LFO_VCF_RES        ] = SynthParamBounds(-20);
 }
 
-void SendParamForSubtractive(size_t paramNum)
+void SendParamForSubtractive(size_t paramNum, int8_t value)
 {
-    int8_t value = gSynthParamValues[paramNum];
+    int8_t prevValue = gSynthParamValues[paramNum];
+    if(prevValue == value)
+    {
+        return;
+    }
+
+    gSynthParamValues[paramNum] = value;
+
     if(IsSubtractiveParamFloat(paramNum))
     {
         SynthParamBounds& bounds = gSynthParamBounds[paramNum];
