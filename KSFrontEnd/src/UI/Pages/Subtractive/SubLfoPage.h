@@ -24,5 +24,16 @@ public:
 	void Update() final;
 
 private:
-	
+	ElemId mRateClb;
+	ElemId mWaveTypeClb;
+	ElemId mAttackClb;
+	ElemId mWobbleClb;
+	ElemId mOsc1TuneClb;
+	ElemId mOsc1VolClb;
+	ElemId mOsc1ShapeClb;
+	ElemId mOsc2TuneClb;
+	ElemId mOsc2VolClb;
+	ElemId mOsc2ShapeClb;
+	ElemId mCutoffClb;
+	ElemId mResonanceClb;
 };

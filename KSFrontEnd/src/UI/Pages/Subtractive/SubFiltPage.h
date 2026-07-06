@@ -24,5 +24,8 @@ public:
 	void Update() final;
 
 private:
-
+	ElemId mCutoffClb;
+	ElemId mResonanceClb;
+	ElemId mModeClb;
+	ElemId mFollowClb;
 };

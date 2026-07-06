@@ -24,5 +24,8 @@ public:
 	void Update() final;
 
 private:
-	
+	ElemId mTimeClb;
+	ElemId mFeedbackClb;
+	ElemId mShearClb;
+	ElemId mModeClb;
 };
