@@ -25,7 +25,7 @@ SubGeneralPage::SubGeneralPage()
 }
 
 /// @brief Called once on opening
-void SubGeneralPage::OnOpen()
+void SubGeneralPage::OnOpen(GuiPageType openType)
 {
 	SelectElem(mTuningId);
 

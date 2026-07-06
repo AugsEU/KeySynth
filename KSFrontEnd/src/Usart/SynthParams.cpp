@@ -16,6 +16,13 @@ int8_t gSynthParamValues[NUM_PARAMETERS];
 
 
 
+// ============================================================================
+// Pre decl
+// ============================================================================
+void TransmitSubtractiveParameter(uint8_t paramNum, int8_t value);
+
+
+
 
 // ============================================================================
 // Public functions
@@ -28,7 +35,10 @@ int8_t GetSynthParamValue(size_t paramNum)
 
 void ForceSendAllParams()
 {
-    
+    for(size_t i = 0; i < NUM_PARAMETERS; ++i)
+    {
+        TransmitSubtractiveParameter((uint8_t)i, gSynthParamValues[i]);
+    }
 }
 
 void InitParamsForSubtractive()
@@ -85,6 +95,8 @@ void InitParamsForSubtractive()
     gSynthParamBounds[ASP_LFO_OSC2_SHAPE     ] = SynthParamBounds(-20);
     gSynthParamBounds[ASP_LFO_VCF_CUTOFF     ] = SynthParamBounds(-20);
     gSynthParamBounds[ASP_LFO_VCF_RES        ] = SynthParamBounds(-20);
+
+    ForceSendAllParams();
 }
 
 void SendParamForSubtractive(size_t paramNum, int8_t value)
@@ -97,19 +109,7 @@ void SendParamForSubtractive(size_t paramNum, int8_t value)
 
     gSynthParamValues[paramNum] = value;
 
-    if(IsSubtractiveParamFloat(paramNum))
-    {
-        SynthParamBounds& bounds = gSynthParamBounds[paramNum];
-
-        float fvalue = bounds.GetNormFloatValue(value);
-        fvalue = bounds.ScaleFloatForSubParam(paramNum, fvalue);
-
-        TxBackendSetParam(paramNum, fvalue);
-    }
-    else
-    {
-        TxBackendSetParam(paramNum, (int32_t)value);
-    }
+    TransmitSubtractiveParameter(paramNum, value);
 }
 
 bool IsSubtractiveParamFloat(size_t paramNum)
@@ -131,4 +131,25 @@ bool IsSubtractiveParamFloat(size_t paramNum)
     }
 
     return true;
+}
+
+// ============================================================================
+// Private functions
+// ============================================================================
+
+void TransmitSubtractiveParameter(uint8_t paramNum, int8_t value)
+{
+    if(IsSubtractiveParamFloat(paramNum))
+    {
+        SynthParamBounds& bounds = gSynthParamBounds[paramNum];
+
+        float fvalue = bounds.GetNormFloatValue(value);
+        fvalue = bounds.ScaleFloatForSubParam(paramNum, fvalue);
+
+        TxBackendSetParam(paramNum, fvalue);
+    }
+    else
+    {
+        TxBackendSetParam(paramNum, (int32_t)value);
+    }
 }

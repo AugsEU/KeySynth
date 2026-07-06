@@ -125,4 +125,6 @@ void LoadSubMemPreset(size_t index)
 {
 	static_assert(sizeof(gSynthParamValues) >= sizeof(gSubPresets[index].mValues));
 	memcpy_P(gSynthParamValues, &gSubPresets[index].mValues, sizeof(gSubPresets[index].mValues));
+
+    ForceSendAllParams();
 }

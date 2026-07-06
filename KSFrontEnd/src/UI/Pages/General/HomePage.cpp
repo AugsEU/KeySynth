@@ -16,7 +16,7 @@ HomePage::HomePage()
 	pLabel->mTextSize = 3;
 }
 
-void HomePage::OnOpen()
+void HomePage::OnOpen(GuiPageType openType)
 {
 
 }

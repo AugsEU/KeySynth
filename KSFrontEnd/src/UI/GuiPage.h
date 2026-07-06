@@ -10,6 +10,7 @@
 
 #include "GuiElement.h"
 #include "GuiElementSize.h"
+#include "GuiColors.h"
 
 #include "Gui.h"
 
@@ -27,6 +28,30 @@
 
 
 
+
+
+// ============================================================================
+// Types
+// ============================================================================
+enum GuiPageType : size_t
+{
+	Home,
+	// Subtractive synth editing pages
+	SubGeneral,
+	SubOsc1,
+	SubOsc2,
+	SubEnv1,
+	SubEnv2,
+	SubFilt,
+	SubLfo,
+	SubDelay,
+	NumGuiPages,
+};
+
+
+
+
+
 // ============================================================================
 // GuiPage
 // ============================================================================
@@ -38,7 +63,7 @@ public:
 	// ========================================================================
 
 	/// @brief Called once when opening
-	virtual void OnOpen() {}
+	virtual void OnOpen(GuiPageType openType) {}
 
 	/// @brief Called once when closing
 	virtual void OnClose() {}
@@ -105,12 +130,15 @@ public:
 	// ========================================================================
 	// Element creation
 	// ========================================================================
+	
+	/// @brief Create label with default styling
+	ElemId CreateLabel(uint16_t x, uint16_t y, const char* text);
 
-	/// @brief Create lable with default styling
+	/// @brief Create counter label with default styling
 	ElemId CreateCounterLabel(uint16_t x, uint16_t y, const char* text);
 
 protected:
-	VariantVector<GuiElement, ELEMENT_MAX_SIZE, 64> mElements;
+	VariantVector<GuiElement, ELEMENT_MAX_SIZE, 32> mElements;
 	uTimeMs mPrevUpdate = 0;
 private:
 	ElemId mSelectedElem = EMPTY_ID;

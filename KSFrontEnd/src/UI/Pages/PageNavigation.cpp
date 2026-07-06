@@ -132,8 +132,10 @@ PageCategory GetCategory(GuiPageType pageType)
 	case GuiPageType::Home:
 		return PageCategory::General;
 	case GuiPageType::SubGeneral:
-	case GuiPageType::SubOsc:
-	case GuiPageType::SubEnv:
+	case GuiPageType::SubOsc1:
+	case GuiPageType::SubOsc2:
+	case GuiPageType::SubEnv1:
+	case GuiPageType::SubEnv2:
 	case GuiPageType::SubFilt:
 	case GuiPageType::SubLfo:
 	case GuiPageType::SubDelay:

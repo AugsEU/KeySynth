@@ -18,11 +18,18 @@ public:
 	SubOscPage();
 
 	/// @brief Called once on opening
-	void OnOpen() final;
+	void OnOpen(GuiPageType openType) final;
 	
 	/// @brief Called when updating a frame
 	void Update() final;
 
 private:
+	uint8_t mOscNum = 0;
 	
+	ElemId mOscNumLbl;
+
+	ElemId mWaveTypeClb;
+	ElemId mTuneClb;
+	ElemId mVolClb;
+	ElemId mWaveShapeClb;
 };

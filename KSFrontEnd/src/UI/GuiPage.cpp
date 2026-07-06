@@ -124,16 +124,31 @@ void GuiPage::LinkLeftRight(ElemId left, ElemId right)
 // ============================================================================
 // Element creation
 // ============================================================================
-	
+
+ElemId GuiPage::CreateLabel(uint16_t x, uint16_t y, const char* text)
+{
+	GuiLabel* newLabel =
+		mElements.push_back<GuiLabel>(x , y);
+	AUG_ASSERT(newLabel, "ElemCreate");
+
+	newLabel->mString = text;
+	newLabel->mTextSize = 2;
+	newLabel->mTextColor = gGuiColorPrimary;
+	newLabel->mHighlightColor = gGuiColorHighlight;
+
+	return (uint8_t)(mElements.size()-1);
+}
+
 ElemId GuiPage::CreateCounterLabel(uint16_t x, uint16_t y, const char* text)
 {
 	GuiLabelCounter* newCounter =
 		mElements.push_back<GuiLabelCounter>(x , y);
-	AUG_ASSERT(newCounter, "GuiLblCter Fail");
+	AUG_ASSERT(newCounter, "ElemCreate");
 
 	newCounter->mString = text;
 	newCounter->mTextSize = 2;
-	newCounter->mTextColor = 0x5555;
+	newCounter->mTextColor = gGuiColorPrimary;
+	newCounter->mHighlightColor = gGuiColorHighlight;
 
 	return (uint8_t)(mElements.size()-1);
 }

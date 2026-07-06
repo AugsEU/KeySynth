@@ -16,7 +16,7 @@ SubLfoPage::SubLfoPage()
 	pLabel->mTextSize = 3;
 }
 
-void SubLfoPage::OnOpen()
+void SubLfoPage::OnOpen(GuiPageType openType)
 {
 
 }

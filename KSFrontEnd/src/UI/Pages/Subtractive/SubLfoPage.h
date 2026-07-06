@@ -18,7 +18,7 @@ public:
 	SubLfoPage();
 
 	/// @brief Called once on opening
-	void OnOpen() final;
+	void OnOpen(GuiPageType openType) final;
 	
 	/// @brief Called when updating a frame
 	void Update() final;

@@ -1,30 +1,14 @@
 // ============================================================================
 // Include
 // ============================================================================
-#include "SubFiltPage.h"
-
-
-
+#include "GuiColors.h"
 
 
 // ============================================================================
-// Class
+// Public globals
 // ============================================================================
-
-SubFiltPage::SubFiltPage()
-{
-	GuiLabel* pLabel = mElements.push_back<GuiLabel>(50, 50);
-	pLabel->mString = "SubFiltPage";
-	pLabel->mTextColor = 0xFFFF;
-	pLabel->mTextSize = 3;
-}
-
-void SubFiltPage::OnOpen(GuiPageType openType)
-{
-
-}
-
-void SubFiltPage::Update()
-{
-
-}
+GuiColor gGuiColorPrimary = SC_GOLD;
+GuiColor gGuiColorSecondary = SC_DESERT;
+GuiColor gGuiColorHighlight = SC_RED;
+GuiColor gGuiColorShadow = SC_MAGIC_NIGHT;
+GuiColor gGuiColorBackground = SC_BLACK;

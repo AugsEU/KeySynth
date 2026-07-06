@@ -64,7 +64,7 @@ void SetupScreenDisplay(void)
 		ILI9341::RowOrder::TopToBottom,
 		ILI9341::RgbOrder::RGB,
 		ILI9341::ColOrder::LeftToRight);
-	gDriver.ForceClear(0x0000);
+	gDriver.ForceClear(gGuiColorBackground);
 	if(err != ILI9341_OK)
 	{
 		Serial.printf("Display error. %x", (uint32_t)err);
@@ -123,9 +123,11 @@ GuiPage* GetCurrentUiPage()
 		return &sHomePage;
 	case GuiPageType::SubGeneral:
 		return &sSubGeneralPage;
-	case GuiPageType::SubOsc:
+	case GuiPageType::SubOsc1:
+	case GuiPageType::SubOsc2:
 		return &sSubOscPage;
-	case GuiPageType::SubEnv:
+	case GuiPageType::SubEnv1:
+	case GuiPageType::SubEnv2:
 		return &sSubEnvPage;
 	case GuiPageType::SubFilt:
 		return &sSubFiltPage;
@@ -152,9 +154,8 @@ void SelectUiPage(GuiPageType type)
 	{
 		currPage->OnClose();
 	}
-
 	
-	gDriver.ForceClear(SC_BLACK);
+	gDriver.ForceClear(gGuiColorBackground);
 	gCurrPageType = type;
 
 	GuiPage* newPage = GetCurrentUiPage();
@@ -162,6 +163,6 @@ void SelectUiPage(GuiPageType type)
 	if(newPage)
 	{
 		newPage->InvalidateAll();
-		newPage->OnOpen();
+		newPage->OnOpen(type);
 	}
 }

@@ -18,11 +18,18 @@ public:
 	SubEnvPage();
 
 	/// @brief Called once on opening
-	void OnOpen() final;
+	void OnOpen(GuiPageType openType) final;
 	
 	/// @brief Called when updating a frame
 	void Update() final;
 
 private:
+	uint8_t mOscNum = 0;
 	
+	ElemId mEnvNumLbl;
+
+	ElemId mAttackClb;
+	ElemId mDecayClb;
+	ElemId mSustainClb;
+	ElemId mReleaseClb;
 };

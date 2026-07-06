@@ -16,7 +16,7 @@ SubDelayPage::SubDelayPage()
 	pLabel->mTextSize = 3;
 }
 
-void SubDelayPage::OnOpen()
+void SubDelayPage::OnOpen(GuiPageType openType)
 {
 
 }
