@@ -27,4 +27,6 @@ private:
 	ElemId mTuningId = EMPTY_ID;
 	ElemId mDriveId = EMPTY_ID;
 	ElemId mGainId = EMPTY_ID;
+
+	ElemId mPresetClb = EMPTY_ID;	
 };

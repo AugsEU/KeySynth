@@ -95,7 +95,7 @@ void InitParamsForSubtractive()
     gSynthParamBounds[ASP_LFO_VCF_RES        ] = SynthParamBounds(-20);
 
     memset(gSynthParamValues, 0, sizeof(gSynthParamValues));
-    LoadSubMemPreset(10);
+    LoadSubMemPreset(12);
 }
 
 void SendParamForSubtractive(size_t paramNum, int8_t value)

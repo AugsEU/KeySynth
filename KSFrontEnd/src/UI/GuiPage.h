@@ -107,6 +107,12 @@ public:
 		return mElements[id];
 	}
 
+	/// @brief Get the selected id
+	ElemId GetSelectedId()
+	{
+		return mSelectedElem;
+	}
+
 	// ========================================================================
 	// Navigation
 	// ========================================================================
