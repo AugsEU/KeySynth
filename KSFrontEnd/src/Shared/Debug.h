@@ -21,5 +21,8 @@
 
 #else // AUG_DEBUG_ENABLED
 #define AUG_ASSERT(...) do{}while(false)
+#define AUG_LOG(fmt, ...) do{}while(false)
+#define AUG_ERR(fmt, ...) do{}while(false)
+
 #endif // AUG_DEBUG_ENABLED
 
