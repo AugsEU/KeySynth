@@ -10,10 +10,13 @@
 #define AUG_LOG(fmt, ...) \
 	printf("AUG_LOG[%x] " fmt "\n", (unsigned int)__LINE__, ##__VA_ARGS__)
 
+#define AUG_ERR(fmt, ...) \
+	printf("AUG_ERR[%x] " fmt "\n", (unsigned int)__LINE__, ##__VA_ARGS__)
+
 #define AUG_ASSERT(cond, fmt, ...) \
 	do { \
 		if(!cond) \
-			AUG_LOG("Condtion failed" #cond fmt, ##__VA_ARGS__); \
+			AUG_ERR("Condtion failed" #cond fmt, ##__VA_ARGS__); \
 	} while(false) \
 
 #else // AUG_DEBUG_ENABLED
