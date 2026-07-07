@@ -144,6 +144,6 @@ PageCategory GetCategory(GuiPageType pageType)
 		break;
 	}
 
-	AUG_LOG("Nocat%d", pageType);
+	AUG_ERR("Nocat%d", pageType);
 	return (PageCategory)-1;
 }
