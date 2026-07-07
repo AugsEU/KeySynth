@@ -43,8 +43,6 @@ void ForceSendAllParams()
 
 void InitParamsForSubtractive()
 {
-    memset(gSynthParamValues, 0, sizeof(gSynthParamValues));
-    LoadSubMemPreset(10);
 
     // General          Type                                                        Bound
     gSynthParamBounds[ASP_TUNING             ] = SynthParamBounds(NUM_TUNINGS-1);
@@ -96,7 +94,8 @@ void InitParamsForSubtractive()
     gSynthParamBounds[ASP_LFO_VCF_CUTOFF     ] = SynthParamBounds(-20);
     gSynthParamBounds[ASP_LFO_VCF_RES        ] = SynthParamBounds(-20);
 
-    ForceSendAllParams();
+    memset(gSynthParamValues, 0, sizeof(gSynthParamValues));
+    LoadSubMemPreset(10);
 }
 
 void SendParamForSubtractive(size_t paramNum, int8_t value)
