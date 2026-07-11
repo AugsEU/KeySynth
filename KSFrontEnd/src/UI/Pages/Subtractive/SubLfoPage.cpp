@@ -12,32 +12,45 @@
 
 SubLfoPage::SubLfoPage()
 {
-	mRateClb = 		CreateCounterLabel(20, 20, AugNumberParamToString(ASP_LFO_RATE));
-	mWaveTypeClb = 	CreateCounterLabel(20, 40, AugNumberParamToString(ASP_LFO_WAVE_TYPE));
-	mAttackClb = 	CreateCounterLabel(20, 60, AugNumberParamToString(ASP_LFO_ATTACK));
-	mWobbleClb = 	CreateCounterLabel(20, 80, AugNumberParamToString(ASP_LFO_WOBBLE));
-	mOsc1TuneClb = 	CreateCounterLabel(20, 120, AugNumberParamToString(ASP_LFO_OSC1_TUNE));
-	mOsc1VolClb = 	CreateCounterLabel(20, 140, AugNumberParamToString(ASP_LFO_OSC1_VOLUME));
-	mOsc1ShapeClb = CreateCounterLabel(20, 160, AugNumberParamToString(ASP_LFO_OSC1_SHAPE));
-	mOsc2TuneClb = 	CreateCounterLabel(160, 20, AugNumberParamToString(ASP_LFO_OSC2_TUNE));
-	mOsc2VolClb = 	CreateCounterLabel(160, 40, AugNumberParamToString(ASP_LFO_OSC2_VOLUME));
-	mOsc2ShapeClb = CreateCounterLabel(160, 60, AugNumberParamToString(ASP_LFO_OSC2_SHAPE));
-	mCutoffClb = 	CreateCounterLabel(160, 100, AugNumberParamToString(ASP_LFO_VCF_CUTOFF));
-	mResonanceClb = CreateCounterLabel(160, 120, AugNumberParamToString(ASP_LFO_VCF_RES));
+	CreateLabel(20, 20, "LFO");
+
+	mRateClb = 		CreateCounterLabel(20, 60, AugNumberParamToString(ASP_LFO_RATE));
+	mWaveTypeClb = 	CreateCounterLabel(20, 80, AugNumberParamToString(ASP_LFO_WAVE_TYPE));
+	mAttackClb = 	CreateCounterLabel(20, 100, AugNumberParamToString(ASP_LFO_ATTACK));
+	mWobbleClb = 	CreateCounterLabel(20, 120, AugNumberParamToString(ASP_LFO_WOBBLE));
+
+	mCutoffClb = 	CreateCounterLabel(20, 160, AugNumberParamToString(ASP_LFO_VCF_CUTOFF));
+	mResonanceClb = CreateCounterLabel(20, 180, AugNumberParamToString(ASP_LFO_VCF_RES));
+
+	mOsc1TuneClb = 	CreateCounterLabel(160, 60, AugNumberParamToString(ASP_LFO_OSC1_TUNE));
+	mOsc1VolClb = 	CreateCounterLabel(160, 80, AugNumberParamToString(ASP_LFO_OSC1_VOLUME));
+	mOsc1ShapeClb = CreateCounterLabel(160, 100, AugNumberParamToString(ASP_LFO_OSC1_SHAPE));
+
+	mOsc2TuneClb = 	CreateCounterLabel(160, 140, AugNumberParamToString(ASP_LFO_OSC2_TUNE));
+	mOsc2VolClb = 	CreateCounterLabel(160, 160, AugNumberParamToString(ASP_LFO_OSC2_VOLUME));
+	mOsc2ShapeClb = CreateCounterLabel(160, 180, AugNumberParamToString(ASP_LFO_OSC2_SHAPE));
 
 	// Setup nav
 	LinkUpDown(mWaveTypeClb, mRateClb);
 	LinkUpDown(mAttackClb, mWaveTypeClb);
 	LinkUpDown(mWobbleClb, mAttackClb);
-	LinkUpDown(mOsc1TuneClb, mWobbleClb);
+	LinkUpDown(mCutoffClb, mWobbleClb);
+	LinkUpDown(mResonanceClb, mCutoffClb);
+	LinkUpDown(mOsc1TuneClb, mResonanceClb);
 	LinkUpDown(mOsc1VolClb, mOsc1TuneClb);
 	LinkUpDown(mOsc1ShapeClb, mOsc1VolClb);
 	LinkUpDown(mOsc2TuneClb, mOsc1ShapeClb);
 	LinkUpDown(mOsc2VolClb, mOsc2TuneClb);
 	LinkUpDown(mOsc2ShapeClb, mOsc2VolClb);
-	LinkUpDown(mCutoffClb, mOsc2ShapeClb);
-	LinkUpDown(mResonanceClb, mCutoffClb);
-	LinkUpDown(mRateClb, mResonanceClb);
+	LinkUpDown(mRateClb, mOsc2ShapeClb);
+	
+	LinkLeftRight(mRateClb, mOsc1TuneClb);
+	LinkLeftRight(mWaveTypeClb, mOsc1VolClb);
+	LinkLeftRight(mAttackClb, mOsc1ShapeClb);
+	LinkLeftRight(mWaveTypeClb, mOsc1VolClb);
+	LinkLeftRight(mWobbleClb, mOsc2TuneClb);
+	LinkLeftRight(mCutoffClb, mOsc2VolClb);
+	LinkLeftRight(mResonanceClb, mOsc2ShapeClb);
 }
 
 void SubLfoPage::OnOpen(GuiPageType openType)

@@ -16,6 +16,7 @@ class GuiLabelCounter final : public GuiElement
 {
 public:
 	GuiLabelCounter(uint16_t x, uint16_t y) : GuiElement(x, y) {}
+	void Update(uTimeMs dt, bool selected) final;
 	void Draw(bool selected) final;
 	bool OnKeyPress(uint8_t keycode) final;
 
@@ -33,4 +34,10 @@ public:
 	// Keybinds
 	uint8_t mAddKeycode = KS_KEYCODE_NUM_PLUS;
 	uint8_t mMinusKeycode = KS_KEYCODE_NUM_MINUS;
+private:
+	bool HandleNumpadInput(uint8_t keycode);
+	void AddNumpadInput(uint8_t nextDigit);
+	void SubmitNumpad();
+
+	uint8_t mWriteCursor = 0xff;
 };

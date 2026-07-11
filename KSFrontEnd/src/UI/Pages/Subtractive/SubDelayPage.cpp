@@ -12,10 +12,12 @@
 
 SubDelayPage::SubDelayPage()
 {
-	mTimeClb = CreateCounterLabel(20, 20, AugNumberParamToString(ASP_DELAY_TIME));
-	mFeedbackClb = CreateCounterLabel(20, 40, AugNumberParamToString(ASP_DELAY_FEEDBACK));
-	mShearClb = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_DELAY_SHEAR));
-	mModeClb = CreateCounterLabel(20, 80, AugNumberParamToString(ASP_DELAY_MODE));
+	CreateLabel(20, 20, "Delay");
+
+	mTimeClb = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_DELAY_TIME));
+	mFeedbackClb = CreateCounterLabel(20, 80, AugNumberParamToString(ASP_DELAY_FEEDBACK));
+	mShearClb = CreateCounterLabel(20, 100, AugNumberParamToString(ASP_DELAY_SHEAR));
+	mModeClb = CreateCounterLabel(20, 120, AugNumberParamToString(ASP_DELAY_MODE));
 
 	// Setup nav
 	LinkUpDown(mFeedbackClb, mTimeClb);

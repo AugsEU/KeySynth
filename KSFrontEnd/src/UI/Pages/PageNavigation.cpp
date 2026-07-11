@@ -45,8 +45,8 @@ void InitialisePageNavigation()
 	SET_START_PAGE(PageCategory::General, GuiPageType::Home);
 	SET_START_PAGE(PageCategory::Subtractive, GuiPageType::SubGeneral);
 
-	gCurrCategory = PageCategory::General;
-	SelectUiPage(GuiPageType::Home);
+	gCurrCategory = PageCategory::Subtractive;
+	SelectUiPage(GuiPageType::SubGeneral);
 }
 
 bool NavigatePage(uint8_t keycode)

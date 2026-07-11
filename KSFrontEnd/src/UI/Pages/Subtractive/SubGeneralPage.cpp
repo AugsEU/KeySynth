@@ -15,10 +15,12 @@
 /// @brief Constructor
 SubGeneralPage::SubGeneralPage()
 {
-	mTuningId = CreateCounterLabel(20, 20, AugNumberParamToString(ASP_TUNING));
-	mDriveId = CreateCounterLabel(20, 40, AugNumberParamToString(ASP_DRIVE));
-	mGainId = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_GAIN));
-	mPresetClb = CreateCounterLabel(20, 100, "Preset");
+	CreateLabel(20, 20, "General");
+
+	mTuningId = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_TUNING));
+	mDriveId = CreateCounterLabel(20, 80, AugNumberParamToString(ASP_DRIVE));
+	mGainId = CreateCounterLabel(20, 100, AugNumberParamToString(ASP_GAIN));
+	mPresetClb = CreateCounterLabel(20, 140, "Preset");
 
 	// Setup nav
 	LinkUpDown(mGainId, mDriveId);

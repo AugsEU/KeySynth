@@ -13,10 +13,12 @@
 
 SubFiltPage::SubFiltPage()
 {
-	mCutoffClb = CreateCounterLabel(20, 20, AugNumberParamToString(ASP_VCF_CUTOFF));
-	mResonanceClb = CreateCounterLabel(20, 40, AugNumberParamToString(ASP_VCF_RES));
-	mModeClb = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_VCF_MODE));
-	mFollowClb = CreateCounterLabel(20, 80, AugNumberParamToString(ASP_VCF_FOLLOW));
+	CreateLabel(20, 20, "Filter");
+
+	mCutoffClb = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_VCF_CUTOFF));
+	mResonanceClb = CreateCounterLabel(20, 80, AugNumberParamToString(ASP_VCF_RES));
+	mModeClb = CreateCounterLabel(20, 100, AugNumberParamToString(ASP_VCF_MODE));
+	mFollowClb = CreateCounterLabel(20, 120, AugNumberParamToString(ASP_VCF_FOLLOW));
 
 	// Setup nav
 	LinkUpDown(mResonanceClb, mCutoffClb);
