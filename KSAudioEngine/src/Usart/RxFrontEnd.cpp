@@ -3,8 +3,8 @@
 // ============================================================================
 #include <Usart/RxFrontEnd.h>
 #include <Shared/Shared.h>
-#include <Voice.h>
-#include <Parameters.h>
+
+#include <AugCSynth.h>
 
 // ============================================================================
 // Constants
@@ -97,18 +97,18 @@ void HandleMessage(uint8_t* buf, size_t len)
         return;
 
     case MessageHeader::NotePress:
-        BeginVoice(buf[1]);
+        AugCSynth::BeginVoice(buf[1]);
         return;
     case MessageHeader::NoteRelease:
-        ReleaseVoice(buf[1]);
+        AugCSynth::ReleaseVoice(buf[1]);
         return;
     case MessageHeader::NoteOff:
-        StopVoice(buf[1]);
+        AugCSynth::StopVoice(buf[1]);
         return;
 
     case MessageHeader::SetParam:
         memcpy((void*)&value, &buf[2], sizeof(float)); // need to copy because of alignment
-        SetFloatParam(buf[1], value);
+        AugCSynth::SetFloatParam(buf[1], value);
         return;
 
     default: // Invalid header, ignore

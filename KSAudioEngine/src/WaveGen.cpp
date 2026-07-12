@@ -1,11 +1,11 @@
 // ============================================================================
 // Includes
 // ============================================================================
-#include <waveGen.h>
+#include "WaveGen.h"
 #include <I2S/AudioConfig.h>
 #include <arm_math.h>
-#include <Voice.h>
-#include "Subtractive/SubWaveGen.h"
+
+#include "AugCSynth.h"
 
 // ============================================================================
 // Globals
@@ -21,6 +21,6 @@ volatile float gVol = 1.0f;
 /// @brief Fill sound buffer with sounds.
 void GenerateWave(uint16_t* out, size_t len)
 {
-	Subtractive::FillSoundBuffer(out, len/2);
+	AugCSynth::Subtractive::FillSoundBuffer((int16_t*)out, (uint16_t)len/2);
 }
 

@@ -1,3 +1,6 @@
 [submodule "KSFrontEnd/lib/ILI9341-Parallel-Augs"]
 	path = KSFrontEnd/lib/ILI9341-Parallel-Augs
 	url = https://github.com/AugsEU/ILI9341-Parallel-Augs.git
+[submodule "KSAudioEngine/lib/AugCSynth"]
+	path = KSAudioEngine/lib/AugCSynth
+	url = https://github.com/AugsEU/AugCSynth.git

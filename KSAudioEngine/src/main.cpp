@@ -8,8 +8,7 @@
 #include <WaveGen.h>
 
 #include <Usart/RxFrontEnd.h>
-#include "Subtractive/SubWaveGen.h"
-#include "Voice.h"
+#include "AugCSynth.h"
 
 // ============================================================================
 // Constants
@@ -27,7 +26,7 @@ void setup(void)
 	Serial.begin(9600);
 	RxFrontEndBegin();
 
-	Subtractive::SynthInit();
+	AugCSynth::Subtractive::SynthInit();
 
 	// Start the I2S interrupts
 	BeginI2s();
