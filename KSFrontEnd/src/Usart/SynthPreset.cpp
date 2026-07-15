@@ -5,7 +5,7 @@
 #include "SynthPreset.h"
 #include "SynthParams.h"
 
-extern int8_t gSynthParamValues[NUM_PARAMETERS];
+extern int8_t gSynthParamValues[AugCSynth::NUM_PARAMETERS];
 
 // ============================================================================
 // Constants

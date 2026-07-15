@@ -3,7 +3,6 @@
 // ============================================================================
 #include "SubGeneralPage.h"
 
-#include "Shared\SubParams.h"
 #include "LocStrings.h"
 #include "Usart/SynthParams.h"
 #include "Usart/SynthPreset.h"

@@ -4,3 +4,6 @@
 [submodule "KSAudioEngine/lib/AugCSynth"]
 	path = KSAudioEngine/lib/AugCSynth
 	url = https://github.com/AugsEU/AugCSynth.git
+[submodule "KSFrontEnd/lib/AugCSynth"]
+	path = KSFrontEnd/lib/AugCSynth
+	url = https://github.com/AugsEU/AugCSynth.git

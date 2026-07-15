@@ -2,7 +2,6 @@
 // Include
 // ============================================================================
 #include "SubLfoPage.h"
-#include "Shared\SubParams.h"
 #include "LocStrings.h"
 #include "Usart/SynthParams.h"
 

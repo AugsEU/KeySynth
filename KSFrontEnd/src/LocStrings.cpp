@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <Shared/SubParams.h>
+#include <Subtractive/SubParams.h>
 
 
 /// @brief Convert tuning to string(max 7 len)

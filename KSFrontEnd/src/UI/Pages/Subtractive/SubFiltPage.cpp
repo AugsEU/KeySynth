@@ -2,7 +2,6 @@
 // Include
 // ============================================================================
 #include "SubFiltPage.h"
-#include "Shared/SubParams.h"
 #include "Usart/SynthParams.h"
 #include "LocStrings.h"
 

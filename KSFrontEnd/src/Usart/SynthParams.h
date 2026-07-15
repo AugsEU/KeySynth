@@ -9,14 +9,14 @@
 #include <stdint.h>
 #include "Shared/Shared.h"
 #include "SynthParamBounds.h"
-
+#include "AugCSynth.h"
 
 
 
 // ============================================================================
 // SynthParamBounds: Parameter bounds
 // ============================================================================
-extern SynthParamBounds gSynthParamBounds[NUM_PARAMETERS];
+extern SynthParamBounds gSynthParamBounds[AugCSynth::NUM_PARAMETERS];
 
 
 

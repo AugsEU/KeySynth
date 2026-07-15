@@ -3,7 +3,7 @@
 // ============================================================================
 #include "SynthParamBounds.h"
 #include "Shared/Shared.h"
-#include "Shared/SubParams.h"
+#include "AugCSynth.h"
 
 #include <math.h>
 
@@ -84,7 +84,7 @@ float SynthParamBounds::ScaleFloatForSubParam(uint8_t paramNum, float fv)
     case ASP_LFO_ATTACK:
         fv *= fv;// Give weight to small values.
         fv = 1.0f - fv;
-        fv = 1.0f / ((float)SAMPLE_RATE * (8.0 + 0.01 - 8.0 * fv));
+        fv = 1.0f / ((float)AugCSynth::SAMPLE_RATE * (8.0 + 0.01 - 8.0 * fv));
 		break;
 	case ASP_ENV_SUSTAIN1: // 0 to 1 
     case ASP_ENV_SUSTAIN2:
@@ -106,7 +106,7 @@ float SynthParamBounds::ScaleFloatForSubParam(uint8_t paramNum, float fv)
         fv *= fv;
         fv *= 50.0f;
         fv += 0.1f;
-        fv *= (1.0f / (float)SAMPLE_RATE);
+        fv *= (1.0f / (float)AugCSynth::SAMPLE_RATE);
 		break;
 	case ASP_LFO_WOBBLE: // -0.5f to 0.5f
     case ASP_LFO_OSC1_VOLUME:

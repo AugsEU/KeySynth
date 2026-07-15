@@ -10,8 +10,8 @@
 // ============================================================================
 // Globals
 // ============================================================================
-SynthParamBounds gSynthParamBounds[NUM_PARAMETERS];
-int8_t gSynthParamValues[NUM_PARAMETERS];
+SynthParamBounds gSynthParamBounds[AugCSynth::NUM_PARAMETERS];
+int8_t gSynthParamValues[AugCSynth::NUM_PARAMETERS];
 
 
 
@@ -35,7 +35,7 @@ int8_t GetSynthParamValue(size_t paramNum)
 
 void ForceSendAllParams()
 {
-    for(size_t i = 0; i < NUM_PARAMETERS; ++i)
+    for(size_t i = 0; i < AugCSynth::NUM_PARAMETERS; ++i)
     {
         TransmitSubtractiveParameter((uint8_t)i, gSynthParamValues[i]);
     }
