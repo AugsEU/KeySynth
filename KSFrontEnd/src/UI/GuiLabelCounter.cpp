@@ -128,12 +128,12 @@ void GuiLabelCounter::AddNumpadInput(uint8_t nextDigit)
 		SubmitNumpad();
 	}
 
-	SetDirty();
-
 	if(mValue > mMaxValue) 
 		mValue = mMaxValue;
 	else if(mValue < mMinValue)
 		mValue = mMinValue;
+	
+	SetChanged();
 }
 
 void GuiLabelCounter::SubmitNumpad()
