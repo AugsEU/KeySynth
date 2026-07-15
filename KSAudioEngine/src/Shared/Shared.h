@@ -6,8 +6,7 @@
 // ============================================================================
 // Include
 // ============================================================================
-#include <Arduino.h>
-#include "Shared/SubParams.h"
+#include <stdint.h>
 
 
 // ============================================================================
@@ -15,9 +14,6 @@
 // ============================================================================
 constexpr int AUDIO_USART_BAUD_RATE = 31250;
 constexpr uint8_t MESSAGE_BEGIN = 0xAB;
-constexpr uint32_t SAMPLE_RATE = 48000;
-
-constexpr size_t NUM_PARAMETERS = ASP_NUM_PARAMS;
 
 
 
@@ -32,18 +28,4 @@ enum MessageHeader : uint8_t
     SetParam = 0x84,    // Set a parameter
 	SetMode = 0x85,		// Change which engine we are using.
     NotifyOnline = 0xFF // We are awake
-};
-
-enum class SynthMode : uint8_t
-{
-	Subtractive = 0x00
-};
-
-struct SynthParameter
-{
-	union
-	{
-		float mFloatValue;
-		uint32_t mIntValue;
-	};
 };

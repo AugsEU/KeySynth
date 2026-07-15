@@ -161,7 +161,7 @@ void ConfigI2s(bool only_bclk)
 	}
 
 	//PLL:
-	int fs = SAMPLERATE;
+	int fs = AugCSynth::SAMPLE_RATE;
 	// PLL between 27*24 = 648MHz und 54*24=1296MHz
 	int n1 = 4; //SAI prescaler 4 => (n1*n2) = multiple of 4
 	int n2 = 1 + (24000000 * 27) / (fs * 256 * n1);
