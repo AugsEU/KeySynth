@@ -25,8 +25,8 @@ void setup(void)
 	// Begin serial
 	Serial.begin(9600);
 	RxFrontEndBegin();
-
-	AugCSynth::Subtractive::SynthInit();
+	
+	AugCSynth::Initialise();
 
 	// Start the I2S interrupts
 	BeginI2s();

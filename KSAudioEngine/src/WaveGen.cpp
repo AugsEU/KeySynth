@@ -21,6 +21,6 @@ volatile float gVol = 1.0f;
 /// @brief Fill sound buffer with sounds.
 void GenerateWave(uint16_t* out, size_t len)
 {
-	AugCSynth::Subtractive::FillSoundBuffer((int16_t*)out, (uint16_t)len/2);
+	AugCSynth::FillSoundBuffer((int16_t*)out, (uint16_t)len/2);
 }
 
