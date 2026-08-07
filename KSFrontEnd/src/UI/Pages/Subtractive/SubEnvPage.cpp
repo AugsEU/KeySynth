@@ -22,13 +22,15 @@ constexpr const char* const ENVELOPE_2_STRING = "Envelope 2";
 
 SubEnvPage::SubEnvPage()
 {
+	using namespace AugCSynth::Subtractive;
+
 	mOscNum = 1;
 	mEnvNumLbl = CreateLabel(20, 20, ENVELOPE_1_STRING);
 
-	mAttackClb = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_ENV_ATTACK1));
-	mDecayClb = CreateCounterLabel(20, 80, AugNumberParamToString(ASP_ENV_DECAY1));
-	mSustainClb = CreateCounterLabel(20, 100, AugNumberParamToString(ASP_ENV_SUSTAIN1));
-	mReleaseClb = CreateCounterLabel(20, 120, AugNumberParamToString(ASP_ENV_RELEASE1));
+	mAttackClb = CreateCounterLabel(20, 60, SubtractiveParamToString(SubParameter::EnvAttack1));
+	mDecayClb = CreateCounterLabel(20, 80, SubtractiveParamToString(SubParameter::EnvDecay1));
+	mSustainClb = CreateCounterLabel(20, 100, SubtractiveParamToString(SubParameter::EnvSustain1));
+	mReleaseClb = CreateCounterLabel(20, 120, SubtractiveParamToString(SubParameter::EnvRelease1));
 
 	// Setup nav
 	LinkUpDown(mDecayClb, mAttackClb);
@@ -39,6 +41,8 @@ SubEnvPage::SubEnvPage()
 
 void SubEnvPage::OnOpen(GuiPageType openType)
 {
+	using namespace AugCSynth::Subtractive;
+
 	SelectElem(mAttackClb);
 
 	switch (openType)
@@ -47,19 +51,19 @@ void SubEnvPage::OnOpen(GuiPageType openType)
 		mOscNum = 1;
 		GetElement<GuiLabel>(mEnvNumLbl)->mString = ENVELOPE_1_STRING;
 
-		LoadSubValueToLabel(mAttackClb, ASP_ENV_ATTACK1);
-		LoadSubValueToLabel(mDecayClb, ASP_ENV_DECAY1);
-		LoadSubValueToLabel(mSustainClb, ASP_ENV_SUSTAIN1);
-		LoadSubValueToLabel(mReleaseClb, ASP_ENV_RELEASE1);
+		LoadSubValueToLabel(mAttackClb, SubParameter::EnvAttack1);
+		LoadSubValueToLabel(mDecayClb, SubParameter::EnvDecay1);
+		LoadSubValueToLabel(mSustainClb, SubParameter::EnvSustain1);
+		LoadSubValueToLabel(mReleaseClb, SubParameter::EnvRelease1);
 		break;
 	case GuiPageType::SubEnv2:
 		mOscNum = 2;
 		GetElement<GuiLabel>(mEnvNumLbl)->mString = ENVELOPE_2_STRING;
 
-		LoadSubValueToLabel(mAttackClb, ASP_ENV_ATTACK2);
-		LoadSubValueToLabel(mDecayClb, ASP_ENV_DECAY2);
-		LoadSubValueToLabel(mSustainClb, ASP_ENV_SUSTAIN2);
-		LoadSubValueToLabel(mReleaseClb, ASP_ENV_RELEASE2);
+		LoadSubValueToLabel(mAttackClb, SubParameter::EnvAttack2);
+		LoadSubValueToLabel(mDecayClb, SubParameter::EnvDecay2);
+		LoadSubValueToLabel(mSustainClb, SubParameter::EnvSustain2);
+		LoadSubValueToLabel(mReleaseClb, SubParameter::EnvRelease2);
 		break;
 	default:
 		break;
@@ -68,21 +72,23 @@ void SubEnvPage::OnOpen(GuiPageType openType)
 
 void SubEnvPage::Update()
 {
+	using namespace AugCSynth::Subtractive;
+
 	GuiPage::Update();
 
 	switch (mOscNum)
 	{
 	case 1:
-		SEND_COUNTER_TO_SYNTH(mAttackClb, ASP_ENV_ATTACK1);
-		SEND_COUNTER_TO_SYNTH(mDecayClb, ASP_ENV_DECAY1);
-		SEND_COUNTER_TO_SYNTH(mSustainClb, ASP_ENV_SUSTAIN1);
-		SEND_COUNTER_TO_SYNTH(mReleaseClb, ASP_ENV_RELEASE1);
+		SEND_COUNTER_TO_SYNTH(mAttackClb, SubParameter::EnvAttack1);
+		SEND_COUNTER_TO_SYNTH(mDecayClb, SubParameter::EnvDecay1);
+		SEND_COUNTER_TO_SYNTH(mSustainClb, SubParameter::EnvSustain1);
+		SEND_COUNTER_TO_SYNTH(mReleaseClb, SubParameter::EnvRelease1);
 		break;
 	case 2:
-		SEND_COUNTER_TO_SYNTH(mAttackClb, ASP_ENV_ATTACK2);
-		SEND_COUNTER_TO_SYNTH(mDecayClb, ASP_ENV_DECAY2);
-		SEND_COUNTER_TO_SYNTH(mSustainClb, ASP_ENV_SUSTAIN2);
-		SEND_COUNTER_TO_SYNTH(mReleaseClb, ASP_ENV_RELEASE2);
+		SEND_COUNTER_TO_SYNTH(mAttackClb, SubParameter::EnvAttack2);
+		SEND_COUNTER_TO_SYNTH(mDecayClb, SubParameter::EnvDecay2);
+		SEND_COUNTER_TO_SYNTH(mSustainClb, SubParameter::EnvSustain2);
+		SEND_COUNTER_TO_SYNTH(mReleaseClb, SubParameter::EnvRelease2);
 		break;
 	default:
 		break;

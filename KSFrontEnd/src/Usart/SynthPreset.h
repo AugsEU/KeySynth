@@ -23,7 +23,7 @@ constexpr uint8_t MAX_USER_PRESETS = 64;
 struct SubSynthPreset
 {
     char mName[PRESET_NUM_CHARS];
-    int8_t mValues[ASP_NUM_PARAMS];
+    int8_t mValues[AugCSynth::NUM_PARAMETERS];
 };
 
 char* GetSubMemPresetName(size_t index);

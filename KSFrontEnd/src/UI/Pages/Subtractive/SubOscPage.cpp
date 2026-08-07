@@ -16,13 +16,15 @@ constexpr const char* const OSCILLATOR_2_STRING = "Oscillator 2";
 
 SubOscPage::SubOscPage()
 {
+	using namespace AugCSynth::Subtractive;
+
 	mOscNum = 1;
 	mOscNumLbl = CreateLabel(20, 20, OSCILLATOR_1_STRING);
 
-	mWaveTypeClb = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_DCO_WAVE_TYPE_1));
-	mTuneClb = CreateCounterLabel(20, 80, AugNumberParamToString(ASP_DCO_TUNE_1));
-	mVolClb = CreateCounterLabel(20, 100, AugNumberParamToString(ASP_DCO_VOL_1));
-	mWaveShapeClb = CreateCounterLabel(20, 120, AugNumberParamToString(ASP_DCO_WS_1));
+	mWaveTypeClb = CreateCounterLabel(20, 60, SubtractiveParamToString(SubParameter::DcoWaveType1));
+	mTuneClb = CreateCounterLabel(20, 80, SubtractiveParamToString(SubParameter::DcoTune1));
+	mVolClb = CreateCounterLabel(20, 100, SubtractiveParamToString(SubParameter::DcoVol1));
+	mWaveShapeClb = CreateCounterLabel(20, 120, SubtractiveParamToString(SubParameter::DcoWs1));
 
 	// Setup nav
 	LinkUpDown(mTuneClb, mWaveTypeClb);
@@ -33,6 +35,8 @@ SubOscPage::SubOscPage()
 
 void SubOscPage::OnOpen(GuiPageType openType)
 {
+	using namespace AugCSynth::Subtractive;
+
 	SelectElem(mWaveTypeClb);
 
 	switch (openType)
@@ -41,19 +45,19 @@ void SubOscPage::OnOpen(GuiPageType openType)
 		mOscNum = 1;
 		GetElement<GuiLabel>(mOscNumLbl)->mString = OSCILLATOR_1_STRING;
 
-		LoadSubValueToLabel(mWaveTypeClb, ASP_DCO_WAVE_TYPE_1);
-		LoadSubValueToLabel(mTuneClb, ASP_DCO_TUNE_1);
-		LoadSubValueToLabel(mVolClb, ASP_DCO_VOL_1);
-		LoadSubValueToLabel(mWaveShapeClb, ASP_DCO_WS_1);
+		LoadSubValueToLabel(mWaveTypeClb, SubParameter::DcoWaveType1);
+		LoadSubValueToLabel(mTuneClb, SubParameter::DcoTune1);
+		LoadSubValueToLabel(mVolClb, SubParameter::DcoVol1);
+		LoadSubValueToLabel(mWaveShapeClb, SubParameter::DcoWs1);
 		break;
 	case GuiPageType::SubOsc2:
 		mOscNum = 2;
 		GetElement<GuiLabel>(mOscNumLbl)->mString = OSCILLATOR_2_STRING;
 
-		LoadSubValueToLabel(mWaveTypeClb, ASP_DCO_WAVE_TYPE_2);
-		LoadSubValueToLabel(mTuneClb, ASP_DCO_TUNE_2);
-		LoadSubValueToLabel(mVolClb, ASP_DCO_VOL_2);
-		LoadSubValueToLabel(mWaveShapeClb, ASP_DCO_WS_2);
+		LoadSubValueToLabel(mWaveTypeClb, SubParameter::DcoWaveType2);
+		LoadSubValueToLabel(mTuneClb, SubParameter::DcoTune2);
+		LoadSubValueToLabel(mVolClb, SubParameter::DcoVol2);
+		LoadSubValueToLabel(mWaveShapeClb, SubParameter::DcoWs2);
 		break;
 	default:
 		break;
@@ -62,21 +66,23 @@ void SubOscPage::OnOpen(GuiPageType openType)
 
 void SubOscPage::Update()
 {
+	using namespace AugCSynth::Subtractive;
+
 	GuiPage::Update();
 
 	switch (mOscNum)
 	{
 	case 1:
-		SEND_COUNTER_TO_SYNTH(mWaveTypeClb, ASP_DCO_WAVE_TYPE_1);
-		SEND_COUNTER_TO_SYNTH(mTuneClb, ASP_DCO_TUNE_1);
-		SEND_COUNTER_TO_SYNTH(mVolClb, ASP_DCO_VOL_1);
-		SEND_COUNTER_TO_SYNTH(mWaveShapeClb, ASP_DCO_WS_1);
+		SEND_COUNTER_TO_SYNTH(mWaveTypeClb, SubParameter::DcoWaveType1);
+		SEND_COUNTER_TO_SYNTH(mTuneClb, SubParameter::DcoTune1);
+		SEND_COUNTER_TO_SYNTH(mVolClb, SubParameter::DcoVol1);
+		SEND_COUNTER_TO_SYNTH(mWaveShapeClb, SubParameter::DcoWs1);
 		break;
 	case 2:
-		SEND_COUNTER_TO_SYNTH(mWaveTypeClb, ASP_DCO_WAVE_TYPE_2);
-		SEND_COUNTER_TO_SYNTH(mTuneClb, ASP_DCO_TUNE_2);
-		SEND_COUNTER_TO_SYNTH(mVolClb, ASP_DCO_VOL_2);
-		SEND_COUNTER_TO_SYNTH(mWaveShapeClb, ASP_DCO_WS_2);
+		SEND_COUNTER_TO_SYNTH(mWaveTypeClb, SubParameter::DcoWaveType2);
+		SEND_COUNTER_TO_SYNTH(mTuneClb, SubParameter::DcoTune2);
+		SEND_COUNTER_TO_SYNTH(mVolClb, SubParameter::DcoVol2);
+		SEND_COUNTER_TO_SYNTH(mWaveShapeClb, SubParameter::DcoWs2);
 		break;
 	default:
 		break;

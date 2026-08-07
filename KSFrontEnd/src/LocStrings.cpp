@@ -1,43 +1,50 @@
 #include <Arduino.h>
+
+// ============================================================================
+// Include
+// ============================================================================
+#include "LocStrings.h"
+
 #include <Subtractive/SubParams.h>
 
+using namespace AugCSynth;
 
 /// @brief Convert tuning to string(max 7 len)
-const char* const TuningToString(uint8_t tuning)
+const char* const TuningToString(AugCSynth::Tuning tuning)
 {
     switch (tuning)
     {
-    case TUNING_12TET:
+    case AugCSynth::Tuning::Equal12:
         return "12 TET";
-    case TUNING_Cn_JI:
+    case AugCSynth::Tuning::JustC:
         return "C Just";
-    case TUNING_Cs_JI:
+    case AugCSynth::Tuning::JustCs:
         return "C# Just";
-    case TUNING_Dn_JI:
+    case AugCSynth::Tuning::JustD:
         return "D Just";
-    case TUNING_Ds_JI:
+    case AugCSynth::Tuning::JustDs:
         return "D# Just";
-    case TUNING_En_JI:
+    case AugCSynth::Tuning::JustE:
         return "E Just";
-    case TUNING_Fn_JI:
+    case AugCSynth::Tuning::JustF:
         return "F Just";
-    case TUNING_Fs_JI:
+    case AugCSynth::Tuning::JustFs:
         return "F# Just";
-    case TUNING_Gn_JI:
+    case AugCSynth::Tuning::JustG:
         return "G Just";
-    case TUNING_Gs_JI:
+    case AugCSynth::Tuning::JustGs:
         return "G# Just";
-    case TUNING_An_JI:
+    case AugCSynth::Tuning::JustA:
         return "A Just";
-    case TUNING_As_JI:
+    case AugCSynth::Tuning::JustAs:
         return "A# Just";
-    case TUNING_Bn_JI:
+    case AugCSynth::Tuning::JustB:
         return "B Just";
-    case TUNING_24TET:
+    case AugCSynth::Tuning::Equal24:
         return "24 TET";
-    case CIRCLE_OF_5 :
+    case AugCSynth::Tuning::CircleOfFifths:
         return "5 Circ";
-    case WONKY:
+    case AugCSynth::Tuning::Wonky:
         return "Wonky";
     default:
         break;
@@ -47,17 +54,17 @@ const char* const TuningToString(uint8_t tuning)
 }
 
 /// @brief Convert delay mode to string 
-const char* const DelayModeToString(uint8_t delay)
+const char* const DelayModeToString(AugCSynth::DelayMode delay)
 {
     switch (delay)
     {
-    case DELAY_MODE_OFF:
+    case AugCSynth::DelayMode::Off:
         return "Off";
-    case DELAY_MODE_NORMAL:
+    case AugCSynth::DelayMode::Feedback :
         return "Normal";
-    case DELAY_MODE_SLAPBACK:
+    case AugCSynth::DelayMode::Slapback:
         return "Slapbck";
-    case DELAY_MODE_GLITCH:
+    case AugCSynth::DelayMode::Glitch:
         return "Glitch";
     default:
         break;
@@ -67,17 +74,17 @@ const char* const DelayModeToString(uint8_t delay)
 }
 
 /// @brief Convert delay mode to string (max 7 len)
-const char* const SoundTypeToString(uint8_t st)
+const char* const SoundTypeToString(Subtractive::PresetType st)
 {
     switch (st)
     {
-    case SOUND_TYPE_POLY:
+    case Subtractive::PresetType::Poly:
         return "Poly";
-    case SOUND_TYPE_MONO:
+    case Subtractive::PresetType::Mono:
         return "Mono";
-    case SOUND_TYPE_PIANO:
+    case Subtractive::PresetType::Piano:
         return "Pluck";
-    case SOUND_TYPE_BASS:
+    case Subtractive::PresetType::Bass:
         return "Bass";
     default:
         break;
@@ -87,17 +94,17 @@ const char* const SoundTypeToString(uint8_t st)
 }
 
 /// @brief Convert osc mode to string 
-const char* const OscModeToString(uint8_t osc)
+const char* const OscModeToString(AugCSynth::WaveType osc)
 {
     switch (osc)
     {
-    case OSC_MODE_SINE:
+    case AugCSynth::WaveType::Sine:
         return "Sine";
-    case OSC_MODE_SQUARE:
+    case AugCSynth::WaveType::Square:
         return "Square";
-    case OSC_MODE_SAW:
+    case AugCSynth::WaveType::Saw:
         return "Saw";
-    case OSC_MODE_ORGAN:
+    case AugCSynth::WaveType::Organ:
         return "Organ";
     default:
         break;
@@ -107,15 +114,15 @@ const char* const OscModeToString(uint8_t osc)
 }
 
 /// @brief Convert osc mode to string 
-const char* const FilterModeToString(uint8_t filt)
+const char* const FilterModeToString(AugCSynth::FilterMode filt)
 {
     switch (filt)
     {
-    case FILTER_MODE_OFF:
+    case AugCSynth::FilterMode::Off:
         return "Off";
-    case FILTER_MODE_LP:
+    case AugCSynth::FilterMode::LowPass:
         return "Low";
-    case FILTER_MODE_HP:
+    case AugCSynth::FilterMode::HighPass:
         return "High";
     default:
         break;
@@ -125,61 +132,61 @@ const char* const FilterModeToString(uint8_t filt)
 }
 
 /// @brief Convert numeric paramter to string(max 4 len) 
-const char* const AugNumberParamToString(uint8_t param)
+const char* const SubtractiveParamToString(AugCSynth::Subtractive::SubParameter param)
 {
     switch (param)
     {
-    case ASP_TUNING:
+    case Subtractive::SubParameter::Tuning:
         return "Tuning";
-    case ASP_DRIVE:
+    case Subtractive::SubParameter::Drive:
         return "Drive";
-    case ASP_GAIN:
+    case Subtractive::SubParameter::Gain:
         return "Gain";
-    case ASP_DELAY_TIME:
+    case Subtractive::SubParameter::DelayTime:
         return "Time";
-    case ASP_DELAY_FEEDBACK:
+    case Subtractive::SubParameter::DelayFeedback:
         return "Feed";
-    case ASP_DELAY_SHEAR:
+    case Subtractive::SubParameter::DelayShear:
         return "Move";
-    case ASP_DCO_WS_1:
-    case ASP_DCO_WS_2:
-    case ASP_LFO_OSC1_SHAPE:
-    case ASP_LFO_OSC2_SHAPE:
+    case Subtractive::SubParameter::DcoWs1:
+    case Subtractive::SubParameter::DcoWs2:
+    case Subtractive::SubParameter::LfoOsc1Shape:
+    case Subtractive::SubParameter::LfoOsc2Shape:
         return "Shpe";
-    case ASP_DCO_VOL_1:
-    case ASP_DCO_VOL_2:
-    case ASP_LFO_OSC1_VOLUME:
-    case ASP_LFO_OSC2_VOLUME:
+    case Subtractive::SubParameter::DcoVol1:
+    case Subtractive::SubParameter::DcoVol2:
+    case Subtractive::SubParameter::LfoOsc1Volume:
+    case Subtractive::SubParameter::LfoOsc2Volume:
         return "Vol";
-    case ASP_DCO_TUNE_1:
-    case ASP_DCO_TUNE_2:
-    case ASP_LFO_OSC1_TUNE:
-    case ASP_LFO_OSC2_TUNE:
+    case Subtractive::SubParameter::DcoTune1:
+    case Subtractive::SubParameter::DcoTune2:
+    case Subtractive::SubParameter::LfoOsc1Tune:
+    case Subtractive::SubParameter::LfoOsc2Tune:
         return "Tune";
-    case ASP_ENV_ATTACK1:
-    case ASP_ENV_ATTACK2:
-    case ASP_LFO_ATTACK:
+    case Subtractive::SubParameter::EnvAttack1:
+    case Subtractive::SubParameter::EnvAttack2:
+    case Subtractive::SubParameter::LfoAttack:
         return "Attk";
-    case ASP_ENV_DECAY1:
-    case ASP_ENV_DECAY2:
+    case Subtractive::SubParameter::EnvDecay1:
+    case Subtractive::SubParameter::EnvDecay2:
         return "Dcay";
-    case ASP_ENV_SUSTAIN1:
-    case ASP_ENV_SUSTAIN2:
+    case Subtractive::SubParameter::EnvSustain1:
+    case Subtractive::SubParameter::EnvSustain2:
         return "Sust";
-    case ASP_ENV_RELEASE1:
-    case ASP_ENV_RELEASE2:
+    case Subtractive::SubParameter::EnvRelease1:
+    case Subtractive::SubParameter::EnvRelease2:
         return "Rele";
-    case ASP_VCF_CUTOFF:
-    case ASP_LFO_VCF_CUTOFF:
+    case Subtractive::SubParameter::VcfCutoff:
+    case Subtractive::SubParameter::LfoVcfCutoff:
         return "Freq";
-    case ASP_VCF_RES:
-    case ASP_LFO_VCF_RES:
+    case Subtractive::SubParameter::VcfRes:
+    case Subtractive::SubParameter::LfoVcfRes:
         return "Res";
-    case ASP_VCF_FOLLOW:
+    case Subtractive::SubParameter::VcfFollow:
         return "Fllw";
-    case ASP_LFO_RATE:
+    case Subtractive::SubParameter::LfoRate:
         return "Rate";
-    case ASP_LFO_WOBBLE:
+    case Subtractive::SubParameter::LfoWobble:
         return "Wobl";
     default:
         break;

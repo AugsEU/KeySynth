@@ -8,15 +8,7 @@
 // ============================================================================
 #include <stdint.h>
 #include "Shared/Shared.h"
-#include "SynthParamBounds.h"
 #include "AugCSynth.h"
-
-
-
-// ============================================================================
-// SynthParamBounds: Parameter bounds
-// ============================================================================
-extern SynthParamBounds gSynthParamBounds[AugCSynth::NUM_PARAMETERS];
 
 
 
@@ -41,8 +33,3 @@ void InitParamsForSubtractive();
 /// @param paramNum The parameter id
 /// @param value The parameter value
 void SendParamForSubtractive(size_t paramNum, int8_t value);
-
-/// @brief Is this a float or integer parameter for the subtractive synth?
-/// @param paramNum Parameter id
-/// @return True if this is a float parameter
-bool IsSubtractiveParamFloat(size_t paramNum);

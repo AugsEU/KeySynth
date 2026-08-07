@@ -14,11 +14,13 @@
 /// @brief Constructor
 SubGeneralPage::SubGeneralPage()
 {
+	using namespace AugCSynth::Subtractive;
+
 	CreateLabel(20, 20, "General");
 
-	mTuningId = CreateCounterLabel(20, 60, AugNumberParamToString(ASP_TUNING));
-	mDriveId = CreateCounterLabel(20, 80, AugNumberParamToString(ASP_DRIVE));
-	mGainId = CreateCounterLabel(20, 100, AugNumberParamToString(ASP_GAIN));
+	mTuningId = CreateCounterLabel(20, 60, SubtractiveParamToString(SubParameter::Tuning));
+	mDriveId = CreateCounterLabel(20, 80, SubtractiveParamToString(SubParameter::Drive));
+	mGainId = CreateCounterLabel(20, 100, SubtractiveParamToString(SubParameter::Gain));
 	mPresetClb = CreateCounterLabel(20, 140, "Preset");
 
 	// Setup nav
@@ -31,11 +33,13 @@ SubGeneralPage::SubGeneralPage()
 /// @brief Called once on opening
 void SubGeneralPage::OnOpen(GuiPageType openType)
 {
+	using namespace AugCSynth::Subtractive;
+
 	SelectElem(mTuningId);
 
-	LoadSubValueToLabel(mTuningId, ASP_TUNING);
-	LoadSubValueToLabel(mDriveId, ASP_DRIVE);
-	LoadSubValueToLabel(mGainId, ASP_GAIN);
+	LoadSubValueToLabel(mTuningId, SubParameter::Tuning);
+	LoadSubValueToLabel(mDriveId, SubParameter::Drive);
+	LoadSubValueToLabel(mGainId, SubParameter::Gain);
 
 	auto* presetCounter = GetElement<GuiLabelCounter>(mPresetClb);
 	presetCounter->mMaxValue = 18;
@@ -45,11 +49,13 @@ void SubGeneralPage::OnOpen(GuiPageType openType)
 /// @brief Called when updating a frame
 void SubGeneralPage::Update()
 {
+	using namespace AugCSynth::Subtractive;
+
 	GuiPage::Update();
 
-	SEND_COUNTER_TO_SYNTH(mTuningId, ASP_TUNING);
-	SEND_COUNTER_TO_SYNTH(mDriveId, ASP_DRIVE);
-	SEND_COUNTER_TO_SYNTH(mGainId, ASP_GAIN);
+	SEND_COUNTER_TO_SYNTH(mTuningId, SubParameter::Tuning);
+	SEND_COUNTER_TO_SYNTH(mDriveId, SubParameter::Drive);
+	SEND_COUNTER_TO_SYNTH(mGainId, SubParameter::Gain);
 
 	auto* presetCounter = GetElement<GuiLabelCounter>(mPresetClb);
 

@@ -11,23 +11,25 @@
 
 SubLfoPage::SubLfoPage()
 {
+	using namespace AugCSynth::Subtractive;
+
 	CreateLabel(20, 20, "LFO");
 
-	mRateClb = 		CreateCounterLabel(20, 60, AugNumberParamToString(ASP_LFO_RATE));
-	mWaveTypeClb = 	CreateCounterLabel(20, 80, AugNumberParamToString(ASP_LFO_WAVE_TYPE));
-	mAttackClb = 	CreateCounterLabel(20, 100, AugNumberParamToString(ASP_LFO_ATTACK));
-	mWobbleClb = 	CreateCounterLabel(20, 120, AugNumberParamToString(ASP_LFO_WOBBLE));
+	mRateClb = 		CreateCounterLabel(20, 60, SubtractiveParamToString(SubParameter::LfoRate));
+	mWaveTypeClb = 	CreateCounterLabel(20, 80, SubtractiveParamToString(SubParameter::LfoWaveType));
+	mAttackClb = 	CreateCounterLabel(20, 100, SubtractiveParamToString(SubParameter::LfoAttack));
+	mWobbleClb = 	CreateCounterLabel(20, 120, SubtractiveParamToString(SubParameter::LfoWobble));
 
-	mCutoffClb = 	CreateCounterLabel(20, 160, AugNumberParamToString(ASP_LFO_VCF_CUTOFF));
-	mResonanceClb = CreateCounterLabel(20, 180, AugNumberParamToString(ASP_LFO_VCF_RES));
+	mCutoffClb = 	CreateCounterLabel(20, 160, SubtractiveParamToString(SubParameter::LfoVcfCutoff));
+	mResonanceClb = CreateCounterLabel(20, 180, SubtractiveParamToString(SubParameter::LfoVcfRes));
 
-	mOsc1TuneClb = 	CreateCounterLabel(160, 60, AugNumberParamToString(ASP_LFO_OSC1_TUNE));
-	mOsc1VolClb = 	CreateCounterLabel(160, 80, AugNumberParamToString(ASP_LFO_OSC1_VOLUME));
-	mOsc1ShapeClb = CreateCounterLabel(160, 100, AugNumberParamToString(ASP_LFO_OSC1_SHAPE));
+	mOsc1TuneClb = 	CreateCounterLabel(160, 60, SubtractiveParamToString(SubParameter::LfoOsc1Tune));
+	mOsc1VolClb = 	CreateCounterLabel(160, 80, SubtractiveParamToString(SubParameter::LfoOsc1Volume));
+	mOsc1ShapeClb = CreateCounterLabel(160, 100, SubtractiveParamToString(SubParameter::LfoOsc1Shape));
 
-	mOsc2TuneClb = 	CreateCounterLabel(160, 140, AugNumberParamToString(ASP_LFO_OSC2_TUNE));
-	mOsc2VolClb = 	CreateCounterLabel(160, 160, AugNumberParamToString(ASP_LFO_OSC2_VOLUME));
-	mOsc2ShapeClb = CreateCounterLabel(160, 180, AugNumberParamToString(ASP_LFO_OSC2_SHAPE));
+	mOsc2TuneClb = 	CreateCounterLabel(160, 140, SubtractiveParamToString(SubParameter::LfoOsc2Tune));
+	mOsc2VolClb = 	CreateCounterLabel(160, 160, SubtractiveParamToString(SubParameter::LfoOsc2Volume));
+	mOsc2ShapeClb = CreateCounterLabel(160, 180, SubtractiveParamToString(SubParameter::LfoOsc2Shape));
 
 	// Setup nav
 	LinkUpDown(mWaveTypeClb, mRateClb);
@@ -54,36 +56,40 @@ SubLfoPage::SubLfoPage()
 
 void SubLfoPage::OnOpen(GuiPageType openType)
 {
+	using namespace AugCSynth::Subtractive;
+	
 	SelectElem(mRateClb);
 
-	LoadSubValueToLabel(mRateClb, ASP_LFO_RATE);
-	LoadSubValueToLabel(mWaveTypeClb, ASP_LFO_WAVE_TYPE);
-	LoadSubValueToLabel(mAttackClb, ASP_LFO_ATTACK);
-	LoadSubValueToLabel(mWobbleClb, ASP_LFO_WOBBLE);
-	LoadSubValueToLabel(mOsc1TuneClb, ASP_LFO_OSC1_TUNE);
-	LoadSubValueToLabel(mOsc1VolClb, ASP_LFO_OSC1_VOLUME);
-	LoadSubValueToLabel(mOsc1ShapeClb, ASP_LFO_OSC1_SHAPE);
-	LoadSubValueToLabel(mOsc2TuneClb, ASP_LFO_OSC2_TUNE);
-	LoadSubValueToLabel(mOsc2VolClb, ASP_LFO_OSC2_VOLUME);
-	LoadSubValueToLabel(mOsc2ShapeClb, ASP_LFO_OSC2_SHAPE);
-	LoadSubValueToLabel(mCutoffClb, ASP_LFO_VCF_CUTOFF);
-	LoadSubValueToLabel(mResonanceClb, ASP_LFO_VCF_RES);
+	LoadSubValueToLabel(mRateClb, SubParameter::LfoRate);
+	LoadSubValueToLabel(mWaveTypeClb, SubParameter::LfoWaveType);
+	LoadSubValueToLabel(mAttackClb, SubParameter::LfoAttack);
+	LoadSubValueToLabel(mWobbleClb, SubParameter::LfoWobble);
+	LoadSubValueToLabel(mOsc1TuneClb, SubParameter::LfoOsc1Tune);
+	LoadSubValueToLabel(mOsc1VolClb, SubParameter::LfoOsc1Volume);
+	LoadSubValueToLabel(mOsc1ShapeClb, SubParameter::LfoOsc1Shape);
+	LoadSubValueToLabel(mOsc2TuneClb, SubParameter::LfoOsc2Tune);
+	LoadSubValueToLabel(mOsc2VolClb, SubParameter::LfoOsc2Volume);
+	LoadSubValueToLabel(mOsc2ShapeClb, SubParameter::LfoOsc2Shape);
+	LoadSubValueToLabel(mCutoffClb, SubParameter::LfoVcfCutoff);
+	LoadSubValueToLabel(mResonanceClb, SubParameter::VcfRes);
 }
 
 void SubLfoPage::Update()
 {
+	using namespace AugCSynth::Subtractive;
+
 	GuiPage::Update();
 
-	SEND_COUNTER_TO_SYNTH(mRateClb, ASP_LFO_RATE);
-	SEND_COUNTER_TO_SYNTH(mWaveTypeClb, ASP_LFO_WAVE_TYPE);
-	SEND_COUNTER_TO_SYNTH(mAttackClb, ASP_LFO_ATTACK);
-	SEND_COUNTER_TO_SYNTH(mWobbleClb, ASP_LFO_WOBBLE);
-	SEND_COUNTER_TO_SYNTH(mOsc1TuneClb, ASP_LFO_OSC1_TUNE);
-	SEND_COUNTER_TO_SYNTH(mOsc1VolClb, ASP_LFO_OSC1_VOLUME);
-	SEND_COUNTER_TO_SYNTH(mOsc1ShapeClb, ASP_LFO_OSC1_SHAPE);
-	SEND_COUNTER_TO_SYNTH(mOsc2TuneClb, ASP_LFO_OSC2_TUNE);
-	SEND_COUNTER_TO_SYNTH(mOsc2VolClb, ASP_LFO_OSC2_VOLUME);
-	SEND_COUNTER_TO_SYNTH(mOsc2ShapeClb, ASP_LFO_OSC2_SHAPE);
-	SEND_COUNTER_TO_SYNTH(mCutoffClb, ASP_LFO_VCF_CUTOFF);
-	SEND_COUNTER_TO_SYNTH(mResonanceClb, ASP_LFO_VCF_RES);
+	SEND_COUNTER_TO_SYNTH(mRateClb, SubParameter::LfoRate);
+	SEND_COUNTER_TO_SYNTH(mWaveTypeClb, SubParameter::LfoWaveType);
+	SEND_COUNTER_TO_SYNTH(mAttackClb, SubParameter::LfoAttack);
+	SEND_COUNTER_TO_SYNTH(mWobbleClb, SubParameter::LfoWobble);
+	SEND_COUNTER_TO_SYNTH(mOsc1TuneClb, SubParameter::LfoOsc1Tune);
+	SEND_COUNTER_TO_SYNTH(mOsc1VolClb, SubParameter::LfoOsc1Volume);
+	SEND_COUNTER_TO_SYNTH(mOsc1ShapeClb, SubParameter::LfoOsc1Shape);
+	SEND_COUNTER_TO_SYNTH(mOsc2TuneClb, SubParameter::LfoOsc2Tune);
+	SEND_COUNTER_TO_SYNTH(mOsc2VolClb, SubParameter::LfoOsc2Volume);
+	SEND_COUNTER_TO_SYNTH(mOsc2ShapeClb, SubParameter::LfoOsc2Shape);
+	SEND_COUNTER_TO_SYNTH(mCutoffClb, SubParameter::LfoVcfCutoff);
+	SEND_COUNTER_TO_SYNTH(mResonanceClb, SubParameter::VcfRes);
 }

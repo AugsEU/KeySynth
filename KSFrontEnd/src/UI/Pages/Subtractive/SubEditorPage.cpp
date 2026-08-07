@@ -4,15 +4,18 @@
 #include "SubEditorPage.h"
 #include <Usart\SynthParams.h>
 
+
+
 // ============================================================================
 // SubEditorPage
 // ============================================================================
 
-void SubEditorPage::LoadSubValueToLabel(ElemId id, uint8_t paramNum)
+void SubEditorPage::LoadSubValueToLabel(ElemId id, AugCSynth::Subtractive::SubParameter param)
 {
 	auto* pCounter = GetElement<GuiLabelCounter>(id);
 
-	pCounter->mMaxValue = gSynthParamBounds[paramNum].GetMaxValue();
-	pCounter->mMinValue = gSynthParamBounds[paramNum].GetMinValue();
-	pCounter->mValue = GetSynthParamValue(paramNum);
+	AugCSynth::SynthParamBounds bounds = AugCSynth::Subtractive::GetSubParamBounds(param);
+	pCounter->mMaxValue = bounds.GetMaxValue();
+	pCounter->mMinValue = bounds.GetMinValue();
+	pCounter->mValue = GetSynthParamValue((size_t)param);
 }

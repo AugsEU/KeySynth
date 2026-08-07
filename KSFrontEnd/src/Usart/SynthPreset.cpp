@@ -7,37 +7,40 @@
 
 extern int8_t gSynthParamValues[AugCSynth::NUM_PARAMETERS];
 
+#define i8 (int8_t)
+using namespace AugCSynth;
+
 // ============================================================================
 // Constants
 // ============================================================================
 constexpr SubSynthPreset gSubPresets[NUM_FACTORY_PRESETS] PROGMEM = {
     {{'I','n','i','t',' ',' ',' ',' ',}, {
-        TUNING_12TET, 0, 20,            // Tune Drive Gain 
-        10, 10, 0, DELAY_MODE_OFF,      // Delay: Time Fbck Shear Mode
-        OSC_MODE_SINE, 0, 50, 5,        // Osc1: Wave Tune Vol Shape
-        OSC_MODE_SINE, 0, 0, 5,         // Osc2: Wave Tune Vol Shape
+        0, 0, 20,                       // Tune Drive Gain 
+        10, 10, 0, 0,                   // Delay: Time Fbck Shear Mode
+        0, 0, 50, 5,                    // Osc1: Wave Tune Vol Shape
+        0, 0, 0, 5,                     // Osc2: Wave Tune Vol Shape
         2, 10, 40, 5,                   // Env1: A D S R
         2, 10, 40, 5,                   // Env2: A D S R
-        20, 0, FILTER_MODE_OFF, 0,      // Filt: Freq Res Mode Env
-        25, OSC_MODE_SINE,  0, 0,       // LFO: Rate Mode Atk Wbbl
+        20, 0, 0, 0,                    // Filt: Freq Res Mode Env
+        25, 0, 0, 0,                    // LFO: Rate Mode Atk Wbbl
         0, 0, 0,                        // LOsc1: Tune Vol Shp
         0, 0, 0,                        // LOsc2: Tune Vol Shp
         0, 0,                           // LVCF: Freq Res
-        SOUND_TYPE_POLY                 // Sound Type
+        0                               // Sound Type
     }},
     {{'L','e','s','l','i','e',' ',' ',}, {
-        TUNING_12TET, 0, 20,            // Tune Drive Gain 
-        20, 3, 0, DELAY_MODE_NORMAL,    // Delay: Time Fbck Shear Mode
-        OSC_MODE_ORGAN, 0, 50, 2,       // Osc1: Wave Tune Vol Shape
-        OSC_MODE_ORGAN, 50, 40, 10,     // Osc2: Wave Tune Vol Shape
+        0, 0, 20,                       // Tune Drive Gain 
+        20, 3, 0, 1,                    // Delay: Time Fbck Shear Mode
+        3, 0, 50, 2,                    // Osc1: Wave Tune Vol Shape
+        3, 50, 40, 10,                  // Osc2: Wave Tune Vol Shape
         1, 5, 40, 1,                    // Env1: A D S R
         1, 5, 37, 1,                    // Env2: A D S R
-        40, 5, FILTER_MODE_LP, 0,       // Filt: Freq Res Mode Env
-        30, OSC_MODE_SINE,  0, 3,       // LFO: Rate Mode Atk Wbbl
+        40, 5, 1, 0,                    // Filt: Freq Res Mode Env
+        30, 0,  0, 3,                   // LFO: Rate Mode Atk Wbbl
         0, 3, -2,                       // LOsc1: Tune Vol Shp
         1, -8, 20,                      // LOsc2: Tune Vol Shp
-        -2, 0,                           // LVCF: Freq Res
-        SOUND_TYPE_POLY                 // Sound Type
+        -2, 0,                          // LVCF: Freq Res
+        0                               // Sound Type
     }},
     {{'C','h','a','p','e','l',' ',' ',}, {
         0,0,20,10,0,0,0,0,0,50,6,0,-40,50,2,1,10,50,3,2,10,40,5,13,0,0,0,25,0,0,0,0,2,0,-2,0,0,0,0,0
@@ -70,18 +73,18 @@ constexpr SubSynthPreset gSubPresets[NUM_FACTORY_PRESETS] PROGMEM = {
         0,0,20,10,4,35,3,0,0,50,20,0,50,15,8,13,56,43,24,12,68,28,34,17,1,1,9,18,0,20,10,-1,4,-10,0,-7,7,0,20,0
 	}},
     {{'F','u','n','k','B','a','s','s',}, {
-        TUNING_12TET, 0, 20,            // Tune Drive Gain 
-        0, 0, 0, DELAY_MODE_OFF,        // Delay: Time Fbck Shear Mode
-        OSC_MODE_SAW, -40, 50, 2,       // Osc1: Wave Tune Vol Shape
-        OSC_MODE_SQUARE, -40, 50, 10,   // Osc2: Wave Tune Vol Shape
+        0, 0, 20,                       // Tune Drive Gain 
+        0, 0, 0, 0,                     // Delay: Time Fbck Shear Mode
+        2, -40, 50, 2,                  // Osc1: Wave Tune Vol Shape
+        1, -40, 50, 10,                 // Osc2: Wave Tune Vol Shape
         0, 6, 40, 10,                   // Env1: A D S R
         0, 2, 40, 15,                   // Env2: A D S R
-        9, 20, FILTER_MODE_LP, 17,      // Filt: Freq Res Mode Env
-        25, OSC_MODE_SINE,  0, 0,       // LFO: Rate Mode Atk Wbbl
+        9, 20, 1, 17,                   // Filt: Freq Res Mode Env
+        25, 0,  0, 0,                   // LFO: Rate Mode Atk Wbbl
         0, 0, 0,                        // LOsc1: Tune Vol Shp
         0, 0, 0,                        // LOsc2: Tune Vol Shp
         0, 0,                           // LVCF: Freq Res
-        SOUND_TYPE_BASS                 // Sound Type
+        0                               // Sound Type
     }},
     
     {{'S','t','i','c','k','y',' ',' ',}, {
