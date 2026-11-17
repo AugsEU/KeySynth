@@ -24,7 +24,7 @@ public:
 	void Draw(bool selected) final;
 
 	const char* mString = nullptr;
-	uint16_t mTextSize = 2;
+	uint16_t mTextSize = 1;
 	ILI9341::ILIColor mTextColor = ILI9341_GREY;
 	ILI9341::ILIColor mHighlightColor = ILI9341_WHITE;
 };

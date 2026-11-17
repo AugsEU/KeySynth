@@ -16,12 +16,19 @@ SubGeneralPage::SubGeneralPage()
 {
 	using namespace AugCSynth::Subtractive;
 
+	// Create elems
 	CreateLabel(20, 20, "General");
 
 	mTuningId = CreateCounterLabel(20, 60, SubtractiveParamToString(SubParameter::Tuning));
 	mDriveId = CreateCounterLabel(20, 80, SubtractiveParamToString(SubParameter::Drive));
 	mGainId = CreateCounterLabel(20, 100, SubtractiveParamToString(SubParameter::Gain));
+	
 	mPresetClb = CreateCounterLabel(20, 140, "Preset");
+
+	// Init
+	auto* presetCounter = GetElement<GuiLabelCounter>(mPresetClb);
+	presetCounter->mMaxValue = 18;
+	presetCounter->mMinValue = 1;
 
 	// Setup nav
 	LinkUpDown(mGainId, mDriveId);
@@ -35,15 +42,13 @@ void SubGeneralPage::OnOpen(GuiPageType openType)
 {
 	using namespace AugCSynth::Subtractive;
 
+	GuiBgFancyBox(10, 10, 150, 150); 
+
 	SelectElem(mTuningId);
 
 	LoadSubValueToLabel(mTuningId, SubParameter::Tuning);
 	LoadSubValueToLabel(mDriveId, SubParameter::Drive);
 	LoadSubValueToLabel(mGainId, SubParameter::Gain);
-
-	auto* presetCounter = GetElement<GuiLabelCounter>(mPresetClb);
-	presetCounter->mMaxValue = 18;
-	presetCounter->mMinValue = 1;
 }
 
 /// @brief Called when updating a frame

@@ -11,6 +11,7 @@
 #include "GuiElement.h"
 #include "GuiElementSize.h"
 #include "GuiColors.h"
+#include "GuiBackgroud.h"
 
 #include "Gui.h"
 
